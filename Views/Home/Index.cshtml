@@ -1,0 +1,27 @@
+﻿
+
+
+<div class="camera">
+
+    <!--Shows stream of camera-->
+    <video id="video">Video stream not available.</video>
+    <button id="startbutton">Take photo</button>
+</div>
+
+<!--Contains captured frames, is not shown-->
+<canvas id="canvas"> </canvas>
+
+
+<div class="output">
+    <!--Final display where image is displayed after capture-->
+    <img id="photo" alt="The screen capture will appear in this box." />
+</div>
+
+<!-- Load the ZXing library from CDN -->
+<script src="~/dist/bundle.js" defer></script>
+
+<div id="reader" width="600px"></div>
+
+
+<button id="startScan">Start Scan</button>
+<textarea id="resultText"></textarea>
