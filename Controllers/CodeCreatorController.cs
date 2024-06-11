@@ -14,9 +14,6 @@ namespace ScannerWebAppUpdate.Controllers
             return View();
         }
 
-        public IActionResult BarcodeCreator()
-        {
-            return View();
-        }
+
     }
 }

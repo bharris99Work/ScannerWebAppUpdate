@@ -1,4 +1,4 @@
-﻿// To use Html5QrcodeScanner (more info below)
+﻿// Use Html5QrcodeScanner
 import { Html5QrcodeScanner } from "html5-qrcode";
 
 (() => {
@@ -30,10 +30,6 @@ import { Html5QrcodeScanner } from "html5-qrcode";
         startbutton = document.getElementById('startbutton');
         scanbutton = document.getElementById('startScan');
         resulttext = document.getElementById('resultText')
-
-
-
-       
 
         /*
         //Gets access to camera permissions, returns true or false; No audio
@@ -75,8 +71,6 @@ import { Html5QrcodeScanner } from "html5-qrcode";
             false,
         );*/
 
-
-
                 /*
                 //Snaps picture, prevent default stops multiple takes
                 startbutton.addEventListener(
@@ -89,28 +83,24 @@ import { Html5QrcodeScanner } from "html5-qrcode";
                 );*/
 
 
-
-
-
-
        // clearphoto();
     }
 
-    //Stes canvas to gray, saves image, displays that image to clear captured image.
-    function clearphoto() {
+    ////Stes canvas to gray, saves image, displays that image to clear captured image.
+    //function clearphoto() {
 
-        const context = canvas.getContext("2d");
-        context.fillStyle = "#AAA";
-        context.fillRect(0, 0, canvas.width, canvas.height);
+    //    const context = canvas.getContext("2d");
+    //    context.fillStyle = "#AAA";
+    //    context.fillRect(0, 0, canvas.width, canvas.height);
 
-        //Sets to PNG
-        const data = canvas.toDataURL("image/png");
-        photo.setAttribute("src", data);
-    }
+    //    //Sets to PNG
+    //    const data = canvas.toDataURL("image/png");
+    //    photo.setAttribute("src", data);
+    //}
 
   
     function onScanSuccess(decodedText, decodedResult) {
-        // handle the scanned code as you like, for example:
+        // handle the scanned code as you likee:
 
         document.getElementById('resultText').textContent = `Code matched = ${decodedText}`, decodedResult;
         console.log(`Code matched = ${decodedText}`, decodedResult);
@@ -124,35 +114,11 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "reader",
-        { fps: 10, qrbox: { width: 350, height: 350 } },
+        { fps: 10, showTorchButtonIfSupported: true, showZoomSliderIfSupported: true,qrbox: { width: 550, height: 550 } },
   /* verbose= */ false);
 
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-
-    
-
-
-    function takepicture() {
-        //Get 2d drawing contextrt for hidden canvas
-        const context = canvas.getContext("2d");
-
-        //Checks if width and height are not zero of image; If not could be an image.
-        if (width && height) {
-
-            //Sets the width and height to equal to the current frame
-            canvas.width = width;
-            canvas.height = height;
-            context.drawImage(video, 0, 0, width, height);
-
-            //Convert the image in to an PNG
-            const data = canvas.toDataURL("image/png");
-            photo.setAttribute("src", data);
-        } else {
-            //Clears image if not found
-            clearphoto();
-        }
-    }
 
     // Set up  event listener to run the startup process
     // once loading is complete.

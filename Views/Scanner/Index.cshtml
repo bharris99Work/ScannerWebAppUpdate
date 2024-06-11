@@ -1,2 +1,35 @@
-﻿<h1>This is Scanning Menu</h1>
-<a asp-action="ScannedPart" asp-controller="Scanner">View Scanned Part</a>
+﻿<h1>Scanning Part</h1>
+
+@* 
+<div class="camera">
+
+    <!--Shows stream of camera-->
+    <video id="video">Video stream not available.</video>
+    <button id="startbutton">Take photo</button>
+</div> *@
+
+<!--Contains captured frames, is not shown-->
+@* <canvas id="canvas"> </canvas> *@
+
+<!-- Webpack bundle of scripts-->
+<script src="~/dist/bundle.js" defer></script>
+
+<!--Pre Made Reader-->
+<div id="reader" width="600px"></div>
+
+
+@* <button id="startScan">Start Scan</button> *@
+
+<button>Manual Entry</button>
+<button>Random</button>
+<br />
+<button>Clear</button>
+<a  asp-action="Index" asp-controller="Scanner">Rescan</a>
+<br />
+
+<form>
+    <textarea id="resultText"></textarea>
+    <a asp-action="ScannedPart" asp-controller="Scanner">Submit</a>
+</form>
+
+

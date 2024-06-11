@@ -17,5 +17,9 @@
     "html5-qrcode": "^2.3.8",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "materialize-css": "^1.0.0-rc.2"
   }
 }
