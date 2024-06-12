@@ -8,38 +8,34 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ScannerWebAppUpdate.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/materialize.min.css"/>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="~/js/materialize.min.js"></script>
 </head>
-<body>
+<body class="has-fixed-sidenav">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">APS Scanner System</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Scanner" asp-action="">Scan Part</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CodeCreator" asp-action="">Create Barcode</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="">Settings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="waves-effect waves-light btn">button</a>
-                        </li>
-                    </ul>
-                </div>
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="nav-wrapper blue darken-2">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-logo">APS Scanner</a>
+                <a href="!#" data-target="mobile-demo" class="sidenav-trigger center-align  blue lighten-5"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li> <a asp-area="" asp-controller="Scanner" asp-action="">Scan Part</a></li>
+                    <li><a asp-area="" asp-controller="CodeCreator" asp-action="">Create Barcode</a></li>
+                    <li><a asp-area="" asp-controller="Settings" asp-action="">Settings</a></li>
+                </ul>
             </div>
         </nav>
+
+        <!-- Sidenav -->
+        <ul class="sidenav blue darken-2" id="mobile-demo">
+            <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li> <a asp-area="" asp-controller="Scanner" asp-action="">Scan Part</a></li>
+            <li><a asp-area="" asp-controller="CodeCreator" asp-action="">Create Barcode</a></li>
+            <li><a asp-area="" asp-controller="Settings" asp-action="">Settings</a></li>
+        </ul>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -47,11 +43,14 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - ScannerWebAppUpdate - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems);
+        });
+    </script>
+
+ 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

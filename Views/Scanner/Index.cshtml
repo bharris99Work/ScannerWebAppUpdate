@@ -1,15 +1,32 @@
-﻿<h1>Scanning Part</h1>
+﻿<style>
+    .text-btn-container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
 
-@* 
-<div class="camera">
+    .btn-container {
+        display: flex;
+        flex-direction: column;
+    }
 
-    <!--Shows stream of camera-->
-    <video id="video">Video stream not available.</video>
-    <button id="startbutton">Take photo</button>
-</div> *@
+    #resultText{
+        height:100%;
+    }
 
-<!--Contains captured frames, is not shown-->
-@* <canvas id="canvas"> </canvas> *@
+    .btn{
+        margin:5px;
+
+    }
+
+    .input-field{
+        height:100%;
+    }
+</style>
+
+
+<h1>Scanning Part</h1>
+
 
 <!-- Webpack bundle of scripts-->
 <script src="~/dist/bundle.js" defer></script>
@@ -17,19 +34,48 @@
 <!--Pre Made Reader-->
 <div id="reader" width="600px"></div>
 
-
-@* <button id="startScan">Start Scan</button> *@
-
-<button>Manual Entry</button>
-<button>Random</button>
-<br />
-<button>Clear</button>
-<a  asp-action="Index" asp-controller="Scanner">Rescan</a>
-<br />
-
 <form>
-    <textarea id="resultText"></textarea>
-    <a asp-action="ScannedPart" asp-controller="Scanner">Submit</a>
+    <div class="text-btn-container">
+        <div class="input-field">
+            <textarea id="resultText"></textarea>
+        </div>
+
+        <div class="btn-container">
+            <a class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">create</i></a>
+            <a class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">shuffle</i></a>
+            <a class="btn-floating btn-small waves-effect"><i class="material-icons">clear</i></a>
+        </div>
+    </div>
+
+
+    <div class="center-align">
+        <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan New Item</a>
+        <button class="btn waves-effect blue darken-2" type="submit" name="action">
+            Submit
+            <i class="material-icons right">send</i>
+        </button>
+    </div>
 </form>
 
+<!-- Modal Trigger -->
+<button data-target="modal1" class="btn modal-trigger">Modal</button>
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <div>
+        <label>Enter Passcode: </label>
+        <textarea> </textarea>
+        <button class="modal-close">Cancel</button>
+        <button class="modal-close">Enter</button>
+    </div>
+</div>
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+    });
+</script>
 

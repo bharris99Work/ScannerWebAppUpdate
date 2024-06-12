@@ -6,9 +6,44 @@
 <button>Search</button>
 <br />
 
-<textarea>
-    Results! Will be a table or grid in future!
-</textarea>
-<br />
+<table class="striped highlight responsive-table">
+    <thead>
+        <tr>
+            <th>Part Number: </th>
+            <th>Job Number: </th>
+            <th>Quantity: </th>
+            <th>Return Option: </th>
+            <th>Tech Option: </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>112233</td>
+            <td>1234</td>
+            <td>4</td>
+            <td>N/A</td>
+            <td>On Job</td>
+            <td><button>Create</button></td>
+        </tr>
+        <tr>
+            <td>112233</td>
+            <td>1234</td>
+            <td>7</td>
+            <td>Abandoned</td>
+            <td>N/A</td>
+            <td><button>Create</button></td>
+        </tr>
+        <tr>
+            <td>112233</td>
+            <td>1555</td>
+            <td>10</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><button>Create</button></td>
+        </tr>
+    </tbody>
+</table>
 
 <a asp-action="CreatorResults" asp-controller="CodeCreator">Send Part</a>

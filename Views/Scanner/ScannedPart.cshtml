@@ -1,40 +1,78 @@
-﻿<h1>Scanned Part: </h1>
+﻿<head>
 
-<button>Admin Access</button>
-<form>
-    <label>Part Number:</label>
-    <textarea></textarea>
-    <br />
-    <label>Job Number: </label>
-    <textarea></textarea>
-    <br />
-    <label>Quantity: </label>
-    <textarea></textarea>
-    <br />
+    <title>Document</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/ScannerWebAppUpdate.styles.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/materialize.min.css">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
 
 
-    <label>Return Options: </label>
-    <select>
-        <option>Abandoned Job</option>
-        <option>Broken</option>
-        <option>Missing Parts</option>
-    </select>
-    <button>Clear</button>
-    <button>Other</button>
-    <br />
+<body>
+    <form>
+        <div class="row">
+        <div class="input-field col s12">
+            <label>Part Number:</label>
+            <textarea></textarea>
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <label>Job Number: </label>
+                <textarea></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <label>Quantity: </label>
+                <textarea></textarea>
+            </div>
+        </div>
+
+        <label>Return Options: </label>
+        <div class="row">
+            <div class="input-field col s12">
+                <select>
+                    <option value="1">Abandoned Job</option>
+                    <option>Broken</option>
+                    <option>Missing Parts</option>
+                </select>
+                </div>
+                </div>
+        <button>Clear</button>
+        <button>Other</button>
+        <br />
+
+        <label>Tech Options: </label>
+        <div class="row">
+        <div class="input-field col s12">
+
+            <select>
+                <option>Tech 1</option>
+                <option>Tech 2</option>
+            </select>
+        </div>
+        </div>
+        <button>Clear</button>
+        <button>Other</button>
+        <br />
+
+        <button>Reset</button>
+        <button>Scan New</button>
+        <br />
+        <button>Submit</button>
+    </form>
 
 
-    <label>Tech Options: </label>
-    <select>
-        <option>Tech 1</option>
-        <option>Tech 2</option>
-    </select>
-    <button>Clear</button>
-    <button>Other</button>
-    <br />
-
-    <button>Reset</button>
-    <button>Scan New</button>
-    <br />
-    <button>Submit</button>
-</form>
+    <script src="~/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+    </script>
+</body>
