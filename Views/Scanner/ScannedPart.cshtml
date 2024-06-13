@@ -9,61 +9,103 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
+<style>
+    .btn{
+    margin: 5px;
+    }
+
+    .input-field label {
+        font-size: 20px;
+    }
+
+</style>
+
 
 <body>
+
+    <!-- Admin Modal Trigger -->
+    <button data-target="modal1" class="btn modal-trigger">Admin</button>
+
+    <!-- Admin Modal Structure TODO: Add password function to dialog -->
+    <div id="modal1" class="modal">
+        <div>
+            <label>Enter Passcode: </label>
+            <textarea> </textarea>
+            <button class="modal-close">Cancel</button>
+            <button class="modal-close">Enter</button>
+        </div>
+    </div>
+
+    <!--Takes part returned from DB and fills form-->
     <form>
         <div class="row">
-        <div class="input-field col s12">
-            <label>Part Number:</label>
-            <textarea></textarea>
-        </div>
+            <div class="input-field col s3">
+                <!--Parts Item Number-->
+                <label>Part Number:</label>
+                <textarea>@ViewBag.ScannedPart.ItemNumber</textarea>
+            </div>
         </div>
 
         <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s3">
+                <!--Parts Job Number-->
                 <label>Job Number: </label>
-                <textarea></textarea>
+                <textarea>@ViewBag.ScannedPart.JobNumber</textarea>
             </div>
         </div>
 
         <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s3">
+                <!--Parts Quantity-->
                 <label>Quantity: </label>
-                <textarea></textarea>
+                <textarea>@ViewBag.ScannedPart.Quantity</textarea>
+            </div>
+            <div class="btn-container">
+                <button>+</button>
+                <button>-</button>
             </div>
         </div>
 
+        <!--Parts Return Option, N/A if does not exist-->
         <label>Return Options: </label>
         <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s3">
                 <select>
                     <option value="1">Abandoned Job</option>
                     <option>Broken</option>
                     <option>Missing Parts</option>
                 </select>
-                </div>
-                </div>
+            </div>
+        </div>
+        <!--Clears selected option-->
         <button>Clear</button>
+        <!--Allows user to enter an option manually-->
         <button>Other</button>
         <br />
 
+        <!--Parts Tech Option, N/A if does not exist-->
         <label>Tech Options: </label>
         <div class="row">
-        <div class="input-field col s12">
+            <div class="input-field col s3">
 
-            <select>
-                <option>Tech 1</option>
-                <option>Tech 2</option>
-            </select>
+                <select>
+                    <option>Tech 1</option>
+                    <option>Tech 2</option>
+                </select>
+            </div>
         </div>
-        </div>
+        <!--Clears selected option-->
         <button>Clear</button>
+        <!--Allows user to enter an option manually-->
         <button>Other</button>
         <br />
 
+        <!--Resets form back to original state-->
         <button>Reset</button>
+        <!--Loads scanner page, allows user to rescan-->
         <button>Scan New</button>
         <br />
+        <!--Submits changes to database-->
         <button>Submit</button>
     </form>
 

@@ -1,6 +1,46 @@
-﻿<h1> Displays Code Generated results</h1>
-<br />
-<h1>!A QR CODE!</h1>
-<br />
-<button>Print</button>
-<a asp-action="" asp-controller="CodeCreator">Select New</a>
+﻿<style>
+    .btn {
+        margin: 5px;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .qr-container {
+        margin: 20px 0; /* Add margin for spacing */
+        text-align: center; /* Center-align text */
+    }
+
+        .qr-container img {
+            display: block; /* Ensure the image is a block element */
+            margin: 0 auto; /* Center-align the image */
+            max-width: 100%; /* Ensure the image does not exceed its container width */
+            height: auto; /* Maintain aspect ratio */
+        }
+</style>
+
+
+<!--Checks to see if an image has been produced from the part, and returned from the controller-->
+@if (ViewBag.QRCodeImageBase64 != null)
+{
+    <div class="qr-container center-align">
+        <!--Header with Part number of part used to generate the QR code-->
+        <h3>@ViewBag.DisplayedPart - QR Code</h3>
+        <!--Produced QR Code from part-->
+        <img src="data:image/png;base64,@ViewBag.QRCodeImageBase64" alt="QR Code" />
+    </div>
+}
+
+
+<div class="btn-container">
+    <!--Allows user to print QR Code-->
+    <a class="waves-effect btn blue darken-2">Print</a>
+    <!--Allows user to share QR Code-->
+    <a class="waves-effect btn blue darken-2">Share</a>
+    <!--Allows user to go back and select another part-->
+    <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="CodeCreator">Select New</a>
+</div>

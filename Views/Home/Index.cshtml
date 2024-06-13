@@ -16,12 +16,14 @@
     }
 </style>
 
+<!--A Sample dashboard with sample data-->
+<h1>Dashboard:</h1>
 
-<h1>Dashboard,</h1>
 
 <div class="flex-container center-align">
     <div class="card">
         <div class="card-content">
+            <!--Contains test Scan History-->
             <span class="card-title">Scan History:</span>
             <ul>
                 <li>Part: 122, Returned, Modifed: 12/4/12</li>
@@ -33,6 +35,7 @@
 
     <div class="card">
         <div class="card-content">
+            <!--Contains test Job History-->
             <span class="card-title"> Recently Viewed Jobs:</span>
             <ul>
                 <li>Job: 1, Parts: 56, Date: 2/4/25</li>
@@ -44,6 +47,7 @@
 
     <div class="card">
         <div class="card-content">
+            <!--Contains test Parts delivery-->
             <span class="card-title">Scheduled Parts Delivery:</span>
             <ul>
                 <li>Part: 1234, 12/3/23</li>
@@ -56,6 +60,8 @@
 
 
 <div class="center-align">
+    <!--Takes user to scanner page to scan an item-->
     <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan Item</a>
+    <!--Takes user to create code page to create an QR code for an item-->
     <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left">create</i>Create QR Code</a>
 </div>

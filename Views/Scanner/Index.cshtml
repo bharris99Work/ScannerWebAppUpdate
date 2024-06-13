@@ -1,55 +1,85 @@
 ﻿<style>
-    .text-btn-container {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
+
+    .text-btn-container{
+        display: grid;
+        grid-template-columns: auto 50px; /* Adjust the width of the button container as needed */
+        grid-template-rows: repeat(3, 1fr); /* Define two rows */
+        gap: 10px; /* Space between the textarea and the button container */
+        align-items: stretch; /* Make sure items stretch to the full height of the grid */
     }
 
     .btn-container {
+        display: grid;
+        grid-template-rows: repeat(3, 1fr); /* Create three equal rows */
+        gap: 10px; /* Space between buttons */
+    }
+
+    .btn {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%; /* Make buttons fill the height of their grid cells */
+        margin: 0; /* Remove any margin */
+        text-transform: none; /* Ensure text is not transformed */
+        margin: 5px;
     }
 
     #resultText{
-        height:100%;
+        grid-row: span 2; /* Make the textarea span two rows */
+        height: 100%; /* Stretch to fill the two rows */
+        box-sizing: border-box; /* Ensure padding and border are included in height */
+        /* Flexbox properties for alignment */
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        resize: none; /* Prevent textarea resize */
+        font-size: 30px;
     }
 
-    .btn{
-        margin:5px;
-
+    .btn-scanning{
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
-    .input-field{
-        height:100%;
+    .hidden {
+        display: none;
     }
 </style>
 
-
-<h1>Scanning Part</h1>
-
+<h1>Scanning For Part</h1>
 
 <!-- Webpack bundle of scripts-->
 <script src="~/dist/bundle.js" defer></script>
 
 <!--Pre Made Reader-->
-<div id="reader" width="600px"></div>
+@* <div id="reader" width="600px"></div> *@
 
-<form>
+<!--Form containing scanned part number-->
+<form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
+
     <div class="text-btn-container">
         <div class="input-field">
-            <textarea id="resultText"></textarea>
+            <!--Scanned or Entered Part (TODO: Make read only unless manual entry was selected)-->
+            <textarea id="resultText" readonly name="scannedPart" class="center-align ">TestPart1</textarea>
         </div>
 
         <div class="btn-container">
-            <a class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">create</i></a>
-            <a class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">shuffle</i></a>
-            <a class="btn-floating btn-small waves-effect"><i class="material-icons">clear</i></a>
+            <!--Edit and Manually enter item number-->
+            <a id="edit" class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">create</i></a>
+            <!--Shuffle and select an item at random from avalible parts (REMOVE DURING  PRODUCTION)-->
+            <a id="shuffle" class="btn-floating btn-small waves-effect blue darken-2" asp-area="" asp-controller="Scanner" asp-action="LoadRandomPart"><i class="material-icons">shuffle</i></a>
+            <!--Clear the item number that has been scanned or entered-->
+            <a id="clear" class="btn-floating btn-small waves-effect"><i class="material-icons">clear</i></a>
         </div>
     </div>
 
 
-    <div class="center-align">
-        <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan New Item</a>
+    <div class="btn-scanning center-align">
+        <!--Allows user to rescan-->
+        <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
+        <!--Searches for part in DB-->
         <button class="btn waves-effect blue darken-2" type="submit" name="action">
             Submit
             <i class="material-icons right">send</i>
@@ -57,25 +87,33 @@
     </div>
 </form>
 
-<!-- Modal Trigger -->
-<button data-target="modal1" class="btn modal-trigger">Modal</button>
-
-<!-- Modal Structure -->
-<div id="modal1" class="modal">
-    <div>
-        <label>Enter Passcode: </label>
-        <textarea> </textarea>
-        <button class="modal-close">Cancel</button>
-        <button class="modal-close">Enter</button>
-    </div>
-</div>
-
+<!--Seeds DB with test parts (REMOVE DURING PRODUCTION)-->
+@* <a class="hidden waves-effect blue darken-2 btn " asp-area="" asp-controller="Scanner" asp-action="BeginSeeding"><i class="material-icons left">qr_code_scanner</i>Seed DB</a> *@
 
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.modal');
         var instances = M.Modal.init(elems);
+
+        let editBN = document.getElementById('edit');
+        let shuffleBN = document.getElementById('shuffle');
+        let clearBN = document.getElementById('clear');
+        let resultText = document.getElementById('resultText');
+
+        clearBN.addEventListener('click', function () {
+            resultText.value = "";
+        });
+
+        editBN.addEventListener('click', function () {
+            resultText.readOnly = !resultText.readOnly; // Toggle readonly attribute
+            if (resultText.readOnly) {
+                resultText.value = "Scan"; // Example text when readonly
+            } else {
+                resultText.value = ""; // Clear text when editable
+            }
+        });
+
     });
 </script>
 

@@ -1,12 +1,28 @@
-﻿<h1>Select Part:</h1>
+﻿
 
-<label>Search for part: </label>
-<textarea>11111</textarea>
-<br />
+<h1>Select Part:</h1>
+
+
+<!--Form that features ways user can search for parts-->
+<form>
+    <div class="row">
+        <div class="input-field col s12">
+            <!--Search for part via Part Number-->
+            <label for="searchedPart">Part Number: </label>
+            <textarea id="searchedPart"></textarea>
+        </div>
+        <div class="input-field col s12">
+            <!--Search for part via Part Number-->
+            <label for="searchedJob">Job Number: </label>
+            <textarea id="searchedJob"></textarea>
+        </div>
+    </div>
+</form>
+<!--Searches database with entered information-->
 <button>Search</button>
-<br />
 
-<table class="striped highlight responsive-table">
+<!--Table featuring parts that where returned from search-->
+<table class="striped highlight responsive-table" >
     <thead>
         <tr>
             <th>Part Number: </th>
@@ -19,31 +35,27 @@
     </thead>
 
     <tbody>
-        <tr>
-            <td>112233</td>
-            <td>1234</td>
-            <td>4</td>
-            <td>N/A</td>
-            <td>On Job</td>
-            <td><button>Create</button></td>
-        </tr>
-        <tr>
-            <td>112233</td>
-            <td>1234</td>
-            <td>7</td>
-            <td>Abandoned</td>
-            <td>N/A</td>
-            <td><button>Create</button></td>
-        </tr>
-        <tr>
-            <td>112233</td>
-            <td>1555</td>
-            <td>10</td>
-            <td>N/A</td>
-            <td>N/A</td>
-            <td><button>Create</button></td>
-        </tr>
+        <!--Fills each column with apropriate info from parts-->
+        @foreach (var part in ViewBag.PartsList)
+        {
+            <tr>
+                <td>@part.ItemNumber</td>
+                <td>@part.JobNumber</td>
+                <td>@part.Quantity</td>
+                <td>@part.ReturnOption</td>
+                <td>@part.TechOption</td>
+                <td>
+                    <form asp-action="Create" asp-controller="CodeCreator" method="post">
+                        <input type="hidden" name="ItemNumber" value="@part.ItemNumber" />
+                        <input type="hidden" name="JobNumber" value="@part.JobNumber" />
+                        <input type="hidden" name="Quantity" value="@part.Quantity" />
+                        <input type="hidden" name="ReturnOption" value="@part.ReturnOption" />
+                        <input type="hidden" name="TechOption" value="@part.TechOption" />
+                        <!--Creates an QR code based off part attached-->
+                        <button type="submit">Create</button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-
-<a asp-action="CreatorResults" asp-controller="CodeCreator">Send Part</a>
