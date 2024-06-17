@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 using System.Diagnostics.Eventing.Reader;
+using System.IO;
 
 namespace ScannerWebAppUpdate.Models
 {
@@ -44,7 +46,7 @@ namespace ScannerWebAppUpdate.Models
 
         }
 
-        public void AddPartsList(List<Part> parts) 
+        public void AddPartsList(ObservableCollection<Part> parts) 
         {
             try
             {
@@ -57,6 +59,80 @@ namespace ScannerWebAppUpdate.Models
             {
                 Console.WriteLine(ex.ToString());
             }
+        }
+
+
+
+        public void AddTechList(ObservableCollection<TechOption> TestTechOptions)
+        {
+            try
+            {
+                foreach (TechOption tech in TestTechOptions)
+                {
+                    AddTech(tech);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+        }
+
+        public void AddReturnList(ObservableCollection<ReturnOption> TestReturnOptions)
+        {
+            try
+            {
+                foreach (ReturnOption returnOption in TestReturnOptions)
+                {
+                    AddReturn(returnOption);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+        }
+
+        public void AddTech(TechOption techOption)
+        {
+            try
+            {
+                //Looks for duplicates
+                if (!TechOptions.Any(tech => tech.Description == techOption.Description))
+                {
+                    TechOptions.Add(techOption);
+                    SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+            }
+
+        }
+
+        public void AddReturn(ReturnOption returnOption)
+        {
+            try
+            {
+                //Looks for duplicates
+                if (!ReturnOptions.Any(returnOpt => returnOpt.Description == returnOption.Description))
+                {
+                    ReturnOptions.Add(returnOption);
+                    SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+            }
+
 
         }
     }

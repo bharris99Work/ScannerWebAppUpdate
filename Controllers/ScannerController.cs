@@ -9,13 +9,19 @@ namespace ScannerWebAppUpdate.Controllers
     {
         private readonly ScannerContext _context = new ScannerContext();
         private ObservableCollection<Part> PartsList;
+        private ObservableCollection<TechOption> TechOptionsList;
+        private ObservableCollection<ReturnOption> ReturnOptionsList;
 
         public ScannerController() {
 
             _context.Database.EnsureCreated();
             _context.Parts.Load();
+            _context.TechOptions.Load();
+            _context.ReturnOptions.Load();
 
             PartsList = _context.Parts.Local.ToObservableCollection();
+            TechOptionsList = _context.TechOptions.Local.ToObservableCollection();
+            ReturnOptionsList = _context.ReturnOptions.Local.ToObservableCollection();
         }
 
         public IActionResult Index()
@@ -24,15 +30,6 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
   
-
-        public void SeedDBParts()
-        {
-            List<Part> partList = new List<Part> { new Part("TestPart1", "TestJob1"), new Part("TestPart2", "TestJob1"), new Part("TestPart3", "TestJob1"), 
-                new Part("TestPart4", "TestJob2"), new Part("TestPart5", "TestJob2") };
-
-            _context.AddPartsList(partList);
-        }
-
         [HttpPost]
         public IActionResult ProcessScannedPart(string scannedPart)
         {
@@ -49,12 +46,9 @@ namespace ScannerWebAppUpdate.Controllers
         public IActionResult ScannedPart(Part scannedPart)
         {
             ViewBag.ScannedPart = scannedPart;
+            ViewBag.ReturnOptions = ReturnOptionsList;
+            ViewBag.TechOptions = TechOptionsList;
             return View();
-        }
-
-        public void BeginSeeding()
-        {
-            SeedDBParts();
         }
 
 
@@ -67,6 +61,13 @@ namespace ScannerWebAppUpdate.Controllers
 
             return RedirectToAction("ScannedPart", PartsList[randomInd]);
 
+        }
+
+        [HttpPost]
+        public IActionResult UploadPart(Part newPart, ReturnOption returnOpt, TechOption techOpt, string returnOther, string techOther) {
+            Console.Write("This is new part");
+
+            return RedirectToAction("Index");
         }
     }
 }

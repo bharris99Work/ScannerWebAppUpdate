@@ -23,6 +23,17 @@
 
             Quantity = 0;
         }
+
+        public Part(string partNumber, string jobNumber, string tech, string returnOpt, int quant)
+        {
+            ItemNumber = partNumber;
+            JobNumber = jobNumber;
+
+            ReturnOption = returnOpt;
+            TechOption = tech;
+
+            Quantity = quant;
+        }
         public Part() { }
     }
 }

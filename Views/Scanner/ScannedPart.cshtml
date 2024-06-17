@@ -10,8 +10,8 @@
 </head>
 
 <style>
-    .btn{
-    margin: 5px;
+    .btn {
+        margin: 5px;
     }
 
     .input-field label {
@@ -22,6 +22,11 @@
 
 
 <body>
+
+    <script>
+        var ScannedPartReturnOption = "@ViewBag.ScannedPart.ReturnOption"</script>
+    <script>
+        var ScannedPartTechOption = "@ViewBag.ScannedPart.TechOption"</script>
 
     <!-- Admin Modal Trigger -->
     <button data-target="modal1" class="btn modal-trigger">Admin</button>
@@ -37,84 +42,108 @@
     </div>
 
     <!--Takes part returned from DB and fills form-->
-    <form>
+    <form asp-action="UploadPart" asp-controller="Scanner" method="post">
         <div class="row">
             <div class="input-field col s3">
                 <!--Parts Item Number-->
-                <label>Part Number:</label>
-                <textarea>@ViewBag.ScannedPart.ItemNumber</textarea>
+                <label for="partNumber">Part Number:</label>
+                <input type="text" id="partNumber" name="ItemNumber" value="@ViewBag.ScannedPart.ItemNumber" />
             </div>
         </div>
 
         <div class="row">
             <div class="input-field col s3">
                 <!--Parts Job Number-->
-                <label>Job Number: </label>
-                <textarea>@ViewBag.ScannedPart.JobNumber</textarea>
+                <label for="jobNumber">Job Number: </label>
+                <input type="text" id="jobNumber" name="JobNumber" value="@ViewBag.ScannedPart.JobNumber" />
             </div>
         </div>
 
         <div class="row">
             <div class="input-field col s3">
                 <!--Parts Quantity-->
-                <label>Quantity: </label>
-                <textarea>@ViewBag.ScannedPart.Quantity</textarea>
+                <label for="partQuantity">Quantity: </label>
+                <input type="number" id="partQuantity" name="Quantity" value="@ViewBag.ScannedPart.Quantity" />
             </div>
             <div class="btn-container">
-                <button>+</button>
-                <button>-</button>
+                <a class="waves-effect btn-small blue darken-2" id="subQuantity">
+                    -
+                </a>
+                <a class="waves-effect btn-small blue darken-2" id="addQuantity">+</a>
             </div>
         </div>
 
         <!--Parts Return Option, N/A if does not exist-->
-        <label>Return Options: </label>
+        <label for="returnOptions">Return Options: </label>
         <div class="row">
             <div class="input-field col s3">
-                <select>
-                    <option value="1">Abandoned Job</option>
-                    <option>Broken</option>
-                    <option>Missing Parts</option>
+                <select id="returnOptions"  name="returnOpt">
+                    <option value="0" disabled>Select Return Option:</option>
+                    @{
+                        int returncount = 1;
+                        foreach (var returnOption in ViewBag.ReturnOptions)
+                        {
+                            <option  value="@returncount">@returnOption.Description</option>
+                            returncount++;
+                        }
+                    }
+
                 </select>
+                <input type="text" id="returnOptionText" name="returnOther" style="display:none;" />
             </div>
         </div>
         <!--Clears selected option-->
-        <button>Clear</button>
+        <a class="waves-effect btn blue darken-2" id="clearReturn">
+            Clear
+        </a>
         <!--Allows user to enter an option manually-->
-        <button>Other</button>
+        <a class="waves-effect btn blue darken-2" id="otherReturn">
+            Other
+        </a>
         <br />
 
         <!--Parts Tech Option, N/A if does not exist-->
-        <label>Tech Options: </label>
+        <label for="techOptions">Tech Options: </label>
         <div class="row">
             <div class="input-field col s3">
+                <select id="techOptions" name="techOpt">
+                    <option value="0" disabled>Select Tech Option:</option>
+                    @{
+                        int techcount = 1;
+                        foreach (var techOption in ViewBag.TechOptions)
+                        {
+                            <option value="@techcount">@techOption.Description</option>
+                            techcount++;
+                        }
+                    }
 
-                <select>
-                    <option>Tech 1</option>
-                    <option>Tech 2</option>
                 </select>
+                @*    <label for="techOptionText">Other Tech: </label> *@
+                <input type="text" id="techOptionText" name="techOther" style="display:none;" />
             </div>
         </div>
         <!--Clears selected option-->
-        <button>Clear</button>
+        <a class="waves-effect btn blue darken-2" id="clearTech">
+            Clear
+        </a>
         <!--Allows user to enter an option manually-->
-        <button>Other</button>
+        <a class="waves-effect btn blue darken-2" id="otherTech">
+            Other
+        </a>
         <br />
 
         <!--Resets form back to original state-->
-        <button>Reset</button>
+        <a class="waves-effect btn blue darken-2" id="resetForm">
+            Reset
+        </a>
         <!--Loads scanner page, allows user to rescan-->
-        <button>Scan New</button>
+        <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="Scanner">New Scan</a>
         <br />
         <!--Submits changes to database-->
-        <button>Submit</button>
+        <button class="waves-effect btn blue darken-2" type="submit">Submit</button>
     </form>
 
 
     <script src="~/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('select');
-            var instances = M.FormSelect.init(elems);
-        });
-    </script>
+    <script src="~/js/partForm.js"></script>
 </body>
