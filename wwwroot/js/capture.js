@@ -1,61 +1,63 @@
 ﻿// Use Html5QrcodeScanner
-import { Html5QrcodeScanner } from "html5-qrcode";
 import { Html5Qrcode } from "html5-qrcode";
 
-(() => {
 
-    let width = 320;    // We will scale the photo width to this
-    let height = 0;     // This will be computed based on the input stream
-
-    let streaming = false; //If streaming or not
-
+document.addEventListener('DOMContentLoaded', function () {
+    var selectedSide = "back";
    
-    let startbutton = null; //used to capture image
+    var cameraselect = document.getElementById('cameraSelect');
 
-    let resulttext = null;
+    // This method will trigger user permissions
+    Html5Qrcode.getCameras().then(devices => {
+        /**
+         * devices would be an array of objects of type:
+         * { id: "id", label: "label" }
+         */
+        // Clear the select element first
+        cameraselect.innerHTML = '';
 
-    let scanbutton = null;
-    let newstream = null;
+        // Iterate over the devices array
+        devices.forEach(device => {
+            // Create an option element
+            var option = document.createElement('option');
+            option.value = device.id;
+            option.text = device.label;
 
-    let selectedDeviceId;
-
-
-    //Gets camera premision and sets initial states.
-    function startup() {
-
+            // Append the option to the select element
+            cameraselect.appendChild(option);
+        });
+        
        
-        startbutton = document.getElementById('startbutton');
-        scanbutton = document.getElementById('startScan');
-        resulttext = document.getElementById('resultText')
-     
-    }
+        
+    }).catch(err => {
+        // handle err
+    });
 
 
 
-  
-    function onScanSuccess(decodedText, decodedResult) {
-        // handle the scanned code as you likee:
+    const html5QrCode = new Html5Qrcode("reader");
+    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        /* handle success */
+    };
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-        document.getElementById('resultText').textContent = `${decodedText}`, decodedResult;
-        console.log(`${decodedText}`, decodedResult);
-    }
+    document.getElementById('switchCamera').addEventListener('click', (event) => {
+        if (selectedSide === "back") {
+            // Select front camera or fail with `OverconstrainedError`.
+            html5QrCode.start({ facingMode: { exact: "user" } }, config, qrCodeSuccessCallback);
+            selectedSide = "front";
+        }
+        else {
+            // Select back camera or fail with `OverconstrainedError`.
+            html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
+            selectedSide = "back";
+        }
 
-    function onScanFailure(error) {
-        // handle scan failure, usually better to ignore and keep scanning.
-        // for example:
-       // console.warn(`Code scan error = ${error}`);
-    }
+    });
 
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: { width: 350, height: 350 } },
-  /* verbose= */ false);
-
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      
     
 
-
-    // Set up  event listener to run the startup process
-    // once loading is complete.
-    window.addEventListener("load", startup, false);
-})();
+ 
+    
+});

@@ -29,20 +29,22 @@
         var ScannedPartTechOption = "@ViewBag.ScannedPart.TechOption"</script>
 
     <!-- Admin Modal Trigger -->
-    <button data-target="modal1" class="btn modal-trigger">Admin</button>
+    <button data-target="AdminDialog" class="btn modal-trigger">Admin</button>
+    <h3>@ViewBag.UploadStatus</h3>
 
     <!-- Admin Modal Structure TODO: Add password function to dialog -->
-    <div id="modal1" class="modal">
+    <div id="AdminDialog" class="modal">
         <div>
             <label>Enter Passcode: </label>
-            <textarea> </textarea>
+            <input type="text" id="enteredPasscode"/>
             <button class="modal-close">Cancel</button>
-            <button class="modal-close">Enter</button>
+            <button id="enterPasscode" class="modal-close">Enter</button>
         </div>
     </div>
 
     <!--Takes part returned from DB and fills form-->
     <form asp-action="UploadPart" asp-controller="Scanner" method="post">
+        <input type="hidden" name="PartId" value="@ViewBag.ScannedPart.PartId" />
         <div class="row">
             <div class="input-field col s3">
                 <!--Parts Item Number-->
@@ -77,19 +79,20 @@
         <label for="returnOptions">Return Options: </label>
         <div class="row">
             <div class="input-field col s3">
-                <select id="returnOptions"  name="returnOpt">
+                <select id="returnOptions">
                     <option value="0" disabled>Select Return Option:</option>
                     @{
                         int returncount = 1;
                         foreach (var returnOption in ViewBag.ReturnOptions)
                         {
-                            <option  value="@returncount">@returnOption.Description</option>
+                            <option value="@returnOption.Description">@returnOption.Description</option>
                             returncount++;
                         }
                     }
-
                 </select>
+                <input type="hidden" id="hiddenReturnOpt" name="ReturnOption" />
                 <input type="text" id="returnOptionText" name="returnOther" style="display:none;" />
+               
             </div>
         </div>
         <!--Clears selected option-->
@@ -106,19 +109,19 @@
         <label for="techOptions">Tech Options: </label>
         <div class="row">
             <div class="input-field col s3">
-                <select id="techOptions" name="techOpt">
+                <select id="techOptions">
                     <option value="0" disabled>Select Tech Option:</option>
                     @{
                         int techcount = 1;
                         foreach (var techOption in ViewBag.TechOptions)
                         {
-                            <option value="@techcount">@techOption.Description</option>
+                            <option value="@techOption.Description">@techOption.Description</option>
                             techcount++;
                         }
                     }
 
                 </select>
-                @*    <label for="techOptionText">Other Tech: </label> *@
+                <input type="hidden" id="hiddenTechOpt" name="TechOption"/>
                 <input type="text" id="techOptionText" name="techOther" style="display:none;" />
             </div>
         </div>
@@ -132,18 +135,32 @@
         </a>
         <br />
 
-        <!--Resets form back to original state-->
-        <a class="waves-effect btn blue darken-2" id="resetForm">
-            Reset
-        </a>
-        <!--Loads scanner page, allows user to rescan-->
-        <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="Scanner">New Scan</a>
-        <br />
+   
+        
         <!--Submits changes to database-->
-        <button class="waves-effect btn blue darken-2" type="submit">Submit</button>
+        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
     </form>
 
+    <!--Loads scanner page, allows user to rescan-->
+    <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="Scanner">New Scan</a>
+    <br />
+
+    <!--Resets form back to original state-->
+    <a class="waves-effect btn blue darken-2" id="resetForm">
+        Reset
+    </a>
+   
 
     <script src="~/js/materialize.min.js"></script>
     <script src="~/js/partForm.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems);
+        });
+    </script>
+  
+
 </body>

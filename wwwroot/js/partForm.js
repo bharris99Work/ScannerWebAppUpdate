@@ -2,6 +2,9 @@
     var elems = document.querySelectorAll('select');
     var instances = M.FormSelect.init(elems);
 
+    var enterpasscode = document.getElementById('enterPasscode');
+    var enteredpasscode = document.getElementById('enteredPasscode');
+
     var partnumber = document.getElementById('partNumber');
     var jobnumber = document.getElementById('jobNumber');
     var partquantity = document.getElementById('partQuantity');
@@ -20,12 +23,43 @@
     var techothertext = document.getElementById('techOptionText');
     var returnothertext = document.getElementById('returnOptionText');
 
+    var submitbn = document.getElementById('submit');
+
+    var reset = document.getElementById('resetForm');
+
+    var passcode = "1234";
+
 
     returnselect.value = '0';
     techselect.value = '0';
 
-    partnumber.setAttribute('readonly', true);
-    jobnumber.setAttribute('readonly', true);
+    partnumber.readOnly = true;
+    jobnumber.readOnly =true;
+
+
+    enterpasscode.addEventListener('click', (event) => {
+
+        if (enteredpasscode.value === passcode) {
+            //Unlock
+            //Item Number
+            //Job Number
+            //????
+            partnumber.readOnly = false;
+            jobnumber.readOnly = false;
+
+            console.log("Password Correct")
+        }
+        else {
+            console.log("Wrong Passcode Entered");
+        }
+
+
+    });
+
+    //Resets window
+    reset.addEventListener('click', function () {
+        window.location.reload();
+    });
 
 
     //Subtract and add to Quantity buttons
@@ -100,6 +134,40 @@
         returnothertext.style.display = 'none';
         returnothertext.value = '';
     });
+
+    submitbn.addEventListener('click', (event) => {
+        //Checks selected tech option of scanned part and either selects it or displays string.
+        var techinstance = M.FormSelect.getInstance(techselect).input.value;
+        var hiddentTech = document.getElementById('hiddenTechOpt');
+
+        var defaultTechString = "Select Tech Option:";
+        var defaultReturnString = "Select Return Option:";
+
+        if (techinstance.trim() === defaultTechString.trim()) {
+            hiddentTech = "";
+        }
+        else {
+            hiddentTech.value = techinstance;
+        }
+    
+        console.log("Succesfully updated value to: " + hiddentTech.value);
+
+        //Checks selected tech option of scanned part and either selects it or displays string.
+        var returninstance = M.FormSelect.getInstance(returnselect).input.value;
+        var hiddenreturn = document.getElementById('hiddenReturnOpt');
+
+        if (returninstance.trim() === defaultReturnString.trim()) {
+            hiddenreturn.value = "";
+        }
+        else {
+            hiddenreturn.value = returninstance;
+        }
+       
+        console.log("Succesfully updated value to: " + hiddenreturn.value);
+
+
+    });
+
 
 
     //Checks selected tech option of scanned part and either selects it or displays string.

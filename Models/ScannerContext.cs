@@ -26,7 +26,7 @@ namespace ScannerWebAppUpdate.Models
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
 
-        public void AddPart(Part part)
+        public bool AddPart(Part part)
         {
             try
             {
@@ -35,67 +35,83 @@ namespace ScannerWebAppUpdate.Models
                 {
                     Parts.Add(part);
                     SaveChanges();
+                    return true;
                 }
+                return false;
 
             }
             catch (Exception ex) 
             {
                 Console.WriteLine(ex.ToString());
-            
+                return false;
             }
 
         }
 
-        public void AddPartsList(ObservableCollection<Part> parts) 
+        public bool AddPartsList(ObservableCollection<Part> parts) 
         {
             try
             {
                 foreach (Part part in parts)
                 {
-                    AddPart(part);
+                    if (!AddPart(part))
+                    {
+                        return false;
+                    }
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                return false;
             }
         }
 
 
 
-        public void AddTechList(ObservableCollection<TechOption> TestTechOptions)
+        public bool AddTechList(ObservableCollection<TechOption> TestTechOptions)
         {
             try
             {
                 foreach (TechOption tech in TestTechOptions)
                 {
-                    AddTech(tech);
+                    if (!AddTech(tech)){
+                        return false;
+                    }
+                      
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                return false;
             }
 
         }
 
-        public void AddReturnList(ObservableCollection<ReturnOption> TestReturnOptions)
+        public bool AddReturnList(ObservableCollection<ReturnOption> TestReturnOptions)
         {
             try
             {
                 foreach (ReturnOption returnOption in TestReturnOptions)
                 {
-                    AddReturn(returnOption);
+                    if (!AddReturn(returnOption)){
+                        return false;
+                    }
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                return false;
             }
 
         }
 
-        public void AddTech(TechOption techOption)
+        public bool AddTech(TechOption techOption)
         {
             try
             {
@@ -104,18 +120,24 @@ namespace ScannerWebAppUpdate.Models
                 {
                     TechOptions.Add(techOption);
                     SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                return false;
 
             }
 
         }
 
-        public void AddReturn(ReturnOption returnOption)
+        public bool AddReturn(ReturnOption returnOption)
         {
             try
             {
@@ -124,16 +146,51 @@ namespace ScannerWebAppUpdate.Models
                 {
                     ReturnOptions.Add(returnOption);
                     SaveChanges();
+                    return true;
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+
+            }
+
+
+        }
+
+        public bool UpdatePart(Part newPart)
+        {
+            try
+            {
+                var part = Parts.FirstOrDefault(p => p.PartId == newPart.PartId);
+
+                if (part != null)
+                {
+                    Part foundPart = part;
+
+                    foundPart.ItemNumber = newPart.ItemNumber;
+                    foundPart.JobNumber = newPart.JobNumber;
+                    foundPart.Quantity = newPart.Quantity;
+                    foundPart.TechOption = newPart.TechOption;
+                    foundPart.ReturnOption = newPart.ReturnOption;
+                    SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    Console.Write("Part not found");
+                    return false;
                 }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-
+                return false;
             }
-
-
         }
     }
 }

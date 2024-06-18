@@ -1,24 +1,71 @@
-﻿<h1>This is Settings Menu</h1>
+﻿<h1>Settings</h1>
+<h3>@ViewBag.UploadStatus</h3>
 
-<button>Add Tech Option</button>
-<br />
-<button>Add Return Option</button>
-<br />
-<label>Database Used: </label>
-<select>
-    <option>Test Site</option>
-    <option>Main Site</option>
-    <option>Local Site</option>
-    <option>Local Storage</option>
-</select>
-<br />
-<label>Change Save Location: </label>
-<textarea>c:/user/documents/scannedparts.excel</textarea>
-<br />
-<button>Save Settings</button>
 
-<a type="button" asp-action="uploadTestTechs" asp-controller="Settings">Seed Test Tech Options</a>
+<!-- Add Tech Modal Trigger & Modal -->
+<button data-target="AddTech" class="btn modal-trigger">Add Tech Option: </button>
+<div id="AddTech" class="modal">
+    <div>
+        <form asp-action="UploadTech" asp-controller="Settings" method="post">
+            <label>Enter Tech Option: </label>
+            <textarea name="techDescription"></textarea>
+            
+            <!--Submits changes to database-->
+            <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+        </form>
+        <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+    </div>
+</div>
 
-<a type="button" asp-action="uploadTestReturns" asp-controller="Settings">Seed Test Return Options</a>
+<!-- Add Return Modal Trigger & Modal -->
+<button data-target="AddReturn" class="btn modal-trigger">Add Return Option: </button>
+<div id="AddReturn" class="modal">
+    <div>
+        <form asp-action="UploadReturn" asp-controller="Settings" method="post">
+            <label>Enter Return Option: </label>
+            <textarea name="returnDescription"></textarea>
+           
+            <!--Submits changes to database-->
+            <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+        </form>
+        <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+    </div>
+</div>
 
-<a type="button" asp-action="uploadTestParts" asp-controller="Settings">Seed Test Parts</a>
+<!--Select Server to save and retrieve info from-->
+<div class="row">
+
+    <label>Database Used: </label>
+    <select>
+        <option>Test Site</option>
+        <option>Main Site</option>
+        <option>Local Site</option>
+        <option>Local Storage</option>
+    </select>
+</div>
+
+<!--Save location of excel sheet with part update history-->
+<div class="row">
+    <label>Change Excel Save Location: </label>
+    <textarea>c:/user/documents/scannedparts.excel</textarea>
+    <button class="waves-effect btn blue darken-2">Save Settings</button>
+</div>
+
+<!--TESTING Seeding buttons. TODO: REMOVE DURING PRODUCTION-->
+<div class="row">
+    <a type="button" asp-action="uploadTestTechs" asp-controller="Settings">Seed Test Tech Options</a>
+
+    <a type="button" asp-action="uploadTestReturns" asp-controller="Settings">Seed Test Return Options</a>
+
+    <a type="button" asp-action="uploadTestParts" asp-controller="Settings">Seed Test Parts</a>
+</div>
+
+
+
+<script src="~/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+    });
+</script>

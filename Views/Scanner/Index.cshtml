@@ -1,4 +1,5 @@
-﻿<style>
+﻿@* 
+<style>
 
     .text-btn-container{
         display: grid;
@@ -46,15 +47,33 @@
     .hidden {
         display: none;
     }
-</style>
+</style> *@
 
 <h1>Scanning For Part</h1>
 
-<!-- Webpack bundle of scripts-->
-<script src="~/dist/bundle.js" defer></script>
 
-<!--Pre Made Reader-->
-@* <div id="reader" width="600px"></div> *@
+
+<div class="row">
+    <!--Pre Made Reader-->
+    <div id="reader" width="600px">
+        <button id="switchCamera">Switch</button>
+    </div>
+    <br />
+    <button id="startScan">Start Scan</button>
+    <button id="stopScan">Stop Scan</button>
+    <div class="row">
+        <div class="input-field col s3">
+            <select id="cameraSelect">
+            </select>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
 
 <!--Form containing scanned part number-->
 <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
@@ -62,7 +81,7 @@
     <div class="text-btn-container">
         <div class="input-field">
             <!--Scanned or Entered Part (TODO: Make read only unless manual entry was selected)-->
-            <textarea id="resultText" readonly name="scannedPart" class="center-align ">PartNoReturn</textarea>
+            <textarea id="resultText" readonly name="scannedPart" class="center-align">...Scan Part...</textarea>
         </div>
 
         <div class="btn-container">
@@ -85,11 +104,14 @@
             <i class="material-icons right">send</i>
         </button>
     </div>
+
+    <h3>@ViewBag.PartFound</h3>
 </form>
 
 <!--Seeds DB with test parts (REMOVE DURING PRODUCTION)-->
 @* <a class="hidden waves-effect blue darken-2 btn " asp-area="" asp-controller="Scanner" asp-action="BeginSeeding"><i class="material-icons left">qr_code_scanner</i>Seed DB</a> *@
 
+<script src="~/js/materialize.min.js"></script>
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -116,4 +138,14 @@
 
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+</script>
+
+<!-- Webpack bundle of scripts-->
+<script src="~/dist/bundle.js" defer></script>
 

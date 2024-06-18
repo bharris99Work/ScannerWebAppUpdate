@@ -24,30 +24,35 @@ namespace ScannerWebAppUpdate.Controllers
             ReturnOptionsList = _context.ReturnOptions.Local.ToObservableCollection();
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string result)
         {
+           ViewBag.PartFound = result;
             return View();
         }
 
-  
+     
+
+
         [HttpPost]
         public IActionResult ProcessScannedPart(string scannedPart)
         {
-            foreach(var part in PartsList)
+            foreach (var part in PartsList)
             {
-                if(part.ItemNumber == scannedPart)
+                if (part.ItemNumber == scannedPart)
                 {
                     return RedirectToAction("ScannedPart", part);
                 }
             }
-            return RedirectToAction("Index");
+            string newresult = "Part Not Found";
+            return RedirectToAction("Index", new { result = newresult });
         }
 
-        public IActionResult ScannedPart(Part scannedPart)
+        public IActionResult ScannedPart(Part scannedPart, string uploadStat)
         {
             ViewBag.ScannedPart = scannedPart;
             ViewBag.ReturnOptions = ReturnOptionsList;
             ViewBag.TechOptions = TechOptionsList;
+            ViewBag.UploadStatus = uploadStat;
             return View();
         }
 
@@ -64,10 +69,61 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadPart(Part newPart, ReturnOption returnOpt, TechOption techOpt, string returnOther, string techOther) {
-            Console.Write("This is new part");
+        public IActionResult UploadPart(Part newPart, string returnOther, string techOther)
+        {
+            //Other string and no option selected
+            if (techOther != null && techOther.Length > 0) {
+                newPart.TechOption = techOther;
+                Console.WriteLine("Tech Other string was selected");
+            
+            }
+            //Option selected, no other string
+            else if (newPart.TechOption != null && newPart.TechOption.Length > 0) {
 
-            return RedirectToAction("Index");
+                Console.WriteLine("Tech Option was selected");
+
+            }
+            //No Option selected
+            else {
+                newPart.TechOption = "";
+                Console.WriteLine("No Option was selected");
+            }
+
+
+
+            //Other string and no option selected
+            if (returnOther != null && returnOther.Length > 0) {
+
+                newPart.ReturnOption = returnOther;
+                Console.WriteLine("Return Other string was selected");
+
+            }
+            //Option selected, no other string
+            else if (newPart.ReturnOption != null && newPart.ReturnOption.Length > 0) {
+
+                Console.WriteLine("Return Option was selected");
+            }
+            //No Option selected
+            else {
+                newPart.ReturnOption = "";
+                Console.WriteLine("No Option was selected");
+
+            }
+
+            string uploadStatus = "";
+            bool uploaded = _context.UpdatePart(newPart);
+            if (uploaded)
+            {
+                //Display update succesful message
+                uploadStatus = "Update Succesful";
+            }
+            else
+            {
+                //Display update failed
+                uploadStatus = "Update Failed";
+            }
+
+            return RedirectToAction("ScannedPart",new { uploadStat = uploadStatus } );
         }
     }
 }

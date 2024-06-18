@@ -17,9 +17,21 @@
             <textarea id="searchedJob"></textarea>
         </div>
     </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <!--Search for part via Part Number-->
+            <label for="partDesc">Part Description: </label>
+            <textarea id="partDesc"></textarea>
+        </div>
+        <div class="input-field col s12">
+            <!--Search for part via Part Number-->
+            <label for="partMan">Part Manufacturer </label>
+            <textarea id="partMan"></textarea>
+        </div>
+    </div>
 </form>
 <!--Searches database with entered information-->
-<button>Search</button>
+<button class="waves-effect btn blue darken-2">Search</button>
 
 <!--Table featuring parts that where returned from search-->
 <table class="striped highlight responsive-table" >
@@ -52,7 +64,7 @@
                         <input type="hidden" name="ReturnOption" value="@part.ReturnOption" />
                         <input type="hidden" name="TechOption" value="@part.TechOption" />
                         <!--Creates an QR code based off part attached-->
-                        <button type="submit">Create</button>
+                        <button class="waves-effect btn blue darken-2" type="submit">Create</button>
                     </form>
                 </td>
             </tr>
