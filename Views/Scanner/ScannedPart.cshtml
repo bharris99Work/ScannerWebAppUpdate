@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/css/materialize.min.css">
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
 </head>
 
 <style>
@@ -16,6 +18,14 @@
 
     .input-field label {
         font-size: 20px;
+    }
+
+    .submitbtn-container{
+
+    }
+
+    .changebn-container{
+
     }
 
 </style>
@@ -29,7 +39,7 @@
         var ScannedPartTechOption = "@ViewBag.ScannedPart.TechOption"</script>
 
     <!-- Admin Modal Trigger -->
-    <button data-target="AdminDialog" class="btn modal-trigger">Admin</button>
+    <button data-target="AdminDialog" class="btn modal-trigger"><i class="material-icons">lock_open</i></button>
     <h3>@ViewBag.UploadStatus</h3>
 
     <!-- Admin Modal Structure TODO: Add password function to dialog -->
@@ -136,20 +146,28 @@
         <br />
 
    
-        
-        <!--Submits changes to database-->
-        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+        <div class="submitbtn-container">
+            <!--Submits changes to database-->
+            <button class="btn waves-effect blue darken-2" type="submit" name="action">
+                Submit
+                <i class="material-icons right">send</i>
+            </button>
+        </div>
+    
     </form>
 
-    <!--Loads scanner page, allows user to rescan-->
-    <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="Scanner">New Scan</a>
-    <br />
+    <div class="changebn-container">
+        <!--Allows user to rescan-->
+        <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
+        <br />
 
-    <!--Resets form back to original state-->
-    <a class="waves-effect btn blue darken-2" id="resetForm">
-        Reset
-    </a>
-   
+        <!--Resets form back to original state-->
+        <a class="waves-effect btn blue darken-2" id="resetForm">
+            Reset
+        </a>
+    </div>
+
+
 
     <script src="~/js/materialize.min.js"></script>
     <script src="~/js/partForm.js"></script>

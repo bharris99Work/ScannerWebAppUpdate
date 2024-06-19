@@ -1,6 +1,6 @@
 ﻿<head>
-    <style>
 
+    <style>
         .text-btn-container {
             display: grid;
             grid-template-columns: auto 50px; /* Adjust the width of the button container as needed */
@@ -54,11 +54,10 @@
         }
 
         .modal-content {
-            position: relative;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+            background-color: #f0f0f0; /* Set your desired background color */
+            padding: 20px; /* Optional: Add padding to the modal content */
+            max-height: calc(100vh - 120px); /* Adjust max-height based on your needs */
+            overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
         }
 
         .reader-container {
@@ -76,17 +75,10 @@
             height: 100%;
         }
 
-        @@media (max-width: 600px) {
-        .reader-container {
-            width: 100%;
-            height: calc(100% - 60px); /* Adjust height to account for button overlay */
-        }
-
-        .btn-scanning {
-            bottom: 10px; /* Adjust positioning if necessary */
-        }
-    }
+       
+    
     </style>
+
 </head>
 
 
@@ -96,63 +88,69 @@
 <!-- Scaan Modal Structure TODO: Add password function to dialog -->
 <div id="ScanDialog" class="modal">
     <div class="modal-content">
-        <!--Pre Made Reader-->
+        <!--QR Code Reader-->
         <div class="reader-container">
             <div id="reader"></div>
         </div>
         <div class="btn-scanning">
-            <button class="btn-floating btn-small waves-effect blue darken-2" id="startScan"><i class="material-icons">play_arrow</i>Start Scan</button>
-            <button class="btn-floating btn-small waves-effect blue darken-2" id="stopScan"><i class="material-icons">pause</i>Pause Scan</button>
+            @* <button class="btn-floating btn-small waves-effect blue darken-2" id="startScan"><i class="material-icons">play_arrow</i>Start Scan</button> *@
+            @* <button class="btn-floating btn-small waves-effect blue darken-2" id="stopScan"><i class="material-icons">pause</i>Pause Scan</button> *@
             <button class="btn-floating btn-small waves-effect blue darken-2" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
         </div>
     </div>
 </div>
-<h3>@ViewBag.PartFound</h3>
 
-<h1>Scanning For Part</h1>
+<body class="testbody">
+    <!--Returns status of searched part-->
+    <h3>@ViewBag.PartFound</h3>
 
-<div class="row">
+    <h1>Scan For Part,</h1>
+
+    <!--Allows User to manually select from a list of avalible camera devices-->
     <div class="row">
-        @*  <div class="input-field col s3">
-        <select class="browser-default" id="cameraSelect">
-        </select>
-        </div> *@
-    </div>
-</div>
-
-
-<!--Form containing scanned part number-->
-<form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
-
-    <div class="text-btn-container">
-        <div class="input-field">
-            <!--Scanned or Entered Part (TODO: Make read only unless manual entry was selected)-->
-            <textarea id="resultText" readonly name="scannedPart" class="center-align">...Scan Part...</textarea>
-        </div>
-
-        <div class="btn-container">
-            <!--Edit and Manually enter item number-->
-            <a id="edit" class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">create</i></a>
-            <!--Shuffle and select an item at random from avalible parts (REMOVE DURING  PRODUCTION)-->
-            <a id="shuffle" class="btn-floating btn-small waves-effect blue darken-2" asp-area="" asp-controller="Scanner" asp-action="LoadRandomPart"><i class="material-icons">shuffle</i></a>
-            <!--Clear the item number that has been scanned or entered-->
-            <a id="clear" class="btn-floating btn-small waves-effect"><i class="material-icons">clear</i></a>
+        <div class="row">
+            @*  <div class="input-field col s3">
+            <select class="browser-default" id="cameraSelect">
+            </select>
+            </div> *@
         </div>
     </div>
 
 
-    <div class="btn-scanning center-align">
-        <!--Allows user to rescan-->
-        <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
-        <!--Searches for part in DB-->
-        <button class="btn waves-effect blue darken-2" type="submit" name="action">
-            Submit
-            <i class="material-icons right">send</i>
-        </button>
-    </div>
+    <!--Form containing scanned part number-->
+    <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
+
+        <div class="text-btn-container">
+            <div class="input-field">
+                <!--Displays scanned part number-->
+                <textarea id="resultText" readonly name="scannedPart" class="center-align">...Scan Part...</textarea>
+            </div>
+
+            <div class="btn-container">
+                <!--Edit and Manually enter item number-->
+                <a id="edit" class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">create</i></a>
+                <!--Shuffle and select an item at random from avalible parts (REMOVE DURING  PRODUCTION)-->
+                <a id="shuffle" class="btn-floating btn-small waves-effect blue darken-2" asp-area="" asp-controller="Scanner" asp-action="LoadRandomPart"><i class="material-icons">shuffle</i></a>
+                <!--Clear the item number that has been scanned or entered-->
+                <a id="clear" class="btn-floating btn-small waves-effect"><i class="material-icons">clear</i></a>
+            </div>
+        </div>
 
 
-</form>
+        <div class="btn-scanning center-align">
+            <!--Allows user to rescan-->
+            <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
+            <!--Searches for part in DB-->
+            <button class="btn waves-effect blue darken-2" type="submit" name="action">
+                Submit
+                <i class="material-icons right">send</i>
+            </button>
+        </div>
+
+
+    </form>
+
+</body>
 
 <!--Seeds DB with test parts (REMOVE DURING PRODUCTION)-->
 @* <a class="hidden waves-effect blue darken-2 btn " asp-area="" asp-controller="Scanner" asp-action="BeginSeeding"><i class="material-icons left">qr_code_scanner</i>Seed DB</a> *@
