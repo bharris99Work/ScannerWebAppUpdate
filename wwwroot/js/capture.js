@@ -3,9 +3,29 @@ import { Html5Qrcode } from "html5-qrcode";
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    var selectedSide = "back";
+    var back = true;
+
    
-    var cameraselect = document.getElementById('cameraSelect');
+   
+    //var cameraselect = document.getElementById('cameraSelect');
+    var switchcamera = document.getElementById('switchCamera');
+    var scanstart = document.getElementById('startScan');
+    var scanstop = document.getElementById('stopScan');
+    var resultext = document.getElementById('resultText');
+
+    var scanning = false;
+    var availabledevices;
+    var cameraid;
+   
+
+
+    switchcamera.style.display = 'none';
+
+    var elems = document.querySelectorAll('.modal');
+    const options = { onCloseEnd: stopCamera };
+    var instances = M.Modal.init(elems, options);
+
+
 
     // This method will trigger user permissions
     Html5Qrcode.getCameras().then(devices => {
@@ -14,47 +34,167 @@ document.addEventListener('DOMContentLoaded', function () {
          * { id: "id", label: "label" }
          */
         // Clear the select element first
-        cameraselect.innerHTML = '';
+       // cameraselect.innerHTML = '';
+
+        // Check if labels are present and distinguishable
+        const frontCameraLabels = ["front", "selfie"];
+        const backCameraLabels = ["back", "rear", "environment"];
+
 
         // Iterate over the devices array
-        devices.forEach(device => {
-            // Create an option element
-            var option = document.createElement('option');
-            option.value = device.id;
-            option.text = device.label;
+        //devices.forEach(device => {
+            //// Create an option element
+            //var option = document.createElement('option');
+            //option.value = device.id;
+            //option.text = device.label || `Camera ${device.id}`;
 
-            // Append the option to the select element
-            cameraselect.appendChild(option);
-        });
-        
+            //// Add additional labeling to help distinguish cameras
+            //if (frontCameraLabels.some(label => device.label.toLowerCase().includes(label))) {
+            //    option.text = `Front Camera (${device.label})`;
+            //} else if (backCameraLabels.some(label => device.label.toLowerCase().includes(label))) {
+            //    option.text = `Back Camera (${device.label})`;
+            //}
+
+            //// Append the option to the select element
+            //cameraselect.appendChild(option);
+        //});
+
+        availabledevices = devices;
+        cameraid = availabledevices[0].id
+        if (availabledevices.length > 1) {
+            //Display switch button
+            switchcamera.style.display = 'block';
+            // Select back camera or fail with `OverconstrainedError`.
+            html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
+            back = true;
+            scanning = true;
+        }
+        else {
+            html5QrCode.start(cameraid, config, qrCodeSuccessCallback);
+            scanning = true;
+        }
+
        
-        
+
+
+
     }).catch(err => {
         // handle err
     });
 
 
+    var scanmodal = document.getElementById('ScanDialog');
+    var scanmodalinst = M.Modal.getInstance(scanmodal);
+
+    scanmodalinst.open();
+  
+
 
     const html5QrCode = new Html5Qrcode("reader");
     const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         /* handle success */
-    };
-    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-    document.getElementById('switchCamera').addEventListener('click', (event) => {
-        if (selectedSide === "back") {
-            // Select front camera or fail with `OverconstrainedError`.
-            html5QrCode.start({ facingMode: { exact: "user" } }, config, qrCodeSuccessCallback);
-            selectedSide = "front";
+        //If Value is not null or empty
+        if (decodedText != "" && decodedText != null) {
+            resultext.value = decodedText;
+
+            //Hide dialog
+            scanmodalinst.close();
+        }
+    };
+    const config = { fps: 10, showTorchButtonIfSupported: true, qrbox: { width: 300, height: 300 } };
+
+    switchcamera.addEventListener('click', function() {
+        if (back) {
+            if (scanning) {
+                html5QrCode.stop().then((ignore) => {
+                    // QR Code scanning is stopped.
+                    scanning = false;
+                    //started again
+                    html5QrCode.start({ facingMode: { exact: "user" } }, config, qrCodeSuccessCallback);
+                    back = false;
+                    scanning = true;
+                }).catch((err) => {
+                    // Stop failed, handle it.
+                });
+            }
+            else {
+                // Select front camera or fail with `OverconstrainedError`.
+                html5QrCode.start({ facingMode: { exact: "user" } }, config, qrCodeSuccessCallback);
+                back = false;
+                scanning = true;
+            }
+            //cameraid = 'facingMode: { exact: "user" }';
+        }
+        else {
+            if (scanning) {
+                html5QrCode.stop().then((ignore) => {
+                    // QR Code scanning is stopped.
+                    scanning = false;
+                    //Started again
+                    html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
+                    back = true;
+                    scanning = true;
+                }).catch((err) => {
+                    // Stop failed, handle it.
+                });
+            }
+            else {
+                // Select back camera or fail with `OverconstrainedError`.
+                html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
+                back = true;
+                scanning = true;
+            }
+            //cameraid = 'facingMode: { exact: "environment" }';
+        }
+    });
+
+    scanstart.addEventListener('click', (event) => {
+        if (scanning) {
+            html5QrCode.stop().then((ignore) => {
+                // QR Code scanning is stopped.
+                // Select back camera or fail with `OverconstrainedError`.
+                html5QrCode.start(cameraid, config, qrCodeSuccessCallback);
+            }).catch((err) => {
+                // Stop failed, handle it.
+            });
+
+            scanning = true;
+
         }
         else {
             // Select back camera or fail with `OverconstrainedError`.
-            html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
-            selectedSide = "back";
+            html5QrCode.start(cameraid, config, qrCodeSuccessCallback);
+            scanning = true;
         }
-
+       
     });
 
+    scanstop.addEventListener('click', function () {
+        stopCamera();
+    });
+
+
+    function stopCamera() {
+
+        if (scanning) {
+            html5QrCode.stop().then((ignore) => {
+                // QR Code scanning is stopped.
+            }).catch((err) => {
+                // Stop failed, handle it.
+            });
+            scanning = false;
+        }
+        else
+            console.log("Not Scanning");
+       
+    }
+
+
+
+   
+
+ 
       
     
 
