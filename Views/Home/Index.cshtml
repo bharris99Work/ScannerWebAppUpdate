@@ -1,67 +1,91 @@
-﻿<style>
-    .flex-container {
+﻿
+<style>
+    .card-container {
         display: flex;
         justify-content: center;
         flex-direction: row;
         flex-wrap: wrap;
     }
 
-    .card {
+    .card-wrapper {
         flex: 1 1 300px; /* Equal width, but can grow and shrink */
         margin: 10px;
+        display: flex;
+        flex-direction: column;
     }
 
-    .btn-large {
-        margin: 5px;
+    .card {
+        flex: 1 1 auto; /* Allow the card to stretch to fill the height */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-content {
+        flex-grow: 1; /* Make the content take up the remaining space */
     }
 </style>
 
-<!--A Sample dashboard with sample data-->
-<h1>Dashboard:</h1>
+<!--Page Header-->
+<div class="row center-align valign-wrapper">
+    <div class="s12">
+        <!--A Sample dashboard with sample data-->
+        <h2>Dashboard:</h2>
+    </div>
+</div>
 
 
-<div class="flex-container center-align">
-    <div class="card">
-        <div class="card-content">
-            <!--Contains test Scan History-->
-            <span class="card-title">Scan History:</span>
-            <ul>
-                <li>Part: 122, Returned, Modifed: 12/4/12</li>
-                <li>Part: 2277, TechOption, Modifed: 12/4/12</li>
-                <li>Part: 22222, TechOption, Modifed: 12/4/12</li>
-            </ul>
+<!--Row of Cards-->
+<div class="card-container">
+    <div class="card-wrapper">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">Scan History:</span>
+                <ul>
+                    <li>Part: TestPart1, Status: Returned, Modified: 12/4/23</li>
+                    <li>Part: TestPart2, Status: Used, Modified: 12/1/23</li>
+                    <li>Part: TestPart3, Status: Used, Modified: 11/6/23</li>
+                    <li>Part: TestPart4, Status: Returned, Modified: 8/2/23</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-content">
-            <!--Contains test Job History-->
-            <span class="card-title"> Recently Viewed Jobs:</span>
-            <ul>
-                <li>Job: 1, Parts: 56, Date: 2/4/25</li>
-                <li>Job 2, Parts: 12, Date: 3/8/25</li>
-                <li>Job 3, Parts: 4, Date: 5/6/25</li>
-            </ul>
+    <div class="card-wrapper">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">Recently Viewed Jobs:</span>
+                <ul>
+                    <li>Job Number: TestJob1, Parts: 12</li>
+                    <li>Job Number: TestJob2, Parts: 4</li>
+                    <li>Job Number: TestJob3, Parts: 7</li>
+                    <li>Job Number: TestJob4, Parts: 2</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-content">
-            <!--Contains test Parts delivery-->
-            <span class="card-title">Scheduled Part Delivery:</span>
-            <ul>
-                <li>Part: 1234, 12/3/23, Lumberton NC</li>
-                <li>Part: 2224, 12/3/23, Lumberton NC</li>
-                <li>Part: 2235, 12/5/23, Lumberton NC</li>
-            </ul>
+    <div class="card-wrapper">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">Upcoming Deliveries:</span>
+                <ul>
+                    <li>Part: TestPart6, ETA: 12/10/23</li>
+                    <li>Part: TestPart8, ETA: 12/10/23</li>
+                    <li>Part: TestPart10, ETA: 12/12/23</li>
+                    <li>Part: TestPart9, ETA: 12/14/23</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 
 
-<div class="center-align">
-    <!--Takes user to scanner page to scan an item-->
-    <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan Item</a>
-    <!--Takes user to create code page to create an QR code for an item-->
-    <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left">create</i>Create QR Code</a>
+<!--Row of Buttons-->
+<div class="row center-align valign-wrapper">
+    <div class="s12">
+        <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan Part</a>
+        <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left">create</i>Create QR Code</a>
+    </div>
+
 </div>
+

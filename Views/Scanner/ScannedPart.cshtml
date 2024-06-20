@@ -10,7 +10,7 @@
 
 
 </head>
-
+@*
 <style>
     .btn {
         margin: 5px;
@@ -29,66 +29,83 @@
     }
 
 </style>
+*@
+
+<script>
+    var ScannedPartReturnOption = "@ViewBag.ScannedPart.ReturnOption"</script>
+<script>
+    var ScannedPartTechOption = "@ViewBag.ScannedPart.TechOption"</script>
 
 
-<body>
+<h3>@ViewBag.UploadStatus</h3>
+<!-- Admin Modal Structure TODO: Add password function to dialog -->
+<div id="AdminDialog" class="modal">
+    <div>
+        <label>Enter Passcode: </label>
+        <input type="text" id="enteredPasscode" />
+        <button class="modal-close">Cancel</button>
+        <button id="enterPasscode" class="modal-close">Enter</button>
+    </div>
+</div>
 
-    <script>
-        var ScannedPartReturnOption = "@ViewBag.ScannedPart.ReturnOption"</script>
-    <script>
-        var ScannedPartTechOption = "@ViewBag.ScannedPart.TechOption"</script>
 
-    <!-- Admin Modal Trigger -->
-    <button data-target="AdminDialog" class="btn modal-trigger"><i class="material-icons">lock_open</i></button>
-    <h3>@ViewBag.UploadStatus</h3>
+<div class="container">
 
-    <!-- Admin Modal Structure TODO: Add password function to dialog -->
-    <div id="AdminDialog" class="modal">
-        <div>
-            <label>Enter Passcode: </label>
-            <input type="text" id="enteredPasscode"/>
-            <button class="modal-close">Cancel</button>
-            <button id="enterPasscode" class="modal-close">Enter</button>
+    <!--Admin Button-->
+    <div class="row">
+        <div class="col s12 left-align">
+            <!-- Admin Modal Trigger -->
+            <button data-target="AdminDialog" class="btn modal-trigger"><i class="material-icons">lock_open</i></button>
         </div>
     </div>
 
-    <!--Takes part returned from DB and fills form-->
+    <!--Form-->
     <form asp-action="UploadPart" asp-controller="Scanner" method="post">
-        <input type="hidden" name="PartId" value="@ViewBag.ScannedPart.PartId" />
+        <!--PartNumber form-->
         <div class="row">
-            <div class="input-field col s3">
-                <!--Parts Item Number-->
+            <div>
                 <label for="partNumber">Part Number:</label>
                 <input type="text" id="partNumber" name="ItemNumber" value="@ViewBag.ScannedPart.ItemNumber" />
             </div>
         </div>
 
+        <!--JobNumber form-->
         <div class="row">
-            <div class="input-field col s3">
-                <!--Parts Job Number-->
+            <div>
                 <label for="jobNumber">Job Number: </label>
                 <input type="text" id="jobNumber" name="JobNumber" value="@ViewBag.ScannedPart.JobNumber" />
             </div>
         </div>
 
+        <!--Quantity form-->
         <div class="row">
-            <div class="input-field col s3">
-                <!--Parts Quantity-->
+            <div>
                 <label for="partQuantity">Quantity: </label>
                 <input type="number" id="partQuantity" name="Quantity" value="@ViewBag.ScannedPart.Quantity" />
             </div>
-            <div class="btn-container">
-                <a class="waves-effect btn-small blue darken-2" id="subQuantity">
-                    -
-                </a>
-                <a class="waves-effect btn-small blue darken-2" id="addQuantity">+</a>
+
+        </div>
+        <div class="row">
+            <div class="col s12 m12 l12 left-align">
+                <!--Add and subtract from quantity button-->
+                <div class="btn-container">
+                    <a class="waves-effect btn-small blue darken-2" id="subQuantity">
+                        -
+                    </a>
+                    <a class="waves-effect btn-small blue darken-2" id="addQuantity">
+                        +
+                    </a>
+                </div>
             </div>
+
         </div>
 
-        <!--Parts Return Option, N/A if does not exist-->
-        <label for="returnOptions">Return Options: </label>
+        <!--Return Option Box-->
         <div class="row">
-            <div class="input-field col s3">
+            <!--Label for Return options-->
+            <label for="returnOptions">Return Options: </label>
+            <!--Combobox-->
+            <div class="input-field">
                 <select id="returnOptions">
                     <option value="0" disabled>Select Return Option:</option>
                     @{
@@ -102,23 +119,28 @@
                 </select>
                 <input type="hidden" id="hiddenReturnOpt" name="ReturnOption" />
                 <input type="text" id="returnOptionText" name="returnOther" style="display:none;" />
-               
             </div>
         </div>
-        <!--Clears selected option-->
-        <a class="waves-effect btn blue darken-2" id="clearReturn">
-            Clear
-        </a>
-        <!--Allows user to enter an option manually-->
-        <a class="waves-effect btn blue darken-2" id="otherReturn">
-            Other
-        </a>
-        <br />
-
-        <!--Parts Tech Option, N/A if does not exist-->
-        <label for="techOptions">Tech Options: </label>
         <div class="row">
-            <div class="input-field col s3">
+            <!--Clear/Other-->
+            <div class="col s12 m12 l12 left-align">
+                <!--Clears selected option-->
+                <a class="waves-effect btn blue darken-2" id="clearReturn">
+                    Clear
+                </a>
+                <!--Allows user to enter an option manually-->
+                <a class="waves-effect btn blue darken-2" id="otherReturn">
+                    Other
+                </a>
+            </div>
+        </div>
+
+        <!--Tech Option Box-->
+        <div class="row">
+            <!--Parts Tech Option, N/A if does not exist-->
+            <label for="techOptions">Tech Options: </label>
+            <!--Combobox-->
+            <div class="input-field col s8">
                 <select id="techOptions">
                     <option value="0" disabled>Select Tech Option:</option>
                     @{
@@ -131,54 +153,65 @@
                     }
 
                 </select>
-                <input type="hidden" id="hiddenTechOpt" name="TechOption"/>
+                <input type="hidden" id="hiddenTechOpt" name="TechOption" />
                 <input type="text" id="techOptionText" name="techOther" style="display:none;" />
             </div>
         </div>
-        <!--Clears selected option-->
-        <a class="waves-effect btn blue darken-2" id="clearTech">
-            Clear
-        </a>
-        <!--Allows user to enter an option manually-->
-        <a class="waves-effect btn blue darken-2" id="otherTech">
-            Other
-        </a>
-        <br />
-
-   
-        <div class="submitbtn-container">
-            <!--Submits changes to database-->
-            <button class="btn waves-effect blue darken-2" type="submit" name="action">
-                Submit
-                <i class="material-icons right">send</i>
-            </button>
+        <div class="row">
+            <!--Clear/Other-->
+            <div class="col s12 m12 l12 left-align">
+                <!--Clears selected option-->
+                <a class="waves-effect btn blue darken-2" id="clearTech">
+                    Clear
+                </a>
+                <!--Allows user to enter an option manually-->
+                <a class="waves-effect btn blue darken-2" id="otherTech">
+                    Other
+                </a>
+            </div>
         </div>
-    
+
+        <!--Form Submission Buttons-->
+        <div class="row">
+
+            <!--Reset/New Scan-->
+            <div class="col s6 m6 l6 left-align">
+                <!--Allows user to rescan-->
+                <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
+                <br />
+
+                <!--Resets form back to original state-->
+                <a class="waves-effect btn red darken-2" id="resetForm">
+                    Reset
+                </a>
+            </div>
+
+            <!--Submit-->
+            <div class="col s6 m6 l6 right-align">
+                <button class="btn waves-effect blue darken-2" type="submit" name="action">
+                    Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+
+        </div>
+
     </form>
-
-    <div class="changebn-container">
-        <!--Allows user to rescan-->
-        <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
-        <br />
-
-        <!--Resets form back to original state-->
-        <a class="waves-effect btn blue darken-2" id="resetForm">
-            Reset
-        </a>
-    </div>
+</div>
 
 
 
-    <script src="~/js/materialize.min.js"></script>
-    <script src="~/js/partForm.js"></script>
+
+<script src="~/js/materialize.min.js"></script>
+<script src="~/js/partForm.js"></script>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(elems);
-        });
-    </script>
-  
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+    });
+</script>
 
-</body>
+
+

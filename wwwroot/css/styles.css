@@ -1,18 +1,11 @@
-﻿/* Media query for smaller screens */
-@media  (max-width: 600px) {
-    body {
-        background-color: blue;
-    }
-    .reader-container {
-        height: calc(100% - 80px); /* Adjust height to account for button overlay */
-    }
+﻿.btn-large {
+    margin: 5px;
+}
 
-    .btn-scanning {
-        bottom: 10px; /* Adjust positioning if necessary */
-    }
+.btn{
+    margin: 5px;
+}
 
-    .modal-content {
-        max-height: calc(100vh - 100px); /* Adjust max-height for smaller screens */
-    }
-  
+.btn-small{
+    margin: 5px;
 }

@@ -1,8 +1,9 @@
 ﻿<h1>Settings</h1>
 <h3>@ViewBag.UploadStatus</h3>
 
-
+<div class="row">
 <!-- Add Tech Modal Trigger & Modal -->
+<div class="col s2 m2 l2">
 <button data-target="AddTech" class="btn modal-trigger">Add Tech Option: </button>
 <div id="AddTech" class="modal">
     <div>
@@ -16,8 +17,10 @@
         <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
     </div>
 </div>
+</div>
 
 <!-- Add Return Modal Trigger & Modal -->
+<div class="col s8 m8 l8">
 <button data-target="AddReturn" class="btn modal-trigger">Add Return Option: </button>
 <div id="AddReturn" class="modal">
     <div>
@@ -31,10 +34,12 @@
         <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
     </div>
 </div>
+</div>
+
+
 
 <!--Select Server to save and retrieve info from-->
-<div class="row">
-
+<div class="col s2 m2 l2">
     <label>Database Used: </label>
     <select>
         <option>Test Site</option>
@@ -42,13 +47,17 @@
         <option>Local Site</option>
         <option>Local Storage</option>
     </select>
+    </div>
 </div>
 
 <!--Save location of excel sheet with part update history-->
 <div class="row">
-    <label>Change Excel Save Location: </label>
-    <textarea>c:/user/documents/scannedparts.excel</textarea>
-    <button class="waves-effect btn blue darken-2">Save Settings</button>
+    <div class="col s8 m8 l8">
+        <label>Change Excel Save Location: </label>
+        <textarea>c:/user/documents/scannedparts.excel</textarea>
+        <button class="waves-effect btn blue darken-2">Save Settings</button>
+    </div>
+   
 </div>
 
 <!--TESTING Seeding buttons. TODO: REMOVE DURING PRODUCTION-->
