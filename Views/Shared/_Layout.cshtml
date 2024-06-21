@@ -12,13 +12,25 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="~/js/materialize.min.js"></script>
+    <style>
+        .brand-logo img {
+            height: 100% !important;
+            width: auto !important;
+        }
+
+        nav{
+            height: 75px;
+        }
+    </style>
+    
+
 </head>
 <body class="has-fixed-sidenav">
     <header>
         <!-- Navigation Bar -->
-        <nav>
+        <nav >
             <div class="nav-wrapper blue darken-2">
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-logo">APS</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index"><img class="brand-logo responsive-img" src="~/img/APS_Logo_75.png" /></a>
                 <a href="!#" data-target="mobile-demo" class="sidenav-trigger center-align  text-white"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>

@@ -155,5 +155,39 @@ namespace ScannerWebAppUpdate.Controllers
 
         }
 
+        /// <summary>
+        /// Takes in parts excel file
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> UploadPartsFromExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                Console.WriteLine("File is null");
+            }
+            else
+            {
+                //Take excel file
+                //Send to service
+                //Service:
+                    //Takes and matches header with specified attribute.
+                        //Part Number = partNumber, etc....
+                        //creates parts list 
+                        //sends parts list to db
+                        //Show finished update
+
+
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            return Index("");
+        }
+
     }
 }

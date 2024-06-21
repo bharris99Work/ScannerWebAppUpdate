@@ -7,7 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\settings.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\styles.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\settings.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\settings.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +33,10 @@
     </PackageReference>
     <PackageReference Include="QRCoder" Version="1.5.1" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>

@@ -57,18 +57,7 @@
 
     <!--Save location of Excel sheet used for saving part history-->
     <div class="row">
-        <form action="#">
-            <div class="file-field input-field">
-                <div class="btn">
-                    <span>File</span>
-                    <input type="file">
-                </div>
-                <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text">
-                </div>
-            </div>
-            <button class="waves-effect blue darken-2 btn-small">Save</button>
-        </form>
+      <label>Save excel sheet location:</label>
     </div>
 
     <!--Test Buttons for initial seeding of Database. (REMOVE DURING PRODUCTION)-->
@@ -84,15 +73,31 @@
             <a class="btn waves-effect blue darken-2" asp-action="uploadTestParts" asp-controller="Settings"> Upload Test Parts</a>
         </div>
     </div>
+    <div class="row">
+        <label>Add Test Parts from Excel: </label>
+        <form asp-action="UploadPartsFromExcel" asp-controller="Settings" method="post" enctype="multipart/form-data">
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file" name="file">
+                </div>
+                <div class="file-path-wrapper">
+                    <input name="filename" id="file-input" class="file-path" type="text">
+                </div>
+            </div>
+            <button class="waves-effect blue darken-2 btn-small" >Seed To Database</button>
+        </form>
+        
+    </div>
 </div>
 
 
 
 
 <script src="~/js/materialize.min.js"></script>
+<script src="~/js/settings.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.modal');
         var instances = M.Modal.init(elems);
-    });
 </script>

@@ -5,9 +5,7 @@
 // Write your JavaScript code.
 //import 'materialize-css/dist/css/materialize.min.css';
 //import 'materialize-css/dist/js/materialize.min.js';
-//import $ from 'jquery';
-//window.$ = $;
-//window.jQuery = $;
+
 
 
 // Initialize the sidenav

@@ -92,7 +92,7 @@
         <!--Page Header-->
         <div class="row">
             <div class="col s12">
-                <h2>Scanning Part:</h2>
+                @* <h2>Scanning Part:</h2> *@
             </div>
         </div>
 
@@ -110,7 +110,7 @@
 
                         <div class="vertical-btn-container">
                             <!--Edit and Manually enter item number-->
-                            <a id="edit" class="btn-floating btn-small waves-effect blue darken-2"><i class="material-icons">create</i></a>
+                            <a id="edit" class="btn tooltipped waves-effect blue darken-2" data-position="bottom" data-tooltip="I am a tooltip"><i class="material-icons">create</i></a>
                             <!--Shuffle and select an item at random from avalible parts (REMOVE DURING  PRODUCTION)-->
                             <a id="shuffle" class="btn-floating btn-small waves-effect blue darken-2" asp-area="" asp-controller="Scanner" asp-action="LoadRandomPart"><i class="material-icons">shuffle</i></a>
                             <!--Clear the item number that has been scanned or entered-->
@@ -148,6 +148,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // var elems = document.querySelectorAll('.modal');
         // var instances = M.Modal.init(elems);
+        M.AutoInit();
 
         let editBN = document.getElementById('edit');
         let shuffleBN = document.getElementById('shuffle');
@@ -169,6 +170,7 @@
 
     });
 </script>
+
 
 
 
