@@ -1,73 +1,91 @@
-﻿<h1>Settings</h1>
-<h3>@ViewBag.UploadStatus</h3>
+﻿
+
+
 
 <div class="row">
-<!-- Add Tech Modal Trigger & Modal -->
-<div class="col s2 m2 l2">
-<button data-target="AddTech" class="btn modal-trigger">Add Tech Option: </button>
-<div id="AddTech" class="modal">
-    <div>
-        <form asp-action="UploadTech" asp-controller="Settings" method="post">
-            <label>Enter Tech Option: </label>
-            <textarea name="techDescription"></textarea>
-            
-            <!--Submits changes to database-->
-            <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+    <!--Title and upload status-->
+    <div class="row">
+        <h1>Settings</h1>
+        <h3>@ViewBag.UploadStatus</h3>
+    </div>
+
+    <!--Add tech and return options-->
+    <div class="row">
+        <div class="col s6 m6 l6 right-align">
+            <button data-target="AddTech" class="btn waves-effect blue darken-2">Add Tech Option: </button>
+            <div id="AddTech" class="modal">
+                <div>
+                    <form asp-action="UploadTech" asp-controller="Settings" method="post">
+                        <label>Enter Tech Option: </label>
+                        <textarea name="techDescription"></textarea>
+
+                        <!--Submits changes to database-->
+                        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+                    </form>
+                    <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="col s6 m6 l6 left-align">
+            <button data-target="AddReturn" class="btn waves-effect blue darken-2">Add Return Option: </button>
+            <div id="AddReturn" class="modal">
+                <div>
+                    <form asp-action="UploadReturn" asp-controller="Settings" method="post">
+                        <label>Enter Return Option: </label>
+                        <textarea name="returnDescription"></textarea>
+
+                        <!--Submits changes to database-->
+                        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+                    </form>
+                    <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--Select DB (Test, Live)-->
+    <div class="row">
+        <div class="s12">
+            <label>Server Used: </label>
+            <select>
+                <option>Test Site</option>
+                <option>Live Site</option>
+            </select>
+        </div>
+    </div>
+
+    <!--Save location of Excel sheet used for saving part history-->
+    <div class="row">
+        <form action="#">
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+            <button class="waves-effect blue darken-2 btn-small">Save</button>
         </form>
-        <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
     </div>
-</div>
-</div>
 
-<!-- Add Return Modal Trigger & Modal -->
-<div class="col s8 m8 l8">
-<button data-target="AddReturn" class="btn modal-trigger">Add Return Option: </button>
-<div id="AddReturn" class="modal">
-    <div>
-        <form asp-action="UploadReturn" asp-controller="Settings" method="post">
-            <label>Enter Return Option: </label>
-            <textarea name="returnDescription"></textarea>
-           
-            <!--Submits changes to database-->
-            <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
-        </form>
-        <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+    <!--Test Buttons for initial seeding of Database. (REMOVE DURING PRODUCTION)-->
+    <div class="row">
+        <div class="col s12">
+            <h6>Add Test Items: </h6>
+        </div>
     </div>
-</div>
-</div>
-
-
-
-<!--Select Server to save and retrieve info from-->
-<div class="col s2 m2 l2">
-    <label>Database Used: </label>
-    <select>
-        <option>Test Site</option>
-        <option>Main Site</option>
-        <option>Local Site</option>
-        <option>Local Storage</option>
-    </select>
+    <div class="row">
+        <div class="col s12">
+            <a class="btn waves-effect blue darken-2" asp-action="uploadTestTechs" asp-controller="Settings">Upload Test Techs</a>
+            <a class="btn waves-effect blue darken-2" asp-action="uploadTestReturns" asp-controller="Settings">Upload Test Returns</a>
+            <a class="btn waves-effect blue darken-2" asp-action="uploadTestParts" asp-controller="Settings"> Upload Test Parts</a>
+        </div>
     </div>
 </div>
 
-<!--Save location of excel sheet with part update history-->
-<div class="row">
-    <div class="col s8 m8 l8">
-        <label>Change Excel Save Location: </label>
-        <textarea>c:/user/documents/scannedparts.excel</textarea>
-        <button class="waves-effect btn blue darken-2">Save Settings</button>
-    </div>
-   
-</div>
-
-<!--TESTING Seeding buttons. TODO: REMOVE DURING PRODUCTION-->
-<div class="row">
-    <a type="button" asp-action="uploadTestTechs" asp-controller="Settings">Seed Test Tech Options</a>
-
-    <a type="button" asp-action="uploadTestReturns" asp-controller="Settings">Seed Test Return Options</a>
-
-    <a type="button" asp-action="uploadTestParts" asp-controller="Settings">Seed Test Parts</a>
-</div>
 
 
 

@@ -4,8 +4,6 @@ import { Html5Qrcode } from "html5-qrcode";
 
 document.addEventListener('DOMContentLoaded', function () {
     var back = true;
-
-   
    
     //var cameraselect = document.getElementById('cameraSelect');
     var switchcamera = document.getElementById('switchCamera');
@@ -40,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const frontCameraLabels = ["front", "selfie"];
         const backCameraLabels = ["back", "rear", "environment"];
 
+
+        //List of cameras so user can select?
         //Sets select box = to list of devices
         // Iterate over the devices array
         //devices.forEach(device => {
@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    //Button to start scan?
     //scanstart.addEventListener('click', (event) => {
     //    if (scanning) {
     //        html5QrCode.stop().then((ignore) => {
@@ -199,14 +200,4 @@ document.addEventListener('DOMContentLoaded', function () {
        
     }
 
-
-
-   
-
- 
-      
-    
-
- 
-    
 });

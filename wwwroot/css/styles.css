@@ -1,11 +1,59 @@
 ﻿.btn-large {
-    margin: 5px;
+    margin: 2px;
+   
 }
 
-.btn{
-    margin: 5px;
+.btn {
+    margin: 2px;
+ 
 }
 
-.btn-small{
-    margin: 5px;
+.btn-small {
+    margin: 2px;
+   
 }
+
+.label{
+    font-size: 12px;
+}
+
+.custom-container{
+    padding: 0;
+    margin: 0;
+    
+}
+
+
+
+/* label color */
+/*.input-field label {
+    color: black;
+    
+}*/
+/* label focus color */
+/*.input-field input[type=text]:focus + label {
+    color: green;
+}*/
+/* label underline focus color */
+/*.input-field input[type=text]:focus {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}*/
+/* valid color */
+/*.input-field input[type=text].valid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}*/
+/* invalid color */
+/*.input-field input[type=text].invalid {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+
+.input-field input[type=text] {
+    background-color: lightgray;
+    border: 1px solid black;
+    border-radius: 10px;*/ /* Adjust the value for more or less rounding */
+    /*padding: 8px;*/ /* Adjust padding to make sure text doesn't touch the border */
+/*}*/
+        

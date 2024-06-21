@@ -19,7 +19,7 @@
         <nav>
             <div class="nav-wrapper blue darken-2">
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-logo">APS</a>
-                <a href="!#" data-target="mobile-demo" class="sidenav-trigger center-align  blue lighten-5"><i class="material-icons">menu</i></a>
+                <a href="!#" data-target="mobile-demo" class="sidenav-trigger center-align  text-white"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li> <a asp-area="" asp-controller="Scanner" asp-action="">Scan Part</a></li>
@@ -30,7 +30,7 @@
         </nav>
 
         <!-- Sidenav -->
-        <ul class="sidenav blue darken-2" id="mobile-demo">
+        <ul class="sidenav white  text-blue darken-2" id="mobile-demo">
             <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
             <li> <a asp-area="" asp-controller="Scanner" asp-action="">Scan Part</a></li>
             <li><a asp-area="" asp-controller="CodeCreator" asp-action="">Create Barcode</a></li>
@@ -38,7 +38,7 @@
         </ul>
 
     </header>
-    <div class="container">
+    <div class="custom-container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
