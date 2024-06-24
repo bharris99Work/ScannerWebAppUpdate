@@ -27,6 +27,15 @@
 
     var reset = document.getElementById('resetForm');
 
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+
+    var successdialog = document.getElementById("SuccessDialog");
+    var successdialoginst = M.Modal.getInstance(successdialog);
+    if (UpdateStatus != null && UpdateStatus != "") {
+        successdialoginst.open();
+    }
+
     var passcode = "1234";
 
 
@@ -34,7 +43,9 @@
     techselect.value = '0';
 
     partnumber.readOnly = true;
-    jobnumber.readOnly =true;
+    jobnumber.readOnly = true;
+
+    
 
 
     enterpasscode.addEventListener('click', (event) => {
@@ -235,5 +246,8 @@
         returnselect.value = '0';
         instance.input.value = 'Select Return Option: '; // Update the displayed value
     }
+
+
+   
 
 });

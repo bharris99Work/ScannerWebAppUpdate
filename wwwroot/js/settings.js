@@ -1,6 +1,7 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     // Initialize Materialize components
-    M.AutoInit();
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
 
     // Add event listener to file input
     document.getElementById('file-input').addEventListener('change', function (event) {

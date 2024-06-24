@@ -33,59 +33,59 @@
     </div>
 </div>
 
+<div class="container">
+    <!--Row of Cards-->
+    <div class="card-container">
+        <div class="card-wrapper">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Scan History:</span>
+                    <ul>
+                        <li>Part: TestPart1, Status: Returned, Modified: 12/4/23</li>
+                        <li>Part: TestPart2, Status: Used, Modified: 12/1/23</li>
+                        <li>Part: TestPart3, Status: Used, Modified: 11/6/23</li>
+                        <li>Part: TestPart4, Status: Returned, Modified: 8/2/23</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-<!--Row of Cards-->
-<div class="card-container">
-    <div class="card-wrapper">
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title">Scan History:</span>
-                <ul>
-                    <li>Part: TestPart1, Status: Returned, Modified: 12/4/23</li>
-                    <li>Part: TestPart2, Status: Used, Modified: 12/1/23</li>
-                    <li>Part: TestPart3, Status: Used, Modified: 11/6/23</li>
-                    <li>Part: TestPart4, Status: Returned, Modified: 8/2/23</li>
-                </ul>
+        <div class="card-wrapper">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Recently Viewed Jobs:</span>
+                    <ul>
+                        <li>Job Number: TestJob1, Parts: 12</li>
+                        <li>Job Number: TestJob2, Parts: 4</li>
+                        <li>Job Number: TestJob3, Parts: 7</li>
+                        <li>Job Number: TestJob4, Parts: 2</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Upcoming Deliveries:</span>
+                    <ul>
+                        <li>Part: TestPart6, ETA: 12/10/23</li>
+                        <li>Part: TestPart8, ETA: 12/10/23</li>
+                        <li>Part: TestPart10, ETA: 12/12/23</li>
+                        <li>Part: TestPart9, ETA: 12/14/23</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="card-wrapper">
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title">Recently Viewed Jobs:</span>
-                <ul>
-                    <li>Job Number: TestJob1, Parts: 12</li>
-                    <li>Job Number: TestJob2, Parts: 4</li>
-                    <li>Job Number: TestJob3, Parts: 7</li>
-                    <li>Job Number: TestJob4, Parts: 2</li>
-                </ul>
-            </div>
-        </div>
-    </div>
 
-    <div class="card-wrapper">
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title">Upcoming Deliveries:</span>
-                <ul>
-                    <li>Part: TestPart6, ETA: 12/10/23</li>
-                    <li>Part: TestPart8, ETA: 12/10/23</li>
-                    <li>Part: TestPart10, ETA: 12/12/23</li>
-                    <li>Part: TestPart9, ETA: 12/14/23</li>
-                </ul>
-            </div>
+    <!--Row of Buttons-->
+    <div class="row center-align valign-wrapper">
+        <div class="s12">
+            <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan Part</a>
+            <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left">create</i>Create QR Code</a>
         </div>
+
     </div>
 </div>
-
-
-<!--Row of Buttons-->
-<div class="row center-align valign-wrapper">
-    <div class="s12">
-        <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan Part</a>
-        <a class="waves-effect blue darken-2 btn-large" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left">create</i>Create QR Code</a>
-    </div>
-
-</div>
-

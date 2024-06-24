@@ -44,7 +44,8 @@ namespace ScannerWebAppUpdate.Controllers
             // For example, you can save it to the database or perform other logic
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(part.ItemNumber, QRCodeGenerator.ECCLevel.Q);
+            string dataStored = part.ItemNumber;
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(dataStored, QRCodeGenerator.ECCLevel.Q);
             string image;
 
             using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))

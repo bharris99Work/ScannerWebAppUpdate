@@ -1,31 +1,11 @@
-﻿@*
-<style>
-    .btn {
-        margin: 5px;
-    }
-
-    .input-field label {
-        font-size: 20px;
-    }
-
-    .submitbtn-container{
-
-    }
-
-    .changebn-container{
-
-    }
-
-</style>
-*@
-
-<script>
+﻿<script>
     var ScannedPartReturnOption = "@ViewBag.ScannedPart.ReturnOption"</script>
 <script>
     var ScannedPartTechOption = "@ViewBag.ScannedPart.TechOption"</script>
+<script>
+    var UpdateStatus = "@ViewBag.UploadStatus"
+</script>
 
-
-<h3>@ViewBag.UploadStatus</h3>
 <!-- Admin Modal Structure TODO: Add password function to dialog -->
 <div id="AdminDialog" class="modal">
     <div>
@@ -37,7 +17,25 @@
 </div>
 
 
-<div >
+<!-- Shows update status-->
+<div id="SuccessDialog" class="modal">
+    <div class="container">
+        <div class="row">
+            <h2>Upload Status: </h2>
+        </div>
+        <div class="row">
+            <h4>@ViewBag.UploadStatus</h4>
+        </div>
+        <div class="row">
+            <!--Allows user to rescan-->
+            <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
+            <button class="waves-effect blue darken-2 btn modal-close">Back</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
     <!--Admin Button-->
     <div class="row">
         <div class="col s12 left-align">
@@ -54,8 +52,8 @@
         <!--PartNumber form-->
         <div class="row">
             <div class="input-field">
-                    <label for="partNumber">Part Number:</label>
-                    <input type="text" id="partNumber" name="ItemNumber" value="@ViewBag.ScannedPart.ItemNumber" />
+                <label for="partNumber">Part Number:</label>
+                <input type="text" id="partNumber" name="ItemNumber" value="@ViewBag.ScannedPart.ItemNumber" />
             </div>
         </div>
 
@@ -162,46 +160,30 @@
         </div>
 
         <!--Form Submission Buttons-->
-        <div class="row">
-
-            <!--Reset/New Scan-->
-            <div class="col s6 m6 l6 left-align">
+        <div class="row center-align valign-wrapper">
+            <div class="col s12">
                 <!--Allows user to rescan-->
-                <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
-                <br />
+                <a class="left waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
 
                 <!--Resets form back to original state-->
-                <a class="waves-effect btn red darken-2" id="resetForm">
+                <a class="left waves-effect btn red darken-2" id="resetForm">
                     Reset
                 </a>
-            </div>
-
-            <!--Submit-->
-            <div class="col s6 m6 l6 right-align">
-                <button id="submit" class="btn waves-effect blue darken-2" type="submit" name="action">
+                <button id="submit" class="right btn waves-effect blue darken-2" type="submit" name="action">
                     Submit
                     <i class="material-icons right">send</i>
                 </button>
             </div>
-
         </div>
-
     </form>
 </div>
-
-
 
 
 <script src="~/js/materialize.min.js"></script>
 <script src="~/js/partForm.js"></script>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.modal');
-        var instances = M.Modal.init(elems);
-    });
-</script>
+
 
 
 

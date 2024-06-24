@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ScannerWebAppUpdate.Models;
 using System.Collections.ObjectModel;
 
@@ -47,14 +48,44 @@ namespace ScannerWebAppUpdate.Controllers
             return RedirectToAction("Index", new { result = newresult });
         }
 
-        public IActionResult ScannedPart(Part scannedPart, string uploadStat)
+        public IActionResult ScannedPart(Part scannedPart, string updatedPartJson)
         {
-            ViewBag.ScannedPart = scannedPart;
-            ViewBag.ReturnOptions = ReturnOptionsList;
-            ViewBag.TechOptions = TechOptionsList;
-            ViewBag.UploadStatus = uploadStat;
-            return View();
+            PartUpdate updatedPart = null;
+
+            if(updatedPartJson != null && updatedPartJson != "")
+            {
+                updatedPart = JsonConvert.DeserializeObject<PartUpdate>(updatedPartJson);
+
+            }
+
+
+            if(updatedPart == null || updatedPart.part == null)
+            {
+                ViewBag.ScannedPart = scannedPart;
+                ViewBag.ReturnOptions = ReturnOptionsList;
+                ViewBag.TechOptions = TechOptionsList;
+                return View();
+            }
+            else
+            {
+                ViewBag.ScannedPart = updatedPart.part;
+                ViewBag.ReturnOptions = ReturnOptionsList;
+                ViewBag.TechOptions = TechOptionsList;
+
+                if (updatedPart.updated)
+                {
+                    ViewBag.UploadStatus = "Successfully Updated: " + updatedPart.part.ItemNumber;
+                }
+                else
+                {
+                    ViewBag.UploadStatus = "Failed to Update: " + updatedPart.part.ItemNumber;
+                }
+                return View();
+            }
+  
         }
+
+     
 
 
         //Selects a Random Part to load (REMOVE DURING PRODUCTION)
@@ -109,21 +140,14 @@ namespace ScannerWebAppUpdate.Controllers
                 Console.WriteLine("No Option was selected");
 
             }
+            PartUpdate partUpdate = new PartUpdate(newPart, _context.UpdatePart(newPart));
+            string serializedPartUpdate = JsonConvert.SerializeObject(partUpdate);
 
-            string uploadStatus = "";
-            bool uploaded = _context.UpdatePart(newPart);
-            if (uploaded)
-            {
-                //Display update succesful message
-                uploadStatus = "Update Succesful";
-            }
-            else
-            {
-                //Display update failed
-                uploadStatus = "Update Failed";
-            }
 
-            return RedirectToAction("ScannedPart",new { uploadStat = uploadStatus } );
+
+
+
+            return RedirectToAction("ScannedPart", new { updatedPartJson = serializedPartUpdate });
         }
     }
 }
