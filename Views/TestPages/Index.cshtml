@@ -1,0 +1,55 @@
+﻿<head>
+    <style>
+      .full-height{
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          border: 3px solid green;
+        }
+
+     
+
+     .vertical-content{
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           flex: 1;
+           background: teal;
+            min-height: 150px; /* Minimum height for middle content */
+
+      }
+
+      .row{
+            border: 3px solid red;
+      }
+    </style>
+</head>
+
+<div class="container full-height">
+
+
+    <!--This is top-->
+   
+    <!--Center-->
+    <div class="row vertical-content">
+        <div class="row">
+            @* <h3>This would be title content</h3> *@
+        </div>
+        <div class="row">
+            <textarea>This is middle content</textarea>
+            <input type="text" />
+        </div>
+        <div class="row">
+            <button>Bottom Button</button>
+        </div>
+        
+    </div>
+  
+    <!--Bottom-->
+    <div class="row">
+        <button>Bottom</button>
+        <button>Another Bottom</button>
+    </div>
+
+</div>

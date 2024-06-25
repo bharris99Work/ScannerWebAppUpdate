@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var scanning = false;
     var availabledevices;
     var cameraid;
+
    
 
     //Hides switch camera button, unhides if multiple devices are found
@@ -23,6 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const options = { onCloseEnd: stopCamera };
     var instances = M.Modal.init(elems, options);
 
+
+   
 
 
     // This method will trigger user permissions
@@ -67,26 +70,32 @@ document.addEventListener('DOMContentLoaded', function () {
             //Display switch button
             switchcamera.style.display = 'block';
             // starts camera with back camera or fail with `OverconstrainedError`.
+            //availabledevices.forEach(device => {
+
+            //});
             html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
+
             back = true;
             scanning = true;
+            scanmodalinst.open();
         }
         else {
             //Starts camera with default selected device
             html5QrCode.start(cameraid, config, qrCodeSuccessCallback);
             scanning = true;
+            scanmodalinst.open();
         }
 
     }).catch(err => {
         // handle err
+        console.log("No Camera Found");
+        scanmodalinst.close();
     });
+
 
     //Grabs instance of scanner dialog
     var scanmodal = document.getElementById('ScanDialog');
     var scanmodalinst = M.Modal.getInstance(scanmodal);
-    //Opens scanner menu
-    scanmodalinst.open();
-  
 
 
     const html5QrCode = new Html5Qrcode("reader");
@@ -105,12 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     //Config for scanner reader
-    const config = { fps: 10, showTorchButtonIfSupported: true, qrbox: { width: 300, height: 300 } };
-
+    const config = { fps: 10, showTorchButtonIfSupported: true, qrbox: { width: 250, height: 250 } };
 
     //Switches between front and back camera TODO: NEED TO HANDLE LOGIC IF USER HAS TWO CAMERAS ON A DESKTOP
     switchcamera.addEventListener('click', function () {
-
         //If back camera is selected
         if (back) {
             //If camera is scanning
@@ -197,7 +204,5 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         else
             console.log("Not Scanning");
-       
     }
-
 });

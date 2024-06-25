@@ -14,47 +14,32 @@
 }
 
 .label{
-    font-size: 12px;
+    font-size: 15px;
 }
 
-.custom-container{
+/*.custom-container{
     padding: 0;
     margin: 0;
     
-}
-.modal {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+}*/
 
-.modal-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0;
+/* Custom container margin */
+.page-container {
+    width: 95%;
+    margin: 5px auto 5px;
+   
+    height: 100vh;
 }
 
-/* Media Query for Mobile Devices */
-@media only screen and (max-width: 600px) {
-    .modal {
-        width: 90%;
-        height: 90%;
-    }
-
-    .modal-content {
-        width: 100%;
-        height: 100%;
-        padding: 10px; /* Optional: Add some padding */
-    }
-
-    .reader-container {
-        height: 80vh; /* Adjust height to take up more vertical space */
-    }
-
-    #reader {
-        height: 80vh; /* Adjust height to take up more vertical space */
+/* Responsive adjustments */
+@media (min-width: 800px) {
+    #ScanDialog {
+        width: 5vw;
+        height: 5vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
 }
 

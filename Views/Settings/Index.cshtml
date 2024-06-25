@@ -2,7 +2,7 @@
 
 
 
-<div class="container">
+<div>
     <!--Title and upload status-->
     <div class="row">
         <h1>Settings: </h1>
@@ -12,37 +12,36 @@
     <!--Add tech and return options-->
     <div class="row">
         <div class="col s12">
-            <button data-target="AddTech" class="btn modal-trigger waves-effect blue darken-2">Add Tech Option: </button>
-            <div id="AddTech" class="modal">
-                <div>
-                    <form asp-action="UploadTech" asp-controller="Settings" method="post">
-                        <label>Enter Tech Option: </label>
-                        <textarea name="techDescription"></textarea>
+        <button data-target="AddTech" class="btn modal-trigger waves-effect blue darken-2">Add Tech Option: </button>
+        <div id="AddTech" class="modal">
+            <div>
+                <form asp-action="UploadTech" asp-controller="Settings" method="post">
+                    <label>Enter Tech Option: </label>
+                    <textarea name="techDescription"></textarea>
 
-                        <!--Submits changes to database-->
-                        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
-                    </form>
-                    <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-                </div>
+                    <!--Submits changes to database-->
+                    <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+                </form>
+                <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
             </div>
         </div>
-        <div class="col s12">
-            <button data-target="AddReturn" class="btn modal-trigger waves-effect blue darken-2">Add Return Option: </button>
-            <div id="AddReturn" class="modal">
-                <div>
-                    <form asp-action="UploadReturn" asp-controller="Settings" method="post">
-                        <label>Enter Return Option: </label>
-                        <textarea name="returnDescription"></textarea>
+        <button data-target="AddReturn" class="btn modal-trigger waves-effect blue darken-2">Add Return Option: </button>
+        <div id="AddReturn" class="modal">
+            <div>
+                <form asp-action="UploadReturn" asp-controller="Settings" method="post">
+                    <label>Enter Return Option: </label>
+                    <textarea name="returnDescription"></textarea>
 
-                        <!--Submits changes to database-->
-                        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
-                    </form>
-                    <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-                </div>
+                    <!--Submits changes to database-->
+                    <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+                </form>
+                <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
             </div>
         </div>
-
     </div>
+
+
+</div>
 
     <!--Select DB (Test, Live)-->
     <div class="row">

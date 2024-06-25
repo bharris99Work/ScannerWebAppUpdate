@@ -1,46 +1,57 @@
 ﻿<style>
-    .text-btn-container {
-        display: grid;
-        grid-template-columns: auto 50px; /* Adjust the width of the button container as needed */
-        grid-template-rows: repeat(3, 1fr); /* Define two rows */
-        gap: 10px; /* Space between the textarea and the button container */
-        align-items: stretch; /* Make sure items stretch to the full height of the grid */
-    }
 
-    .input-field {
+
+    .modal-container{
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        flex: 1; /* Ensure input field takes up remaining vertical space */
+        align-items: center;
+        justify-content: center;
+        border: 3px solid green;
+
     }
 
-        .input-field input {
-            margin-top: auto; /* Push the input field to the bottom */
-        }
+    #reader{
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Ensure the image fits within the reader */
+    }
+
+    #ScanDialog{
+        width: 95vw;
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
 
     .vertical-btn-container {
-        display: grid;
-        grid-template-rows: repeat(3, 1fr); /* Create three equal rows */
-        gap: 10px; /* Space between buttons */
-    }
-
-    #resultText {
-        grid-row: span 2; /* Make the textarea span two rows */
-        height: 100%;
         display: flex;
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
-        font-size: 30px;
+        flex-direction: column;
     }
 
-    .reader-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
+    .scantext-container {
+        display: flex;
+        flex-direction: column;
+        align-self: flex-end;
+        width: 75vw;
     }
 
-    #reader {
-        width: 100%;
-        height: 100%;
+    .text-btn-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        align-content: stretch;
+    }
+
+    .perfect-center {
+        height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .btn-scanning {
@@ -50,47 +61,58 @@
         z-index: 1;
     }
 
+    @@media only screen and (min-width: 768px) {
+        #ScanDialog {
+            width: 30vw;
+            height: 55vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+    }
+  
+    }
+
+
+ 
+
 </style>
 
-<h1>@ViewBag.PartFound</h1>
+<!-- Scaan Modal Structure TODO: Add password function to dialog -->
+<div id="ScanDialog" class="modal">
+    <div class="modal-container">
+        <!--QR Code Reader-->
+        <div id="reader"></div>
+        @* <button class="btn-floating btn-small waves-effect blue darken-2" id="startScan"><i class="material-icons">play_arrow</i>Start Scan</button> *@
+        @* <button class="btn-floating btn-small waves-effect blue darken-2" id="stopScan"><i class="material-icons">pause</i>Pause Scan</button> *@
+        <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
+
+        
+    </div>
+</div>
 <!-- Scan Modal Trigger -->
 @* <button data-target="ScanDialog" class="btn modal-trigger">Scan Item</button> *@
-<div class="container">
-    <!-- Scaan Modal Structure TODO: Add password function to dialog -->
-    <div id="ScanDialog" class="modal">
-        <div class="modal-content">
-            <!--QR Code Reader-->
-            <div class="reader-container">
-                <div id="reader"></div>
-            </div>
-            <div class="btn-scanning">
-                @* <button class="btn-floating btn-small waves-effect blue darken-2" id="startScan"><i class="material-icons">play_arrow</i>Start Scan</button> *@
-                @* <button class="btn-floating btn-small waves-effect blue darken-2" id="stopScan"><i class="material-icons">pause</i>Pause Scan</button> *@
-                <button class="btn-floating btn-small waves-effect blue darken-2" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
-            </div>
-        </div>
-    </div>
+<div>
 
 
-    <div>
 
-        <!--Page Header-->
-        <div class="row">
-            <div class="col s12">
-                @* <h2>Scanning Part:</h2> *@
-            </div>
-        </div>
 
+
+    <div class="perfect-center">
+
+        <h1>@ViewBag.PartFound</h1>
         <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
             <!--Scanner text box and buttons-->
             <div class="row">
                 <!--Form containing scanned part number-->
                 <div class="col s12">
                     <div class="text-btn-container">
-                        <div class="input-field center-align">
+                        <div class="scantext-container">
                             <!--Displays scanned part number-->
                             <label class="text-black" for="resultText">Scan Part</label>
-                            <input type="text" id="resultText" readonly name="scannedPart"></input>
+                            <input type="text" id="resultText" readonly name="scannedPart" value="Scan Part">
+                            <a class="btn-flat disabled" id="lockimg"><i class="material-icons">lock</i></a>
+                            <a class="btn-flat disabled" id="unlockimg"><i class="material-icons">lock_open</i></a>
                         </div>
 
                         <div class="vertical-btn-container">
@@ -106,19 +128,19 @@
             </div>
 
             <!--Submit and scan buttons-->
-            <div class="row center-align valign-wrapper">
+            <div class="row">
                 <div class="col s12">
                     <!--Allows user to rescan-->
                     <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
 
-
                     <!--Searches for part in DB-->
                     <button class="btn waves-effect blue darken-2" type="submit" name="action">
-                        Submit
+                        Search
                         <i class="material-icons right">send</i>
                     </button>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
@@ -131,12 +153,20 @@
     document.addEventListener('DOMContentLoaded', function () {
         // var elems = document.querySelectorAll('.modal');
         // var instances = M.Modal.init(elems);
-        M.AutoInit();
+        //M.AutoInit();
 
         let editBN = document.getElementById('edit');
         let shuffleBN = document.getElementById('shuffle');
         let clearBN = document.getElementById('clear');
         let resultText = document.getElementById('resultText');
+        let unlockimg = document.getElementById('unlockimg');
+        let lockimg = document.getElementById('lockimg');
+
+
+        lockimg.style.display = "block";
+        unlockimg.style.display = "none";
+
+        resultText.value = "";
 
         clearBN.addEventListener('click', function () {
             resultText.value = "";
@@ -145,9 +175,11 @@
         editBN.addEventListener('click', function () {
             resultText.readOnly = !resultText.readOnly; // Toggle readonly attribute
             if (resultText.readOnly) {
-                resultText.value = "Scan"; // Example text when readonly
+                lockimg.style.display = "block";
+                unlockimg.style.display = "none";
             } else {
-                resultText.value = ""; // Clear text when editable
+                unlockimg.style.display = "block";
+                lockimg.style.display = "none";
             }
         });
 
