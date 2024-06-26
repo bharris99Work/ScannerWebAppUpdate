@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     //Config for scanner reader
-    const config = { fps: 10, showTorchButtonIfSupported: true, qrbox: { width: 250, height: 250 } };
+    const config = { fps: 10, showTorchButtonIfSupported: true, qrbox: { width: 200, height: 200 } };
 
     //Switches between front and back camera TODO: NEED TO HANDLE LOGIC IF USER HAS TWO CAMERAS ON A DESKTOP
     switchcamera.addEventListener('click', function () {
