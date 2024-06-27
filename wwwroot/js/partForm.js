@@ -30,6 +30,16 @@
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems);
 
+    var adminunlock = document.getElementById('adminUnlock');
+    var adminlock = document.getElementById('adminLock')
+
+    var defaultTech = 'No Tech';
+    var defaultReturn = 'No Return';
+
+   
+    var icons = document.querySelectorAll('.material-icons.prefix');
+    
+
     var successdialog = document.getElementById("SuccessDialog");
     var successdialoginst = M.Modal.getInstance(successdialog);
     if (UpdateStatus != null && UpdateStatus != "") {
@@ -45,7 +55,7 @@
     partnumber.readOnly = true;
     jobnumber.readOnly = true;
 
-    
+   
 
 
     enterpasscode.addEventListener('click', (event) => {
@@ -57,6 +67,13 @@
             //????
             partnumber.readOnly = false;
             jobnumber.readOnly = false;
+
+            adminlock.style.display = 'none';
+            adminunlock.style.display = 'block';
+
+            icons.forEach(function (icon) {
+                icon.textContent = 'lock_open';
+            });
 
             console.log("Password Correct")
         }
@@ -124,7 +141,7 @@
         techSelectWrapper.style.display = 'block';
 
         var instance = M.FormSelect.getInstance(techselect);
-        instance.input.value = 'Select Tech Option:'; // Update the displayed value
+        instance.input.value = defaultTech; // Update the displayed value
 
         techothertext.style.display = 'none';
         techothertext.value = '';
@@ -140,7 +157,7 @@
         returnSelectWrapper.style.display = 'block';
 
         var instance = M.FormSelect.getInstance(returnselect);
-        instance.input.value = 'Select Return Option: '; // Update the displayed value
+        instance.input.value = defaultReturn; // Update the displayed value
 
         returnothertext.style.display = 'none';
         returnothertext.value = '';
@@ -151,10 +168,7 @@
         var techinstance = M.FormSelect.getInstance(techselect).input.value;
         var hiddentTech = document.getElementById('hiddenTechOpt');
 
-        var defaultTechString = "Select Tech Option:";
-        var defaultReturnString = "Select Return Option:";
-
-        if (techinstance.trim() === defaultTechString.trim()) {
+        if (techinstance.trim() === defaultTech.trim()) {
             hiddentTech = "";
         }
         else {
@@ -167,7 +181,7 @@
         var returninstance = M.FormSelect.getInstance(returnselect).input.value;
         var hiddenreturn = document.getElementById('hiddenReturnOpt');
 
-        if (returninstance.trim() === defaultReturnString.trim()) {
+        if (returninstance.trim() === defaultReturn.trim()) {
             hiddenreturn.value = "";
         }
         else {
@@ -211,7 +225,7 @@
     else {
         console.log("No string nor selected tech option");
         techselect.value = '0'; // Set to the placeholder option value
-        instance.input.value = 'Select Tech Option: '; // Update the displayed value
+        instance.input.value = defaultTech; // Update the displayed value
     }
 
     //Checks selected return option of scanned part and either selects it or displays string.
@@ -244,7 +258,7 @@
     else {
         console.log("No string nor selected return option");
         returnselect.value = '0';
-        instance.input.value = 'Select Return Option: '; // Update the displayed value
+        instance.input.value = defaultReturn; // Update the displayed value
     }
 
 

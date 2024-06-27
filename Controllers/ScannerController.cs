@@ -27,7 +27,13 @@ namespace ScannerWebAppUpdate.Controllers
 
         public IActionResult Index(string result)
         {
-           ViewBag.PartFound = result;
+            ResultPart? resultPart = new ResultPart();
+            if (result != null) {
+               resultPart = JsonConvert.DeserializeObject<ResultPart>(result);
+                ViewBag.PartFound = resultPart.Result;
+                ViewBag.ScannedText = resultPart.ScannedString;
+            }
+      
             return View();
         }
 
@@ -37,6 +43,7 @@ namespace ScannerWebAppUpdate.Controllers
         [HttpPost]
         public IActionResult ProcessScannedPart(string scannedPart)
         {
+            ResultPart resultPart = new ResultPart();
             foreach (var part in PartsList)
             {
                 if (part.ItemNumber == scannedPart)
@@ -45,12 +52,17 @@ namespace ScannerWebAppUpdate.Controllers
                 }
             }
             string newresult = "Part Not Found";
-            return RedirectToAction("Index", new { result = newresult });
+            resultPart.Result = newresult;
+            resultPart.ScannedString = scannedPart;
+
+            string serializedResult = JsonConvert.SerializeObject(resultPart);
+
+            return RedirectToAction("Index", new { result = serializedResult });
         }
 
         public IActionResult ScannedPart(Part scannedPart, string updatedPartJson)
         {
-            PartUpdate updatedPart = null;
+            PartUpdate? updatedPart = null;
 
             if(updatedPartJson != null && updatedPartJson != "")
             {
@@ -144,10 +156,22 @@ namespace ScannerWebAppUpdate.Controllers
             string serializedPartUpdate = JsonConvert.SerializeObject(partUpdate);
 
 
-
-
-
             return RedirectToAction("ScannedPart", new { updatedPartJson = serializedPartUpdate });
+        }
+
+
+
+        public class ResultPart
+        {
+            public string Result { get; set; }
+            public string ScannedString { get; set; }
+
+            public ResultPart() { }
+            public ResultPart(string result, string scannedPart)
+            {
+                Result= result;
+                ScannedString = scannedPart;
+            }
         }
     }
 }

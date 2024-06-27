@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
    // var scanstop = document.getElementById('stopScan');
     var resultext = document.getElementById('resultText');
 
+    var submit = document.getElementById('submitbn');
+
     var scanning = false;
     var availabledevices;
     var cameraid;
@@ -110,6 +112,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //Hide dialog
             scanmodalinst.close();
+
+            submit.click();
+            
         }
     };
 

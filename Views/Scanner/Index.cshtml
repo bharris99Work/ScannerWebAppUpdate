@@ -24,7 +24,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
+        display: none;
     }
 
     .vertical-btn-container {
@@ -47,13 +47,6 @@
         align-content: stretch;
     }
 
-    .perfect-center {
-        height: 75vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
     .btn-scanning {
         position: absolute;
         bottom: 10px;
@@ -68,8 +61,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-    }
+            display: none;
+        }
   
     }
 
@@ -96,11 +89,11 @@
 
 
 
-
+    <h1>@ViewBag.PartFound</h1>
 
     <div class="perfect-center">
 
-        <h1>@ViewBag.PartFound</h1>
+     
         <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
             <!--Scanner text box and buttons-->
             <div class="row">
@@ -110,7 +103,7 @@
                         <div class="scantext-container">
                             <!--Displays scanned part number-->
                             <label class="text-black" for="resultText">Scan Part</label>
-                            <input type="text" id="resultText" readonly name="scannedPart" value="Scan Part">
+                            <input type="text" id="resultText" readonly name="scannedPart" value="@ViewBag.ScannedText">
                             <a class="btn-flat disabled" id="lockimg"><i class="material-icons">lock</i></a>
                             <a class="btn-flat disabled" id="unlockimg"><i class="material-icons">lock_open</i></a>
                         </div>
@@ -134,7 +127,7 @@
                     <a class="waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
 
                     <!--Searches for part in DB-->
-                    <button class="btn waves-effect blue darken-2" type="submit" name="action">
+                    <button id="submitbn" class="btn waves-effect blue darken-2" type="submit" name="action">
                         Search
                         <i class="material-icons right">send</i>
                     </button>
@@ -162,11 +155,8 @@
         let unlockimg = document.getElementById('unlockimg');
         let lockimg = document.getElementById('lockimg');
 
-
         lockimg.style.display = "block";
         unlockimg.style.display = "none";
-
-        resultText.value = "";
 
         clearBN.addEventListener('click', function () {
             resultText.value = "";

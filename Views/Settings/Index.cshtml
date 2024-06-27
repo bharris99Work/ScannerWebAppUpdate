@@ -12,82 +12,121 @@
     <!--Add tech and return options-->
     <div class="row">
         <div class="col s12">
-        <button data-target="AddTech" class="btn modal-trigger waves-effect blue darken-2">Add Tech Option: </button>
-        <div id="AddTech" class="modal">
-            <div>
+            <button data-target="AddTech" class="btn modal-trigger waves-effect blue darken-2">Add Tech Option: </button>
+            <div id="AddTech" class="modal">
                 <form asp-action="UploadTech" asp-controller="Settings" method="post">
-                    <label>Enter Tech Option: </label>
-                    <textarea name="techDescription"></textarea>
-
-                    <!--Submits changes to database-->
-                    <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+                    <div class="row">
+                        <label>Enter Tech Option: </label>
+                        <textarea name="techDescription"></textarea>
+                    </div>
+                    <div class="row">
+                        <!--Submits changes to database-->
+                        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
                 </form>
                 <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-            </div>
-        </div>
+                </div>
+                </div>
+        
+
+
         <button data-target="AddReturn" class="btn modal-trigger waves-effect blue darken-2">Add Return Option: </button>
         <div id="AddReturn" class="modal">
             <div>
                 <form asp-action="UploadReturn" asp-controller="Settings" method="post">
-                    <label>Enter Return Option: </label>
-                    <textarea name="returnDescription"></textarea>
+                    <div class="row">
+                        <label>Enter Return Option: </label>
+                        <textarea name="returnDescription"></textarea>
+                    </div>
+                    <div class="row">
+                        <!--Submits changes to database-->
+                        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+                </form>
+                <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+
+                </div>
+                </div>
+                </div>
+           
+
+        <!--Add Test Part: REMOVE DURING PRODUCTION-->
+        <button data-target="AddPart" class="btn modal-trigger waves-effect blue darken-2">Add Test Part: </button>
+        <div id="AddPart" class="modal">
+            <div>
+                <form asp-action="uploadPart" asp-controller="Settings" method="post">
+                    <!--Part number-->
+                    <div class="row">
+                        <label for="itemnumber">Part Number: </label>
+                        <input id="itemnumber" type="text" name="ItemNumber">
+                    </div>
+                    <!--Job Number-->
+                    <div class="row">
+                        <label for="jobnumber">Job Number: </label>
+                        <input id="jobnumber" type="text" name="JobNumber">
+                    </div>
+                    <!--Quantity-->
+                    <div class="row">
+                        <label for="quantity">Quantity: </label>
+                        <input id="quantity" type="number" name="Quantity">
+                    </div>
+
 
                     <!--Submits changes to database-->
                     <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
                 </form>
                 <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-            </div>
-        </div>
-    </div>
 
-
+                </div>
+                </div>
+            
+</div>
 </div>
 
-    <!--Select DB (Test, Live)-->
-    <div class="row">
-        <div class="s12">
-            <label>Server Used: </label>
-            <select>
-                <option>Test Site</option>
-                <option>Live Site</option>
-            </select>
-        </div>
-    </div>
 
-    <!--Save location of Excel sheet used for saving part history-->
-    <div class="row">
-      <label>Save excel sheet location:</label>
+<!--Select DB (Test, Live)-->
+<div class="row">
+    <div class="s12">
+        <label>Server Used: </label>
+        <select>
+            <option>Test Site</option>
+            <option>Live Site</option>
+        </select>
     </div>
+</div>
 
-    <!--Test Buttons for initial seeding of Database. (REMOVE DURING PRODUCTION)-->
-    <div class="row">
-        <div class="col s12">
-            <h6>Add Test Items: </h6>
-        </div>
+<!--Save location of Excel sheet used for saving part history-->
+<div class="row">
+    <label>Save excel sheet location:</label>
+</div>
+
+<!--Test Buttons for initial seeding of Database. (REMOVE DURING PRODUCTION)-->
+<div class="row">
+    <div class="col s12">
+        <h6>Add Test Items: </h6>
     </div>
-    <div class="row">
-        <div class="col s12">
-            <a class="btn waves-effect blue darken-2" asp-action="uploadTestTechs" asp-controller="Settings">Upload Test Techs</a>
-            <a class="btn waves-effect blue darken-2" asp-action="uploadTestReturns" asp-controller="Settings">Upload Test Returns</a>
-            <a class="btn waves-effect blue darken-2" asp-action="uploadTestParts" asp-controller="Settings"> Upload Test Parts</a>
-        </div>
+</div>
+<div class="row">
+    <div class="col s12">
+        <a class="btn waves-effect blue darken-2" asp-action="uploadTestTechs" asp-controller="Settings">Upload Test Techs</a>
+        <a class="btn waves-effect blue darken-2" asp-action="uploadTestReturns" asp-controller="Settings">Upload Test Returns</a>
+        <a class="btn waves-effect blue darken-2" asp-action="uploadTestParts" asp-controller="Settings"> Upload Test Parts</a>
     </div>
-    <div class="row">
-        <label>Add Test Parts from Excel: </label>
-        <form asp-action="UploadPartsFromExcel" asp-controller="Settings" method="post" enctype="multipart/form-data">
-            <div class="file-field input-field">
-                <div class="btn">
-                    <span>File</span>
-                    <input type="file" name="file">
-                </div>
-                <div class="file-path-wrapper">
-                    <input name="filename" id="file-input" class="file-path" type="text">
-                </div>
+</div>
+<div class="row">
+    <label>Add Test Parts from Excel: </label>
+    <form asp-action="UploadPartsFromExcel" asp-controller="Settings" method="post" enctype="multipart/form-data">
+        <div class="file-field input-field">
+            <div class="btn">
+                <span>File</span>
+                <input type="file" name="file">
             </div>
-            <button class="waves-effect blue darken-2 btn-small" >Seed To Database</button>
-        </form>
-        
-    </div>
+            <div class="file-path-wrapper">
+                <input name="filename" id="file-input" class="file-path" type="text">
+            </div>
+        </div>
+        <button class="waves-effect blue darken-2 btn-small">Seed To Database</button>
+    </form>
+
+</div>
 </div>
 
 

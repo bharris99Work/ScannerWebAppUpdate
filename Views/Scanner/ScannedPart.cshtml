@@ -6,13 +6,43 @@
     var UpdateStatus = "@ViewBag.UploadStatus"
 </script>
 
+<head>
+    <style>
+        #AdminDialog {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+            width: 90vw;
+            height: 45vh;
+        }
+
+        @@media only screen and (min-width: 768px) {
+            #AdminDialog {
+                width: 30vw;
+                height: 55vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+
+
 <!-- Admin Modal Structure TODO: Add password function to dialog -->
 <div id="AdminDialog" class="modal">
-    <div>
-        <label>Enter Passcode: </label>
-        <input type="text" id="enteredPasscode" />
-        <button class="modal-close">Cancel</button>
-        <button id="enterPasscode" class="modal-close">Enter</button>
+    <div class="container">
+        <div class="row">
+            <label>Enter Passcode (1234): </label>
+            <input type="text" id="enteredPasscode" />
+        </div>
+        <div class="row">
+            <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+            <button class="waves-effect btn blue darken-2 modal-close" id="enterPasscode">Enter</button>
+        </div>
     </div>
 </div>
 
@@ -40,7 +70,8 @@
     <div class="row">
         <div class="col s12 left-align">
             <!-- Admin Modal Trigger -->
-            <button data-target="AdminDialog" class="btn modal-trigger"><i class="material-icons">lock_open</i></button>
+            <button id="adminUnlock" data-target="AdminDialog" class="btn modal-trigger"><i class="material-icons">lock_open</i></button>
+            <button id="adminLock" data-target="AdminDialog" class="btn modal-trigger"><i class="material-icons">lock</i></button>
         </div>
     </div>
 
@@ -52,123 +83,146 @@
         <!--PartNumber form-->
         <div class="row">
             <div class="input-field">
-                <label for="partNumber">Part Number:</label>
-                <input type="text" id="partNumber" name="ItemNumber" value="@ViewBag.ScannedPart.ItemNumber" />
+                <div class="col s11">
+                    <label for="partNumber">Part Number:</label>
+                    <input type="text" id="partNumber" name="ItemNumber" value="@ViewBag.ScannedPart.ItemNumber" />
+                </div>
+                <div class="col s1">
+                    <i class="material-icons prefix">lock</i>
+                </div>
             </div>
         </div>
 
         <!--JobNumber form-->
         <div class="row">
             <div class="input-field">
-                <label for="jobNumber">Job Number: </label>
-                <input type="text" id="jobNumber" name="JobNumber" value="@ViewBag.ScannedPart.JobNumber" />
+                <div class="col s11">
+                    <label for="jobNumber">Job Number: </label>
+                    <input type="text" id="jobNumber" name="JobNumber" value="@ViewBag.ScannedPart.JobNumber" />
+                </div>
+                <div class="col s1">
+                    <i class="material-icons prefix">lock</i>
+                </div>
             </div>
         </div>
 
         <!--Quantity form-->
         <div class="row">
-            <div class="input-field">
-                <label for="partQuantity">Quantity: </label>
-                <input type="number" id="partQuantity" name="Quantity" value="@ViewBag.ScannedPart.Quantity" />
-            </div>
 
-        </div>
-        <div class="row">
-            <div class="col s12 m12 l12 left-align">
-                <!--Add and subtract from quantity button-->
-                <div class="btn-container">
-                    <a class="waves-effect btn-small blue darken-2" id="subQuantity">
-                        -
-                    </a>
-                    <a class="waves-effect btn-small blue darken-2" id="addQuantity">
-                        +
-                    </a>
+            <div class="input-field">
+                <div class="col s3">
+                    <label for="partQuantity">Quantity: </label>
+                    <input type="number" id="partQuantity" name="Quantity" value="@ViewBag.ScannedPart.Quantity" />
+                </div>
+                <div class="col s9">
+
+                    <div class="col s12 m12 l12 left-align">
+                        <a class="waves-effect btn-small blue darken-2" id="addQuantity"><i class="material-icons">add</i>
+                        </a>
+                        <a class="waves-effect btn-small blue darken-2" id="subQuantity"><i class="material-icons">remove</i></a>
+                    </div>
                 </div>
             </div>
-
         </div>
+
 
         <!--Return Option Box-->
         <div class="row">
-            <!--Label for Return options-->
-            <label for="returnOptions">Return Options: </label>
-            <!--Combobox-->
-            <div>
-                <select id="returnOptions">
-                    <option value="0" disabled>Select Return Option:</option>
-                    @{
-                        int returncount = 1;
-                        foreach (var returnOption in ViewBag.ReturnOptions)
-                        {
-                            <option value="@returnOption.Description">@returnOption.Description</option>
-                            returncount++;
+        <div class="input-field">
+            <div class="col s8">
+                <!--Label for Return options-->
+                <label for="returnOptions">Return Options: </label>
+                <!--Combobox-->
+                <div>
+                    <select id="returnOptions">
+                        <option value="0" disabled>No Return</option>
+                        @{
+                            int returncount = 1;
+                            foreach (var returnOption in ViewBag.ReturnOptions)
+                            {
+                                <option value="@returnOption.Description">@returnOption.Description</option>
+                                returncount++;
+                            }
                         }
-                    }
-                </select>
-                <input type="hidden" id="hiddenReturnOpt" name="ReturnOption" />
-                <input type="text" id="returnOptionText" name="returnOther" style="display:none;" />
+                    </select>
+                    <input type="hidden" id="hiddenReturnOpt" name="ReturnOption" />
+                    <input type="text" id="returnOptionText" name="returnOther" style="display:none;" />
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <!--Clear/Other-->
-            <div class="col s12 m12 l12 left-align">
-                <!--Clears selected option-->
-                <a class="waves-effect btn blue darken-2" id="clearReturn">
-                    Clear
-                </a>
-                <!--Allows user to enter an option manually-->
-                <a class="waves-effect btn blue darken-2" id="otherReturn">
-                    Other
-                </a>
+            <div class="col s4">
+                <!--Clear/Other-->
+                <div class="col s12 m12 l12 left-align">
+                    <!--Allows user to enter an option manually-->
+                    <a class="waves-effect btn blue darken-2" id="otherReturn">
+                        Other
+                    </a>
+                    <!--Clears selected option-->
+                    <a class="waves-effect btn red accent-4" id="clearReturn">
+                        Clear
+                    </a>
+                </div>
             </div>
+            </div>
+
         </div>
+
+
 
         <!--Tech Option Box-->
         <div class="row">
-            <!--Parts Tech Option, N/A if does not exist-->
-            <label for="techOptions">Tech Options: </label>
-            <!--Combobox-->
-            <div>
-                <select id="techOptions">
-                    <option value="0" disabled>Select Tech Option:</option>
-                    @{
-                        int techcount = 1;
-                        foreach (var techOption in ViewBag.TechOptions)
-                        {
-                            <option value="@techOption.Description">@techOption.Description</option>
-                            techcount++;
+        <div class="input-field">
+       
+            <div class="col s8">
+                <!--Parts Tech Option, N/A if does not exist-->
+                <label for="techOptions">Tech Options: </label>
+                <!--Combobox-->
+                <div>
+                    <select id="techOptions">
+                        <option value="0" disabled>No Tech</option>
+                        @{
+                            int techcount = 1;
+                            foreach (var techOption in ViewBag.TechOptions)
+                            {
+                                <option value="@techOption.Description">@techOption.Description</option>
+                                techcount++;
+                            }
                         }
-                    }
 
-                </select>
-                <input type="hidden" id="hiddenTechOpt" name="TechOption" />
-                <input type="text" id="techOptionText" name="techOther" style="display:none;" />
+                    </select>
+                    <input type="hidden" id="hiddenTechOpt" name="TechOption" />
+                    <input type="text" id="techOptionText" name="techOther" style="display:none;" />
+                </div>
+            </div>
+            <div class="col s4">
+                <!--Clear/Other-->
+                <div class="col s12 m12 l12 left-align">
+                    <!--Allows user to enter an option manually-->
+                    <a class="waves-effect btn blue darken-2" id="otherTech">
+                        Other
+                    </a>
+                    <!--Clears selected option-->
+                    <a class="waves-effect btn red accent-4" id="clearTech">
+                        Clear
+                    </a>
+                </div>
+            </div>
             </div>
         </div>
-        <div class="row">
-            <!--Clear/Other-->
-            <div class="col s12 m12 l12 left-align">
-                <!--Clears selected option-->
-                <a class="waves-effect btn blue darken-2" id="clearTech">
-                    Clear
-                </a>
-                <!--Allows user to enter an option manually-->
-                <a class="waves-effect btn blue darken-2" id="otherTech">
-                    Other
-                </a>
-            </div>
-        </div>
 
+        <div class="divider"></div>
+        <div class="section"></div>
         <!--Form Submission Buttons-->
-        <div class="row center-align valign-wrapper">
-            <div class="col s12">
+        <div class="row">
+            <div class="col s6">
                 <!--Allows user to rescan-->
-                <a class="left waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>New Scan</a>
+                <a class="left waves-effect blue darken-2 btn" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan</a>
 
                 <!--Resets form back to original state-->
                 <a class="left waves-effect btn red darken-2" id="resetForm">
                     Reset
                 </a>
+            </div>
+            <div class="col s6">
                 <button id="submit" class="right btn waves-effect blue darken-2" type="submit" name="action">
                     Submit
                     <i class="material-icons right">send</i>
@@ -181,6 +235,14 @@
 
 <script src="~/js/materialize.min.js"></script>
 <script src="~/js/partForm.js"></script>
+
+<script>
+    var adminunlock = document.getElementById('adminUnlock');
+    var adminlock = document.getElementById('adminLock')
+
+
+    adminunlock.style.display = 'none';
+</script>
 
 
 

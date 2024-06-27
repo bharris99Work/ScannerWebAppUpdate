@@ -67,6 +67,19 @@ namespace ScannerWebAppUpdate.Controllers
 
         }
 
+        [HttpPost]
+        public IActionResult uploadPart(Part testPart)
+        {
+            bool uploadstatus = false;
+            if (testPart != null)
+            {
+                testPart.ReturnOption = "";
+                testPart.TechOption = "";
+                uploadstatus = _context.AddPart(testPart);
+            }
+            return uploadStatus(uploadstatus);
+        }
+
 
         public IActionResult uploadTestReturns()
         {

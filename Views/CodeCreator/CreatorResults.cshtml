@@ -37,8 +37,6 @@
 
 
 <div class="btn-container">
-    <!--Allows user to print QR Code-->
-    <a id="printButton" class="waves-effect btn blue darken-2">Print</a>
     <!--Allows user to share QR Code-->
     <a id="shareButton" class="waves-effect btn blue darken-2">Share</a>
     <!--Allows user to go back and select another part-->
@@ -46,10 +44,6 @@
 </div>
 
 <script>
-    document.getElementById('printButton').addEventListener('click', () => {
-      
-    });
-
     document.getElementById('shareButton').addEventListener('click', async() => {
         if(navigator.share){
             const img = document.getElementById('qrImage');

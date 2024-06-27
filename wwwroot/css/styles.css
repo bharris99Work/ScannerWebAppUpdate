@@ -17,31 +17,21 @@
     font-size: 15px;
 }
 
-/*.custom-container{
-    padding: 0;
-    margin: 0;
-    
-}*/
+.perfect-center {
+    height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 /* Custom container margin */
 .page-container {
     width: 95%;
-    margin: 5px auto 5px;
-   
-    height: 100vh;
+    margin: 5px auto;
 }
 
-/* Responsive adjustments */
-@media (min-width: 800px) {
-    #ScanDialog {
-        width: 5vw;
-        height: 5vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-}
+
 
 
 
