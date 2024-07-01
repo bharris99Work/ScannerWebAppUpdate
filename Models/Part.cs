@@ -34,6 +34,12 @@
 
             Quantity = quant;
         }
-        public Part() { }
+        public Part() {
+            ItemNumber = "";
+            JobNumber = "";
+            ReturnOption = "";
+            TechOption = "";
+            Quantity = 0;
+        }
     }
 }

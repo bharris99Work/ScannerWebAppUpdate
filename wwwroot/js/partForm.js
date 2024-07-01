@@ -23,7 +23,7 @@
     var techothertext = document.getElementById('techOptionText');
     var returnothertext = document.getElementById('returnOptionText');
 
-    var submitbn = document.getElementById('submit');
+    var submitbn = document.getElementById('submitbn');
 
     var reset = document.getElementById('resetForm');
 
@@ -97,8 +97,28 @@
     });
     addquantity.addEventListener('click', (event) => {
         event.preventDefault();
-        partquantity.value = parseInt(partquantity.value) + 1;
+        var newValue = parseInt(partquantity.value) + 1;
+        if (newValue.toString().length<= 4) {
+            partquantity.value = Math.max(0, parseInt(partquantity.value) + 1);
+        }
+
     });
+    //Quantity check
+    partquantity.addEventListener('input', function (event) {
+        let value = event.target.value;
+
+        //Removes any non numeric char
+        value = value.replace(/[^0-9]/g, '');
+
+        //Limit maxiumin digits to 4
+        if (value.length > 4) {
+            value = value.slice(0, 4);
+        }
+
+        event.target.value = value;
+
+    });
+
 
 
     //Display tech text box, hide tech select box

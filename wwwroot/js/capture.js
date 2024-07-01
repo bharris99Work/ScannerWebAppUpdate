@@ -26,6 +26,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const options = { onCloseEnd: stopCamera };
     var instances = M.Modal.init(elems, options);
 
+    // Square QR box with edge size = 70% of the smaller edge of the viewfinder.
+    let qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
+        let minEdgePercentage = 0.7; // 70%
+        let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+        let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+        return {
+            width: qrboxSize,
+            height: qrboxSize
+        };
+    }
 
    
 
@@ -119,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     //Config for scanner reader
-    const config = { fps: 10, showTorchButtonIfSupported: true, qrbox: { width: 200, height: 200 } };
+    const config = { fps: 10, showTorchButtonIfSupported: true, qrbox: qrboxFunction };
 
     //Switches between front and back camera TODO: NEED TO HANDLE LOGIC IF USER HAS TWO CAMERAS ON A DESKTOP
     switchcamera.addEventListener('click', function () {

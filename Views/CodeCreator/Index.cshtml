@@ -1,75 +1,89 @@
-﻿
-
-<h1>Select Part:</h1>
-
-
-<!--Form that features ways user can search for parts-->
-<form>
-    <div class="row">
-        <div class="input-field col s12">
-            <!--Search for part via Part Number-->
-            <label for="searchedPart">Part Number: </label>
-            <textarea id="searchedPart"></textarea>
-        </div>
-        <div class="input-field col s12">
-            <!--Search for part via Part Number-->
-            <label for="searchedJob">Job Number: </label>
-            <textarea id="searchedJob"></textarea>
-        </div>
-    </div>
-    <div class="row">
-        <div class="input-field col s12">
-            <!--Search for part via Part Number-->
-            <label for="partDesc">Part Description: </label>
-            <textarea id="partDesc"></textarea>
-        </div>
-        <div class="input-field col s12">
-            <!--Search for part via Part Number-->
-            <label for="partMan">Part Manufacturer </label>
-            <textarea id="partMan"></textarea>
-        </div>
-    </div>
-</form>
-<!--Searches database with entered information-->
-<button class="waves-effect btn blue darken-2">Search</button>
-
-
-<!--Table featuring parts that where returned from search-->
-<table class="striped highlight responsive-table" >
-    <thead>
-        <tr>
-            <th>Part Number: </th>
-            <th>Job Number: </th>
-            <th>Quantity: </th>
-            <th>Return Option: </th>
-            <th>Tech Option: </th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <!--Fills each column with apropriate info from parts-->
-        @foreach (var part in ViewBag.PartsList)
-        {
-            <tr>
-                <td>@part.ItemNumber</td>
-                <td>@part.JobNumber</td>
-                <td>@part.Quantity</td>
-                <td>@part.ReturnOption</td>
-                <td>@part.TechOption</td>
-                <td>
-                    <form asp-action="Create" asp-controller="CodeCreator" method="post">
-                        <input type="hidden" name="ItemNumber" value="@part.ItemNumber" />
-                        <input type="hidden" name="JobNumber" value="@part.JobNumber" />
-                        <input type="hidden" name="Quantity" value="@part.Quantity" />
-                        <input type="hidden" name="ReturnOption" value="@part.ReturnOption" />
-                        <input type="hidden" name="TechOption" value="@part.TechOption" />
-                        <!--Creates an QR code based off part attached-->
-                        <button class="waves-effect btn blue darken-2" type="submit">Create</button>
-                    </form>
-                </td>
-            </tr>
+﻿<head>
+<style>
+        .table-container {
+            overflow-x: auto;
         }
-    </tbody>
-</table>
+
+</style>
+
+</head>
+
+
+@{
+    // Calculate the current page, page size, and total pages from ViewBag
+    int currentPage = ViewBag.CurrentPage;
+    int pageSize = ViewBag.PageSize;
+    int totalPages = ViewBag.TotalPages;
+}
+<div>
+    <div class="row">
+        <div class="col s12 center">
+            <div class="table-container">
+
+
+                <!--Table featuring parts that where returned from search-->
+                <table id="datatable" class="striped responsive">
+                    <thead>
+                        <tr>
+                            <th>Part Number: </th>
+                            <th>Job Number: </th>
+                            <th>Quantity: </th>
+                            <th>Return Option: </th>
+                            <th>Tech Option: </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <!--Fills each column with apropriate info from parts-->
+                        @foreach (var part in ViewBag.PartsList)
+                        {
+                            <tr>
+                                <td>@part.ItemNumber</td>
+                                <td>@part.JobNumber</td>
+                                <td>@part.Quantity</td>
+                                <td>@part.ReturnOption</td>
+                                <td>@part.TechOption</td>
+                                <td>
+                                    <form asp-action="Create" asp-controller="CodeCreator" method="post">
+                                        <input type="hidden" name="ItemNumber" value="@part.ItemNumber" />
+                                        <input type="hidden" name="JobNumber" value="@part.JobNumber" />
+                                        <input type="hidden" name="Quantity" value="@part.Quantity" />
+                                        <input type="hidden" name="ReturnOption" value="@part.ReturnOption" />
+                                        <input type="hidden" name="TechOption" value="@part.TechOption" />
+                                        <!--Creates an QR code based off part attached-->
+                                        <button class="waves-effect btn blue darken-2" type="submit">Create</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <ul class="pagination">
+        <!-- Display 'First' and 'Previous' links if not on the first page -->
+        @if (currentPage > 1)
+        {
+           <li class="waves-effect"> <a href="?page=1&pageSize=@pageSize">First</a></li>
+           <li class="waves-effect"> <a href="?page=@(currentPage - 1)&pageSize=@pageSize">Previous</a></li>
+        }
+
+        <!-- Generate pagination links for each page -->
+        @for (int i = 1; i <= totalPages; i++)
+        {
+           <li class="waves-effect"> <a href="?page=@i&pageSize=@pageSize" class="@(i == currentPage ? "active" : "")">@i</a></li>
+        }
+
+        <!-- Display 'Next' and 'Last' links if not on the last page -->
+        @if (currentPage < totalPages)
+        {
+           <li class="waves-effect"> <a href="?page=@(currentPage + 1)&pageSize=@pageSize">Next</a></li>
+           <li class="waves-effect"> <a href="?page=@totalPages&pageSize=@pageSize">Last</a></li>
+        }
+    </ul>
 </div>
+<script src="~/dist/codeTable.bundle.js"></script>

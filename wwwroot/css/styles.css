@@ -13,10 +13,6 @@
    
 }
 
-.label{
-    font-size: 15px;
-}
-
 .perfect-center {
     height: 75vh;
     display: flex;
@@ -29,6 +25,75 @@
 .page-container {
     width: 95%;
     margin: 5px auto;
+    padding-bottom: 50px; /* Adjust this value as needed */
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+#AdminDialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    width: 90vw;
+    height: 45vh;
+}
+
+.vertical-btn-container {
+    display: inline-grid;
+    grid-auto-flow: row;
+    grid-auto-columns: 1fr;
+}
+
+.btn-container {
+    display: inline-grid;
+    grid-auto-flow: row;
+    grid-auto-columns: 1fr;
+}
+
+    .btn-container a {
+        margin: 2px;
+    }
+
+    .btn-container button {
+        margin: 2px;
+    }
+
+@media only screen and (min-width: 768px){
+    #AdminDialog {
+        width: 30vw;
+        height: 55vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+    }
+
+    .btn-container {
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        padding: 10px;
+        margin-top: 20px;
+    }
+
+        .btn-container a {
+            margin: 0 4px;
+        }
+
+        .btn-container button {
+            margin: 0 4px;
+        }
+
+
+
 }
 
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScannerWebAppUpdate.Models;
+using Syncfusion.XlsIO;
 using System.Collections.ObjectModel;
 using System.Data;
 
@@ -48,7 +49,6 @@ namespace ScannerWebAppUpdate.Controllers
         {
             try
             {
-
                 if (returnDescription != null & returnDescription != string.Empty)
                 {
                     ReturnOption returnOption = new ReturnOption(returnDescription);
@@ -129,8 +129,6 @@ namespace ScannerWebAppUpdate.Controllers
         {
             try
             {
-
-
                 TestParts = new ObservableCollection<Part> { new Part("TestPart1", "TestJob1", "Tech Option 3","Missing Parts", 5),
                 new Part("TestPart2", "TestJob2", "Tech Option 2","Extra Parts", 12),
                 new Part("TestPart3", "TestJob3", "Tech Option 1","Repair", 1),
@@ -147,8 +145,6 @@ namespace ScannerWebAppUpdate.Controllers
                 return uploadStatus(false);
 
             }
-
-
         }
 
         public IActionResult uploadStatus(bool updateStat)
@@ -194,12 +190,65 @@ namespace ScannerWebAppUpdate.Controllers
 
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
 
+                DataTable dataTable = ReadExcelFile(file);
+
+                if(dataTable != null && dataTable.Rows.Count > 1)
+                {
+                   bool uploadStatus = _context.UploadPartsFromExcel(dataTable);
+                }
+
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
             }
             return Index("");
+        }
+
+
+        private DataTable ReadExcelFile(IFormFile file)
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+
+
+                using (var stream = file.OpenReadStream())
+                {
+                    using (ExcelEngine excelEngine = new ExcelEngine())
+                    {
+                        IApplication application = excelEngine.Excel;
+                        IWorkbook workbook = application.Workbooks.Open(stream);
+                        IWorksheet worksheet = workbook.Worksheets[0]; // Assuming data is in the first worksheet
+
+                        // Add columns based on the first row
+                        var headerRow = worksheet.Rows[0];
+                        foreach (var headerCell in headerRow.Cells)
+                        {
+                            dataTable.Columns.Add(headerCell.DisplayText);
+                        }
+
+                        // Add rows
+                        for (int row = 1; row <= worksheet.Rows.Length-1; row++)
+                        {
+                            var excelRow = worksheet.Rows[row];
+                            DataRow dataRow = dataTable.NewRow();
+                            for (int col = 0; col < worksheet.Rows[row].Cells.Length; col++)
+                            {
+                                dataRow[col] = worksheet.Rows[row].Cells[col].DisplayText;
+                            }
+                            dataTable.Rows.Add(dataRow);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return dataTable;
         }
 
     }

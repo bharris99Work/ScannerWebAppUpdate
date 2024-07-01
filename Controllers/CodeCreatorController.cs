@@ -24,9 +24,29 @@ namespace ScannerWebAppUpdate.Controllers
 
 
         }
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int pageSize = 20)
         {
-            ViewBag.PartsList = PartsList;
+
+            // Calculate the number of records to skip based on the current page and page size
+            int skip = (page - 1) * pageSize;
+
+            // Fetch the required parts from the database, ordered by Id, and apply pagination
+            var parts = _context.Parts.OrderBy(p => p.PartId).Skip(skip).Take(pageSize).ToList();
+
+            // Store the fetched parts in ViewBag to be used in the view
+            ViewBag.PartsList = parts;
+
+            // Set additional pagination information in ViewBag for use in the view
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalPages = (int)Math.Ceiling(_context.Parts.Count() / (double)pageSize);
+
+            ///Only grab first 20 parts from list initally,
+            ///Setup next and previous buttons for going back and forth
+            ///Next: Grabs next 20 parts.
+            ///Previous: Grabs previous 20 parts.
+
+            //ViewBag.PartsList = PartsList;
             return View();
         }
 

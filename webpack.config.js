@@ -1,9 +1,13 @@
 ﻿const path = require('path');
 
 module.exports = {
-    entry: './wwwroot/js/capture.js',
+    entry: {
+        capture: './wwwroot/js/capture.js',
+        testCapture: './wwwroot/js/testCapture.js',
+        codeTable: './wwwroot/js/codeTable.js'
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'wwwroot/dist')
     },
     module: {

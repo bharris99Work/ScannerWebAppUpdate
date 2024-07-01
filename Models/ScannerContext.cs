@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 
@@ -187,6 +188,33 @@ namespace ScannerWebAppUpdate.Models
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                return false;
+            }
+        }
+
+
+        public bool UploadPartsFromExcel(DataTable partsTable)
+        {
+            try
+            {
+                foreach(DataRow row in partsTable.Rows)
+                {
+                    var part = new Part
+                    {
+                        ItemNumber = row["PartNumber"].ToString(),
+                        JobNumber = row["JobName"].ToString(),
+                        Quantity = int.Parse(row["Quantity"].ToString()),
+                        ReturnOption = row["ReturnReason"].ToString()
+                    };
+                    AddPart(part);
+                }
+                SaveChanges();
+                return true;
+
+            }
+            catch (Exception ex) {
+                
+
                 return false;
             }
         }

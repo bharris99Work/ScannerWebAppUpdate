@@ -1,14 +1,5 @@
 ﻿<style>
-    .btn {
-        margin: 5px;
-    }
-
-    .btn-container {
-        display: flex;
-        justify-content: center;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
+   
 
     .qr-container {
         margin: 20px 0; /* Add margin for spacing */
@@ -23,25 +14,32 @@
         }
 </style>
 
+<div class="row">
+    <!--Checks to see if an image has been produced from the part, and returned from the controller-->
+    @if (ViewBag.QRCodeImageBase64 != null)
+    {
+        <div class="qr-container center-align">
+            <!--Header with Part number of part used to generate the QR code-->
+            <h3>@ViewBag.DisplayedPart - QR Code</h3>
+            <!--Produced QR Code from part-->
+            <img id="qrImage" class="responsive-img" src="data:image/png;base64,@ViewBag.QRCodeImageBase64" alt="QR Code" />
+        </div>
+    }
 
-<!--Checks to see if an image has been produced from the part, and returned from the controller-->
-@if (ViewBag.QRCodeImageBase64 != null)
-{
-    <div class="qr-container center-align">
-        <!--Header with Part number of part used to generate the QR code-->
-        <h3>@ViewBag.DisplayedPart - QR Code</h3>
-        <!--Produced QR Code from part-->
-        <img id="qrImage" class="responsive-img" src="data:image/png;base64,@ViewBag.QRCodeImageBase64" alt="QR Code" />
-    </div>
-}
-
-
-<div class="btn-container">
-    <!--Allows user to share QR Code-->
-    <a id="shareButton" class="waves-effect btn blue darken-2">Share</a>
-    <!--Allows user to go back and select another part-->
-    <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="CodeCreator">Select New</a>
 </div>
+
+
+<div class="row center">
+    <div class="col s12">
+        <div class="btn-container">
+            <!--Allows user to share QR Code-->
+            <a id="shareButton" class="waves-effect btn blue darken-2">Share</a>
+            <!--Allows user to go back and select another part-->
+            <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="CodeCreator">Select New</a>
+        </div>
+    </div>
+</div>
+
 
 <script>
     document.getElementById('shareButton').addEventListener('click', async() => {

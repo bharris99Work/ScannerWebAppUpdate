@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="~/ScannerWebAppUpdate.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/materialize.min.css"/>
     <link rel="stylesheet" href="~/css/styles.css"/>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+
+
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="~/js/materialize.min.js"></script>
@@ -60,12 +68,32 @@
         </main>
     </div>
 
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn blue darken-2">
+            <i class="material-icons top">qr_code_scanner</i>Scan
+        </a>
+        <ul>
+            <li><a class="btn-floating blue darken-2" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan</a></li>
+            <li><a class="btn-floating blue darken-2" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left">create</i>Create</a></li>
+        </ul>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('.sidenav');
             var instances = M.Sidenav.init(elems, { draggable: true });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.fixed-action-btn');
+            var instances = M.FloatingActionButton.init(elems, {
+                direction: 'left',
+                hoverEnabled: false
+            });
+        });
+    </script>
+
  
 
  
