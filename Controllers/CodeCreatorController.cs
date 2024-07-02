@@ -6,6 +6,10 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Drawing.Printing;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ScannerWebAppUpdate.Controllers
 {
@@ -79,6 +83,20 @@ namespace ScannerWebAppUpdate.Controllers
 
             // Redirect to a result page or back to the index
             return RedirectToAction("CreatorResults", new { image, displayedPart = part.ItemNumber });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string itemNumber, string description, string jobNumber)
+        {
+            
+            var items = await _context.SearchPartAsync(itemNumber, jobNumber, description);
+            
+            ViewBag.PartsList = items;
+            ViewBag.CurrentPage = 1;
+            ViewBag.PageSize = items.Count;
+            ViewBag.TotalPages = 1;
+
+            return View("Index");
         }
 
 

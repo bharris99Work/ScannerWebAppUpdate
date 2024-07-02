@@ -270,6 +270,7 @@
             //Display Text Box
             returnothertext.style.display = 'block';
 
+
             //Set Text Box Value = selected part value
             returnothertext.value = ScannedPartReturnOption;
           
@@ -282,6 +283,8 @@
     }
 
 
-   
+    M.textareaAutoResize(returnothertext);
+    M.textareaAutoResize(techothertext);
+
 
 });

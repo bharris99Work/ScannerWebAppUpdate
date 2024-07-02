@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
             orderable: false
         }],
         responsive: true,
-        paging: false
+        paging: false,
+        searching: false
+
     });
 
 

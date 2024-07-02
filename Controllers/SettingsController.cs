@@ -68,14 +68,14 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
         [HttpPost]
-        public IActionResult uploadPart(Part testPart)
+        public async Task<IActionResult> uploadPart(Part testPart)
         {
             bool uploadstatus = false;
             if (testPart != null)
             {
                 testPart.ReturnOption = "";
                 testPart.TechOption = "";
-                uploadstatus = _context.AddPart(testPart);
+                uploadstatus = await _context.AddPartAsync(testPart);
             }
             return uploadStatus(uploadstatus);
         }
@@ -125,7 +125,7 @@ namespace ScannerWebAppUpdate.Controllers
 
         }
 
-        public IActionResult uploadTestParts()
+        public async Task<IActionResult> uploadTestParts()
         {
             try
             {
@@ -135,7 +135,7 @@ namespace ScannerWebAppUpdate.Controllers
                 new Part("TestPart4", "TestJob4", "Tech Option 2","Abandoned Job", 132),
                 new Part("TestPart5", "TestJob5", "Tech Option 1","Wrong Part", 65) };
 
-                bool updateStatus = _context.AddPartsList(TestParts);
+                bool updateStatus = await _context.AddPartsList(TestParts);
 
                 return uploadStatus(updateStatus);
             }
@@ -194,7 +194,7 @@ namespace ScannerWebAppUpdate.Controllers
 
                 if(dataTable != null && dataTable.Rows.Count > 1)
                 {
-                   bool uploadStatus = _context.UploadPartsFromExcel(dataTable);
+                   bool uploadStatus = await _context.UploadPartsFromExcelAsync(dataTable);
                 }
 
                 using (var stream = new FileStream(path, FileMode.Create))
@@ -202,7 +202,7 @@ namespace ScannerWebAppUpdate.Controllers
                     await file.CopyToAsync(stream);
                 }
             }
-            return Index("");
+            return RedirectToAction("Index")     ;
         }
 
 

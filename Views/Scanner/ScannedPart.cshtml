@@ -9,23 +9,29 @@
 <head>
     <style>
      
-
-
-
-    
-
     </style>
 </head>
 
 
 <!-- Admin Modal Structure TODO: Add password function to dialog -->
 <div id="AdminDialog" class="modal">
-    <div class="container">
-        <div class="row">
+    <div class="row">
+        <h4>Password Locked </h4>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <h6>Please enter admin passcode to change information.</h6>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
             <label>Enter Passcode (1234): </label>
             <input type="text" id="enteredPasscode" />
         </div>
-        <div class="row">
+    </div>
+    <div class="row">
+        <div class="col s12">
             <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
             <button class="waves-effect btn blue darken-2 modal-close" id="enterPasscode">Enter</button>
         </div>
@@ -135,7 +141,7 @@
                         }
                     </select>
                     <input type="hidden" id="hiddenReturnOpt" name="ReturnOption" />
-                    <input type="text" id="returnOptionText" name="returnOther" style="display:none;" />
+                    <textarea class="materialize-textarea" placeholder="Type Return Reason" type="text" id="returnOptionText" name="returnOther" style="display:none;"></textarea>
                 </div>
             </div>
             <div class="col s5">
@@ -173,10 +179,9 @@
                                 techcount++;
                             }
                         }
-
                     </select>
                     <input type="hidden" id="hiddenTechOpt" name="TechOption" />
-                    <input type="text" id="techOptionText" name="techOther" style="display:none;" />
+                        <textarea class="materialize-textarea" placeholder="Type Tech Option" type="text" id="techOptionText" name="techOther" style="display:none;"></textarea>
                 </div>
             </div>
             <div class="col s5">

@@ -16,7 +16,7 @@
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var datatables_net_dt__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! datatables.net-dt */ \"./node_modules/datatables.net-dt/js/dataTables.dataTables.mjs\");\n\ndocument.addEventListener('DOMContentLoaded', function () {\n  var dataTable = document.getElementById('datatable');\n  var table = new datatables_net_dt__WEBPACK_IMPORTED_MODULE_0__[\"default\"](dataTable, {\n    columnDefs: [{\n      targets: -1,\n      // Disable sorting on the last column (the buttons)\n      orderable: false\n    }],\n    responsive: true,\n    paging: false\n  });\n});\n\n//# sourceURL=webpack://scannerwebappupdate/./wwwroot/js/codeTable.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var datatables_net_dt__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! datatables.net-dt */ \"./node_modules/datatables.net-dt/js/dataTables.dataTables.mjs\");\n\ndocument.addEventListener('DOMContentLoaded', function () {\n  var dataTable = document.getElementById('datatable');\n  var table = new datatables_net_dt__WEBPACK_IMPORTED_MODULE_0__[\"default\"](dataTable, {\n    columnDefs: [{\n      targets: -1,\n      // Disable sorting on the last column (the buttons)\n      orderable: false\n    }],\n    responsive: true,\n    paging: false,\n    searching: false\n  });\n});\n\n//# sourceURL=webpack://scannerwebappupdate/./wwwroot/js/codeTable.js?");
 
 /***/ }),
 

@@ -1,10 +1,16 @@
 ﻿<head>
-<style>
+    <style>
         .table-container {
+            display: block;
             overflow-x: auto;
+            width: 100%;
         }
 
-</style>
+        .dataTable {
+            width: 100%;
+        }
+
+    </style>
 
 </head>
 
@@ -17,12 +23,53 @@
 }
 <div>
     <div class="row">
-        <div class="col s12 center">
+        <h6 class="browser-default" id="searchError"></h6>
+
+    </div>
+    <div class="row">
+        <form asp-action="Search" asp-controller="CodeCreator">
+            <div class="row">
+                <div class="col s6">
+                    <!--Searches for part by item number-->
+                    <label for="itemNumSearch">Item Number: </label>
+                    <input placeholder="Enter Item Number" id="itemNumSearch" type="text" name="itemNumber">
+                </div>
+                <div class="col s6">
+                    <!--Searches for part by job number-->
+                    <label for="jobNumSearch">Job Number: </label>
+                    <input placeholder="Enter Job Number" id="jobNumSearch" type="text" name="jobNumber">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <!--Searches for part by description-->
+                    <label for="descriptionSearch">Description: </label>
+                    <input placeholder="Enter Part Description" id="descriptionSearch" type="text" name="description">
+                </div>
+            </div>
+            <div class="row valign-wrapper center">
+                <div class="col s12">
+                   <div class="btn-container">
+                        <!--Searches for part in DB-->
+                        <button id="submitbn" class="btn blue darken-2" type="submit" name="action">
+                            Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                        <!--Resets form back to original state-->
+                        <a class="btn red darken-2" id="resetForm">
+                            Reset
+                            <i class="material-icons right">restart_alt</i>
+                        </a>
+                   </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col s12">
             <div class="table-container">
-
-
                 <!--Table featuring parts that where returned from search-->
-                <table id="datatable" class="striped responsive">
+                <table id="datatable" class="dataTable striped responsive">
                     <thead>
                         <tr>
                             <th>Part Number: </th>
@@ -68,22 +115,23 @@
         <!-- Display 'First' and 'Previous' links if not on the first page -->
         @if (currentPage > 1)
         {
-           <li class="waves-effect"> <a href="?page=1&pageSize=@pageSize">First</a></li>
-           <li class="waves-effect"> <a href="?page=@(currentPage - 1)&pageSize=@pageSize">Previous</a></li>
+            <li class="waves-effect"> <a href="?page=1&pageSize=@pageSize">First</a></li>
+            <li class="waves-effect"> <a href="?page=@(currentPage - 1)&pageSize=@pageSize">Previous</a></li>
         }
 
         <!-- Generate pagination links for each page -->
         @for (int i = 1; i <= totalPages; i++)
         {
-           <li class="waves-effect"> <a href="?page=@i&pageSize=@pageSize" class="@(i == currentPage ? "active" : "")">@i</a></li>
+            <li class="waves-effect"> <a href="?page=@i&pageSize=@pageSize" class="@(i == currentPage ? "active" : "")">@i</a></li>
         }
 
         <!-- Display 'Next' and 'Last' links if not on the last page -->
         @if (currentPage < totalPages)
         {
-           <li class="waves-effect"> <a href="?page=@(currentPage + 1)&pageSize=@pageSize">Next</a></li>
-           <li class="waves-effect"> <a href="?page=@totalPages&pageSize=@pageSize">Last</a></li>
+            <li class="waves-effect"> <a href="?page=@(currentPage + 1)&pageSize=@pageSize">Next</a></li>
+            <li class="waves-effect"> <a href="?page=@totalPages&pageSize=@pageSize">Last</a></li>
         }
     </ul>
 </div>
 <script src="~/dist/codeTable.bundle.js"></script>
+<script src="~/js/codeCreatorSearch.js"></script>

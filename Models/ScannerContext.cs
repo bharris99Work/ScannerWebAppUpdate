@@ -25,7 +25,7 @@ namespace ScannerWebAppUpdate.Models
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
 
-        public bool AddPart(Part part)
+        public async Task<bool> AddPartAsync(Part part)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace ScannerWebAppUpdate.Models
                 if (!Parts.Any(parts => parts.ItemNumber == part.ItemNumber))
                 {
                     Parts.Add(part);
-                    SaveChanges();
+                    await SaveChangesAsync();
                     return true;
                 }
                 return false;
@@ -47,13 +47,13 @@ namespace ScannerWebAppUpdate.Models
 
         }
 
-        public bool AddPartsList(ObservableCollection<Part> parts) 
+        public async Task<bool> AddPartsList(ObservableCollection<Part> parts) 
         {
             try
             {
                 foreach (Part part in parts)
                 {
-                    if (!AddPart(part))
+                    if (!await AddPartAsync(part))
                     {
                         return false;
                     }
@@ -193,7 +193,7 @@ namespace ScannerWebAppUpdate.Models
         }
 
 
-        public bool UploadPartsFromExcel(DataTable partsTable)
+        public async Task<bool> UploadPartsFromExcelAsync(DataTable partsTable)
         {
             try
             {
@@ -206,9 +206,9 @@ namespace ScannerWebAppUpdate.Models
                         Quantity = int.Parse(row["Quantity"].ToString()),
                         ReturnOption = row["ReturnReason"].ToString()
                     };
-                    AddPart(part);
+                    await AddPartAsync(part);
                 }
-                SaveChanges();
+                await SaveChangesAsync();
                 return true;
 
             }
@@ -217,6 +217,28 @@ namespace ScannerWebAppUpdate.Models
 
                 return false;
             }
+        }
+
+        public async Task<List<Part>> SearchPartAsync(string itemNumber, string jobNumber, string description)
+        {
+            var query = Parts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(itemNumber))
+            {
+                query = query.Where(p => p.ItemNumber.ToLower().Trim().Contains(itemNumber.ToLower().Trim()));
+            }
+            if (!string.IsNullOrEmpty(description))
+            {
+                query = query.Where(p => p.ItemNumber.Trim().Contains(description));
+            }
+            if (!string.IsNullOrEmpty(jobNumber))
+            {
+                query = query.Where(p => p.JobNumber.ToLower().Trim().Contains(jobNumber.ToLower().Trim()));
+            }
+
+            var items = await query.ToListAsync();
+
+            return items;
         }
     }
 }

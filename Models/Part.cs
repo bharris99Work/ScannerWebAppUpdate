@@ -18,8 +18,8 @@
             ItemNumber = partNumber;
             JobNumber = jobNumber;
  
-            ReturnOption = "N/A";
-            TechOption = "N/A";
+            ReturnOption = "";
+            TechOption = "";
 
             Quantity = 0;
         }
