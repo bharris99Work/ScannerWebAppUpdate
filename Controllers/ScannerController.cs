@@ -46,7 +46,7 @@ namespace ScannerWebAppUpdate.Controllers
             ResultPart resultPart = new ResultPart();
             foreach (var part in PartsList)
             {
-                if (part.ItemNumber == scannedPart)
+                if (part.ItemNumber.ToLower().Trim() == scannedPart.ToLower().Trim())
                 {
                     return RedirectToAction("ScannedPart", part);
                 }

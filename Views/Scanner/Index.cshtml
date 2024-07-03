@@ -66,25 +66,7 @@
         width: 75vw;
     }
 
-    #ScanDialog {
-        width: 80vw;
-        height: 60vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        display: none;
-    }
-
-    @@media only screen and (min-width: 768px) {
-        #ScanDialog {
-            width: 80vw;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            display: none;
-        }
-    }
+ 
 /* 
     .modal-container {
         width: 100%;
@@ -180,7 +162,7 @@
                     <div class="text-btn-container">
                         <div class="scantext-container">
                             <!--Displays scanned part number-->
-                            <label class="text-black" for="resultText">Part Number:</label>
+                            <label class="text-black text-darken-2" for="resultText">Part Number:</label>
                             <input placeholder="Scan or Enter Part Number" type="text" id="resultText" readonly name="scannedPart" value="@ViewBag.ScannedText">
                             <a class="btn-flat disabled" id="lockimg"><i class="material-icons">lock</i></a>
                             <a class="btn-flat disabled" id="unlockimg"><i class="material-icons">lock_open</i></a>

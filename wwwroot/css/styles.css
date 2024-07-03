@@ -19,7 +19,25 @@
     align-items: center;
     justify-content: center;
 }
+.perfect-center-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
 
+
+.result-Dialog {
+    width: 80vw;
+    height: 60vh;
+    border-radius: 15px; /* Adjust the value as needed */
+}
+
+.admin-Dialog {
+    width: 80vw;
+    height: 50vh;
+    border-radius: 15px; /* Adjust the value as needed */
+}
 
 /* Custom container margin */
 .page-container {
@@ -37,19 +55,20 @@ body {
 main {
     flex: 1 0 auto;
 }
-#AdminDialog {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    display: none;
-    width: 90vw;
-    height: 45vh;
-}
 
 .vertical-btn-container {
     display: inline-grid;
     grid-auto-flow: row;
     grid-auto-columns: 1fr;
+}
+
+#ScanDialog {
+    width: 80vw;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
 }
 
 .btn-container {
@@ -67,9 +86,22 @@ main {
     }
 
 @media only screen and (min-width: 768px){
-    #AdminDialog {
-        width: 30vw;
-        height: 55vh;
+
+    .result-Dialog {
+        width: 35vw;
+        height: 45vh;
+        border-radius: 15px; /* Adjust the value as needed */
+    }
+
+    .admin-Dialog {
+        width: 35vw;
+        height: 45vh;
+        border-radius: 15px; /* Adjust the value as needed */
+    }
+
+    #ScanDialog {
+        width: 50vw;
+        height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -91,15 +123,7 @@ main {
         .btn-container button {
             margin: 0 4px;
         }
-
-
-
 }
-
-
-
-
-
     /* label color */
     /*.input-field label {
     color: black;

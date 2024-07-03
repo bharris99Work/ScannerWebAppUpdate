@@ -171,7 +171,14 @@ namespace ScannerWebAppUpdate.Models
                     Part foundPart = part;
 
                     foundPart.ItemNumber = newPart.ItemNumber;
-                    foundPart.JobNumber = newPart.JobNumber;
+                    if(foundPart.JobNumber != null && foundPart.JobNumber != string.Empty)
+                    {
+                        foundPart.JobNumber = newPart.JobNumber;
+
+                    }
+                    else
+                        foundPart.JobNumber = "";
+
                     foundPart.Quantity = newPart.Quantity;
                     foundPart.TechOption = newPart.TechOption;
                     foundPart.ReturnOption = newPart.ReturnOption;
