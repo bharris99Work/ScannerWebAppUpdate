@@ -26,14 +26,14 @@ namespace ScannerWebAppUpdate.Controllers
             return View();
         }
 
-        public IActionResult UploadTech(string techDescription)
+        public async Task<IActionResult> UploadTech(string techDescription)
         {
             try
             {
                 if (techDescription != null & techDescription != string.Empty)
                 {
                     TechOption techOption = new TechOption(techDescription);
-                    bool updateStatus = _context.AddTech(techOption);
+                    bool updateStatus = await _context.AddTech(techOption);
                     return uploadStatus(updateStatus);
                 }
                 return uploadStatus(false);
@@ -45,14 +45,14 @@ namespace ScannerWebAppUpdate.Controllers
             }
         }
 
-        public IActionResult UploadReturn(string returnDescription)
+        public async Task<IActionResult> UploadReturn(string returnDescription)
         {
             try
             {
                 if (returnDescription != null & returnDescription != string.Empty)
                 {
                     ReturnOption returnOption = new ReturnOption(returnDescription);
-                    bool updateStatus = _context.AddReturn(returnOption);
+                    bool updateStatus = await _context.AddReturn(returnOption);
                     return uploadStatus(updateStatus);
 
                 }
@@ -81,7 +81,7 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
 
-        public IActionResult uploadTestReturns()
+        public async Task<IActionResult> uploadTestReturns()
         {
             try
             {
@@ -89,7 +89,7 @@ namespace ScannerWebAppUpdate.Controllers
                 new ReturnOption("Abandoned Job"), new ReturnOption("Missing Parts"), new ReturnOption("Extra Parts"),
                 new ReturnOption("Repair"), new ReturnOption("Wrong Part")};
 
-                bool updateStatus = _context.AddReturnList(TestReturns);
+                bool updateStatus = await _context.AddReturnList(TestReturns);
 
                 return uploadStatus(updateStatus);
             }
@@ -102,7 +102,7 @@ namespace ScannerWebAppUpdate.Controllers
 
         }
 
-        public IActionResult uploadTestTechs()
+        public async Task<IActionResult> uploadTestTechs()
         {
             try
             {
@@ -111,7 +111,7 @@ namespace ScannerWebAppUpdate.Controllers
                 TestTechs = new ObservableCollection<TechOption>() { new TechOption("Tech Option 1"),
                 new TechOption("Tech Option 2"), new TechOption("Tech Option 3")};
 
-                bool updateStatus = _context.AddTechList(TestTechs);
+                bool updateStatus = await _context.AddTechList(TestTechs);
 
                 return uploadStatus(updateStatus);
             }

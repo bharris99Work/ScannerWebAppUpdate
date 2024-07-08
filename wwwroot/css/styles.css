@@ -14,8 +14,8 @@
 }
 
 .perfect-center {
-    height: 75vh;
-    display: flex;
+    height: 50vh;
+    
     align-items: center;
     justify-content: center;
 }
@@ -39,11 +39,14 @@
     border-radius: 15px; /* Adjust the value as needed */
 }
 
+
 /* Custom container margin */
 .page-container {
     width: 95%;
+    height: 100%;
     margin: 5px auto;
     padding-bottom: 50px; /* Adjust this value as needed */
+
 }
 
 body {
@@ -71,6 +74,14 @@ main {
     display: none;
 }
 
+.title-header {
+    font-weight: 200;
+}
+
+
+
+
+
 .btn-container {
     display: inline-grid;
     grid-auto-flow: row;
@@ -85,7 +96,20 @@ main {
         margin: 2px;
     }
 
-@media only screen and (min-width: 768px){
+@media only screen and (min-width: 993px){
+
+
+    /* Custom container margin */
+    .page-container {
+        width: 95%;
+        margin: 5px auto;
+        padding-bottom: 50px; /* Adjust this value as needed */
+        padding-left: 265px;
+    }
+
+    .invesible-top {
+        top: 65px;
+    }
 
     .result-Dialog {
         width: 35vw;

@@ -12,12 +12,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var resultext = document.getElementById('resultText');
 
     var submit = document.getElementById('submitbn');
+    var progressbar = document.getElementById('progressBar');
+
+   //progressbar.style.display = 'none';
 
     var scanning = false;
     var availabledevices;
     var cameraid;
 
-   
 
     //Hides switch camera button, unhides if multiple devices are found
     switchcamera.style.display = 'none';
@@ -199,11 +201,23 @@ document.addEventListener('DOMContentLoaded', function () {
     //        html5QrCode.start(cameraid, config, qrCodeSuccessCallback);
     //        scanning = true;
     //    }
-       
+
     //});
 
+    /*
     scanstop.addEventListener('click', function () {
         stopCamera();
+    });*/
+
+    submit.addEventListener('click', function (event) {
+
+        if (resultext.value == '') {
+            event.preventDefault();
+        }
+        else {
+            progressbar.style.display = 'block';
+        }
+
     });
 
 

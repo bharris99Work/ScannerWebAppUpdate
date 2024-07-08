@@ -41,16 +41,21 @@ namespace ScannerWebAppUpdate.Controllers
 
 
         [HttpPost]
-        public IActionResult ProcessScannedPart(string scannedPart)
+        public async Task<IActionResult> ProcessScannedPart(string scannedPart)
         {
             ResultPart resultPart = new ResultPart();
-            foreach (var part in PartsList)
+            // Simulate an asynchronous database search
+            var matchingPart = await Task.Run(() =>
+                PartsList.FirstOrDefault(part =>
+                    part.ItemNumber.ToLower().Trim() == scannedPart.ToLower().Trim()
+                )
+            );
+
+            if (matchingPart != null)
             {
-                if (part.ItemNumber.ToLower().Trim() == scannedPart.ToLower().Trim())
-                {
-                    return RedirectToAction("ScannedPart", part);
-                }
+                return RedirectToAction("ScannedPart", matchingPart);
             }
+       
             string newresult = "Part Not Found";
             resultPart.Result = newresult;
             resultPart.ScannedString = scannedPart;
@@ -112,7 +117,7 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadPart(Part newPart, string returnOther, string techOther)
+        public async Task<IActionResult> UploadPart(Part newPart, string returnOther, string techOther)
         {
             //Other string and no option selected
             if (techOther != null && techOther.Length > 0) {
@@ -152,7 +157,7 @@ namespace ScannerWebAppUpdate.Controllers
                 Console.WriteLine("No Option was selected");
 
             }
-            PartUpdate partUpdate = new PartUpdate(newPart, _context.UpdatePart(newPart));
+            PartUpdate partUpdate = new PartUpdate(newPart, await _context.UpdatePart(newPart));
             string serializedPartUpdate = JsonConvert.SerializeObject(partUpdate);
 
 

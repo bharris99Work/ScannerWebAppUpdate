@@ -21,47 +21,59 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="~/js/materialize.min.js"></script>
     <style>
-        .brand-logo img {
-            height: 100% !important;
-            width: auto !important;
+        .navbar-fixed .nav-wrapper{
+            height: 65px;
         }
 
-        nav{
-            height: 75px;
+        .brand-logo img{
+            height:58px;
+            width: auto;
         }
+
+       
     </style>
 
 </head>
 <body class="has-fixed-sidenav">
     <header>
-        <div>
-            <h6 class="right-align">Account: Admin</h6>
-        </div>
-        <!-- Navigation Bar -->
-        <nav>
-            <div class="nav-wrapper blue darken-2">
-                <a asp-area="" asp-controller="Home" asp-action="Index"><img class="brand-logo responsive-img" src="~/img/APS_Logo_75.png" /></a>
-                <a href="!#" data-target="mobile-demo" class="sidenav-trigger center-align  text-white"><i class="material-icons">menu</i></a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li> <a asp-area="" asp-controller="Scanner" asp-action="">Scan Part</a></li>
-                    <li><a asp-area="" asp-controller="CodeCreator" asp-action="">Create Barcode</a></li>
-                    <li><a asp-area="" asp-controller="Settings" asp-action="">Settings</a></li>
-                    <li><a asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
-                </ul>
-            </div>
-        </nav>
 
-        <!-- Sidenav -->
-        <ul class="sidenav white text-blue darken-2" id="mobile-demo">
-            <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-            <li> <a asp-area="" asp-controller="Scanner" asp-action="">Scan Part</a></li>
-            <li><a asp-area="" asp-controller="CodeCreator" asp-action="">Create Barcode</a></li>
-            <li><a asp-area="" asp-controller="Settings" asp-action="">Settings</a></li>
-            <li><a asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
-        </ul>
+
+        <div class="navbar-fixed">
+            <nav>
+                <div class="nav-wrapper white">
+                    <a class="brand-logo responsive-img" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/Resize APS.png"></a>
+                    <a href="!#" data-target="mobile-demo" class="sidenav-trigger hide-on-large-only text-blue"><i class="material-icons">menu</i></a>
+                    
+                </div>
+            </nav>
+        </div>
 
     </header>
+
+
+    <!-- Mobile Sidenav -->
+    <ul class="sidenav blue darken-2 white-text" id="mobile-demo">
+        <li><a class="white-text" asp-area="" asp-controller="Home" asp-action="Index"><i class="material-icons left indigo-text text-darken-4">dashboard</i>Dashboard</a></li>
+        <li> <a class="white-text" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Scanner</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left  indigo-text text-darken-4">print</i>Print Barcode</a></li>
+        <li><a><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li>
+        <li><a><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="Settings" asp-action=""><i class="material-icons left  indigo-text text-darken-4">settings</i>Settings</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
+    </ul>
+
+    <!--Fixed SideNav-->
+    <ul class="sidenav blue darken-2 white-text sidenav-fixed hide-on-med-and-down invesible-top" id="mobile-nav">
+        <li><a class="white-text" asp-area="" asp-controller="Home" asp-action="Index"><i class="material-icons left  indigo-text text-darken-4">dashboard</i>Dashboard</a></li>
+        <li> <a class="white-text" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Scanner</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left indigo-text text-darken-4">print</i>Print Barcode</a></li>
+        <li><a><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li>
+        <li><a><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="Settings" asp-action=""><i class="material-icons left  indigo-text text-darken-4">settings</i>Settings</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
+    </ul>
+
+
     <div class="page-container">
         <main role="main" class="pb-3">
             @RenderBody()

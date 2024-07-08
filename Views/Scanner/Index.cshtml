@@ -66,73 +66,73 @@
         width: 75vw;
     }
 
- 
-/* 
-    .modal-container {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-    }
 
-    #reader {
-        flex: 1;
-       
-    }
+    /*
+        .modal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+        }
 
-    #ScanDialog {
-        width: 90vw;
-        height: 45vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        display: none;
-    }
+        #reader {
+            flex: 1;
 
-    .vertical-btn-container {
-        display: flex;
-        flex-direction: column;
-    }
+        }
 
-    .scantext-container {
-        display: flex;
-        flex-direction: column;
-        align-self: flex-end;
-        width: 75vw;
-    }
-
-    .text-btn-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        align-content: stretch;
-    }
-
-    .btn-scanning {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        z-index: 1;
-    }
-
-    @@media only screen and (min-width: 768px) {
         #ScanDialog {
-            width: 45vw;
-            height: 90vh;
+            width: 90vw;
+            height: 45vh;
             display: flex;
             align-items: center;
             justify-content: center;
             display: none;
         }
 
+        .vertical-btn-container {
+            display: flex;
+            flex-direction: column;
+        }
 
-    }
- */
+        .scantext-container {
+            display: flex;
+            flex-direction: column;
+            align-self: flex-end;
+            width: 75vw;
+        }
 
- 
+        .text-btn-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            align-content: stretch;
+        }
+
+        .btn-scanning {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1;
+        }
+
+        @@media only screen and (min-width: 768px) {
+            #ScanDialog {
+                width: 45vw;
+                height: 90vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                display: none;
+            }
+
+
+        }
+     */
+
+
 
 </style>
 
@@ -145,27 +145,38 @@
         @* <button class="btn-floating btn-small waves-effect blue darken-2" id="stopScan"><i class="material-icons">pause</i>Pause Scan</button> *@
         <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
 
-        
+
     </div>
 </div>
 <!-- Scan Modal Trigger -->
 @* <button data-target="ScanDialog" class="btn modal-trigger">Scan Item</button> *@
 
 <div>
-    <h1>@ViewBag.PartFound</h1>
-    <div class="perfect-center">
+   
+    <h3 class="title-header">Scanner:</h3>
+   
+    <div>
         <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
             <!--Scanner text box and buttons-->
             <div class="row">
                 <!--Form containing scanned part number-->
                 <div class="col s12">
+                    <h5 class="red-text">@ViewBag.PartFound</h5>
                     <div class="text-btn-container">
                         <div class="scantext-container">
                             <!--Displays scanned part number-->
                             <label class="text-black text-darken-2" for="resultText">Part Number:</label>
                             <input placeholder="Scan or Enter Part Number" type="text" id="resultText" readonly name="scannedPart" value="@ViewBag.ScannedText">
                             <a class="btn-flat disabled" id="lockimg"><i class="material-icons">lock</i></a>
-                            <a class="btn-flat disabled" id="unlockimg"><i class="material-icons">lock_open</i></a>
+                            <a class="btn-flat disabled" id="unlockimg" style="display: none;"><i class="material-icons">lock_open</i></a>
+                            <div class="row">
+                                <div class="col s12">
+                                    <!--Progress bar for item search-->
+                                    <div id="progressBar" class="progress" style="display: none;">
+                                        <div class="indeterminate"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="vertical-btn-container">
@@ -192,12 +203,15 @@
             </div>
 
         </form>
+   
+
     </div>
+  
 </div>
 
 <script src="~/js/materialize.min.js"></script>
 <!-- Webpack bundle of scripts-->
-<script src="~/dist/bundle.js" defer></script>
+<script src="~/dist/capture.bundle.js" defer></script>
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -212,8 +226,8 @@
         let unlockimg = document.getElementById('unlockimg');
         let lockimg = document.getElementById('lockimg');
 
-        lockimg.style.display = "block";
-        unlockimg.style.display = "none";
+       // lockimg.style.display = "block";
+       // unlockimg.style.display = "none";
 
         clearBN.addEventListener('click', function () {
             resultText.value = "";

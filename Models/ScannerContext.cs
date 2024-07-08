@@ -69,13 +69,13 @@ namespace ScannerWebAppUpdate.Models
 
 
 
-        public bool AddTechList(ObservableCollection<TechOption> TestTechOptions)
+        public async Task<bool> AddTechList(ObservableCollection<TechOption> TestTechOptions)
         {
             try
             {
                 foreach (TechOption tech in TestTechOptions)
                 {
-                    if (!AddTech(tech)){
+                    if (!await AddTech(tech)){
                         return false;
                     }
                       
@@ -90,13 +90,13 @@ namespace ScannerWebAppUpdate.Models
 
         }
 
-        public bool AddReturnList(ObservableCollection<ReturnOption> TestReturnOptions)
+        public async Task<bool> AddReturnList(ObservableCollection<ReturnOption> TestReturnOptions)
         {
             try
             {
                 foreach (ReturnOption returnOption in TestReturnOptions)
                 {
-                    if (!AddReturn(returnOption)){
+                    if (!await AddReturn(returnOption)){
                         return false;
                     }
                 }
@@ -110,7 +110,7 @@ namespace ScannerWebAppUpdate.Models
 
         }
 
-        public bool AddTech(TechOption techOption)
+        public async Task<bool> AddTech(TechOption techOption)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace ScannerWebAppUpdate.Models
                 if (!TechOptions.Any(tech => tech.Description == techOption.Description))
                 {
                     TechOptions.Add(techOption);
-                    SaveChanges();
+                    await SaveChangesAsync();
                     return true;
                 }
                 else
@@ -136,7 +136,7 @@ namespace ScannerWebAppUpdate.Models
 
         }
 
-        public bool AddReturn(ReturnOption returnOption)
+        public async Task<bool> AddReturn(ReturnOption returnOption)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace ScannerWebAppUpdate.Models
                 if (!ReturnOptions.Any(returnOpt => returnOpt.Description == returnOption.Description))
                 {
                     ReturnOptions.Add(returnOption);
-                    SaveChanges();
+                    await SaveChangesAsync();
                     return true;
                 }
                 return false;
@@ -160,7 +160,7 @@ namespace ScannerWebAppUpdate.Models
 
         }
 
-        public bool UpdatePart(Part newPart)
+        public async Task<bool> UpdatePart(Part newPart)
         {
             try
             {
@@ -182,7 +182,7 @@ namespace ScannerWebAppUpdate.Models
                     foundPart.Quantity = newPart.Quantity;
                     foundPart.TechOption = newPart.TechOption;
                     foundPart.ReturnOption = newPart.ReturnOption;
-                    SaveChanges();
+                    await SaveChangesAsync();
                     return true;
                 }
                 else
