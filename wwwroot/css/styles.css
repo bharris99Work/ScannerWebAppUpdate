@@ -1,24 +1,21 @@
 ﻿.btn-large {
     margin: 2px;
-   
 }
 
 .btn {
     margin: 2px;
- 
 }
 
 .btn-small {
     margin: 2px;
-   
 }
 
 .perfect-center {
     height: 50vh;
-    
     align-items: center;
     justify-content: center;
 }
+
 .perfect-center-content {
     display: flex;
     align-items: center;
@@ -46,13 +43,36 @@
     height: 100%;
     margin: 5px auto;
     padding-bottom: 50px; /* Adjust this value as needed */
-
 }
 
 body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+}
+
+.truncate {
+    display: inline-block;
+    max-width: 150px; /* Adjust the width as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+.expanded {
+    white-space: normal;
+    max-width: none;
+}
+
+.table-container {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.dataTable {
+    width: 100%;
 }
 
 main {
@@ -79,6 +99,14 @@ main {
 }
 
 
+.form-container {
+    margin: 8px 0px 0px 0px;
+}
+
+.center-help-container {
+    height: 75vh;
+    align-content: center;
+}
 
 
 
@@ -96,8 +124,11 @@ main {
         margin: 2px;
     }
 
-@media only screen and (min-width: 993px){
+@media only screen and (min-width: 993px) {
 
+    .form-container {
+        margin: 2px 0px 0px 0px;
+    }
 
     /* Custom container margin */
     .page-container {
@@ -148,27 +179,27 @@ main {
             margin: 0 4px;
         }
 }
-    /* label color */
-    /*.input-field label {
+/* label color */
+/*.input-field label {
     color: black;
     
 }*/
-    /* label focus color */
-    /*.input-field input[type=text]:focus + label {
+/* label focus color */
+/*.input-field input[type=text]:focus + label {
     color: green;
 }*/
-    /* label underline focus color */
-    /*.input-field input[type=text]:focus {
+/* label underline focus color */
+/*.input-field input[type=text]:focus {
     border-bottom: 1px solid #000;
     box-shadow: 0 1px 0 0 #000;
 }*/
-    /* valid color */
-    /*.input-field input[type=text].valid {
+/* valid color */
+/*.input-field input[type=text].valid {
     border-bottom: 1px solid #000;
     box-shadow: 0 1px 0 0 #000;
 }*/
-    /* invalid color */
-    /*.input-field input[type=text].invalid {
+/* invalid color */
+/*.input-field input[type=text].invalid {
     border-bottom: 1px solid #000;
     box-shadow: 0 1px 0 0 #000;
 }
@@ -177,6 +208,5 @@ main {
     background-color: lightgray;
     border: 1px solid black;
     border-radius: 10px;*/ /* Adjust the value for more or less rounding */
-    /*padding: 8px;*/ /* Adjust padding to make sure text doesn't touch the border */
-    /*}*/
-        
+/*padding: 8px;*/ /* Adjust padding to make sure text doesn't touch the border */
+/*}*/

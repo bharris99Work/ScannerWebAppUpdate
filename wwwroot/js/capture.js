@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var submit = document.getElementById('submitbn');
     var progressbar = document.getElementById('progressBar');
 
+    var camerascan = document.getElementById('cameraScan');
+
+    var readerscan = document.getElementById('readerScan');
+
+    var camerafound = false;
+
    //progressbar.style.display = 'none';
 
     var scanning = false;
@@ -28,6 +34,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const options = { onCloseEnd: stopCamera };
     var instances = M.Modal.init(elems, options);
 
+
+    let cancelreader = document.getElementById('cancelReader');
+    let readeroptions = document.getElementById('readerOptions');
+    let scanoptions = document.getElementById('scanOptions');
+    let openreader = document.getElementById('readerScan');
+
+    openreader.addEventListener('click', function () {
+        readeroptions.style.display = 'block';
+        scanoptions.style.display = 'none';
+    });
+
+    cancelreader.addEventListener('click', function () {
+        readeroptions.style.display = 'none';
+        scanoptions.style.display = 'block';
+
+    });
+
+
     // Square QR box with edge size = 70% of the smaller edge of the viewfinder.
     let qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
         let minEdgePercentage = 0.7; // 70%
@@ -39,9 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-   
-
-
     // This method will trigger user permissions
     Html5Qrcode.getCameras().then(devices => {
         /**
@@ -49,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
          * { id: "id", label: "label" }
          */
         // Clear the select element first
-       // cameraselect.innerHTML = '';
+        // cameraselect.innerHTML = '';
 
         // Check if labels are present and distinguishable
         const frontCameraLabels = ["front", "selfie"];
@@ -60,51 +81,68 @@ document.addEventListener('DOMContentLoaded', function () {
         //Sets select box = to list of devices
         // Iterate over the devices array
         //devices.forEach(device => {
-            //// Create an option element
-            //var option = document.createElement('option');
-            //option.value = device.id;
-            //option.text = device.label || `Camera ${device.id}`;
+        //// Create an option element
+        //var option = document.createElement('option');
+        //option.value = device.id;
+        //option.text = device.label || `Camera ${device.id}`;
 
-            //// Add additional labeling to help distinguish cameras
-            //if (frontCameraLabels.some(label => device.label.toLowerCase().includes(label))) {
-            //    option.text = `Front Camera (${device.label})`;
-            //} else if (backCameraLabels.some(label => device.label.toLowerCase().includes(label))) {
-            //    option.text = `Back Camera (${device.label})`;
-            //}
+        //// Add additional labeling to help distinguish cameras
+        //if (frontCameraLabels.some(label => device.label.toLowerCase().includes(label))) {
+        //    option.text = `Front Camera (${device.label})`;
+        //} else if (backCameraLabels.some(label => device.label.toLowerCase().includes(label))) {
+        //    option.text = `Back Camera (${device.label})`;
+        //}
 
-            //// Append the option to the select element
-            //cameraselect.appendChild(option);
+        //// Append the option to the select element
+        //cameraselect.appendChild(option);
         //});
 
         //Finds all camera devices
         availabledevices = devices;
         //Sets cameraid = to first avalible device found
         cameraid = availabledevices[0].id
-        if (availabledevices.length > 1) {
-            //Display switch button
-            switchcamera.style.display = 'block';
-            // starts camera with back camera or fail with `OverconstrainedError`.
-            //availabledevices.forEach(device => {
-
-            //});
-            html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
-
-            back = true;
-            scanning = true;
-            scanmodalinst.open();
-        }
-        else {
-            //Starts camera with default selected device
-            html5QrCode.start(cameraid, config, qrCodeSuccessCallback);
-            scanning = true;
-            scanmodalinst.open();
-        }
+        camerafound = true;
+ 
 
     }).catch(err => {
         // handle err
         console.log("No Camera Found");
-        scanmodalinst.close();
+        camerafound = false;
+       // scanmodalinst.close();
     });
+
+   
+    camerascan.addEventListener('click', function () {
+
+        if (camerafound) {
+            if (availabledevices.length > 1) {
+                //Display switch button
+                switchcamera.style.display = 'block';
+                // starts camera with back camera or fail with `OverconstrainedError`.
+                //availabledevices.forEach(device => {
+
+                //});
+                html5QrCode.start({ facingMode: { exact: "environment" } }, config, qrCodeSuccessCallback);
+
+                back = true;
+                scanning = true;
+                scanmodalinst.open();
+                
+            }
+            else {
+                //Starts camera with default selected device
+                html5QrCode.start(cameraid, config, qrCodeSuccessCallback);
+                scanning = true;
+                scanmodalinst.open();
+            }
+        }
+        else {
+            console.log("No Camera Found");
+        }
+    
+    });
+
+ 
 
 
     //Grabs instance of scanner dialog
@@ -217,6 +255,13 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             progressbar.style.display = 'block';
         }
+
+    });
+
+    //Listens for input from reader
+    readerscan.addEventListener('click', function () {
+        let inputBuffer = '';
+
 
     });
 

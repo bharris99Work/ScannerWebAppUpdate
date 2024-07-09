@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
+using System.Linq.Expressions;
 
 namespace ScannerWebAppUpdate.Models
 {
@@ -11,6 +12,7 @@ namespace ScannerWebAppUpdate.Models
         public DbSet<Part> Parts { get; set; }
         public DbSet<ReturnOption> ReturnOptions { get; set; }
         public DbSet<TechOption> TechOptions { get; set; }
+        public DbSet<PartHistory> PartHistory { get; set; }
 
 
         public string DbPath { get; }
@@ -169,9 +171,17 @@ namespace ScannerWebAppUpdate.Models
                 if (part != null)
                 {
                     Part foundPart = part;
+                    Part oldPart = new Part()
+                    {
+                        ItemNumber = part.ItemNumber,
+                        JobNumber = part.JobNumber,
+                        Quantity = part.Quantity,
+                        ReturnOption = part.ReturnOption,
+                        TechOption = part.TechOption
+                    };
 
                     foundPart.ItemNumber = newPart.ItemNumber;
-                    if(foundPart.JobNumber != null && foundPart.JobNumber != string.Empty)
+                    if(newPart.JobNumber != null && newPart.JobNumber != string.Empty)
                     {
                         foundPart.JobNumber = newPart.JobNumber;
 
@@ -183,6 +193,8 @@ namespace ScannerWebAppUpdate.Models
                     foundPart.TechOption = newPart.TechOption;
                     foundPart.ReturnOption = newPart.ReturnOption;
                     await SaveChangesAsync();
+                    bool added = await AddToPartHistory(foundPart, oldPart);
+                    Console.WriteLine();
                     return true;
                 }
                 else
@@ -197,6 +209,52 @@ namespace ScannerWebAppUpdate.Models
                 Console.WriteLine(ex.ToString());
                 return false;
             }
+        }
+
+        public async Task<bool> AddToPartHistory(Part newPart, Part oldPart)
+        {
+            try
+            {
+                string changes = "";
+
+                if (newPart.ItemNumber != oldPart.ItemNumber)
+                {
+                    changes += "OldItemNumber: " + oldPart.ItemNumber + " -> NewItemNumber: " + newPart.ItemNumber + "; ";
+                }
+                if (newPart.JobNumber != oldPart.JobNumber)
+                {
+                    changes += "OldJobNumber: " + oldPart.JobNumber + " -> NewJobNumber: " + newPart.JobNumber + "; ";
+                }
+                if (newPart.Quantity != oldPart.Quantity)
+                {
+                    changes += "OldQuantity: " + oldPart.Quantity + " -> NewQuantity: " + newPart.Quantity + "; ";
+                }
+                if (newPart.ReturnOption != oldPart.ReturnOption)
+                {
+                    changes += "OldReturn: " + oldPart.ReturnOption + " -> NewReturn: " + newPart.ReturnOption + "; ";
+                }
+                if (newPart.TechOption != oldPart.TechOption)
+                {
+                    changes += "OldTech: " + oldPart.TechOption + " -> NewTech: " + newPart.TechOption + "; ";
+                }
+
+                PartHistory partHistory = new PartHistory()
+                {
+                    PartId = newPart.PartId,
+                    DateChanged = DateTime.Now,
+                    ChangedValues = changes
+                };
+
+                PartHistory.Add(partHistory);
+                await SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex) { 
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            
+
         }
 
 

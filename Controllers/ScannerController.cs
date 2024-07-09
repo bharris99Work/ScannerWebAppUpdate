@@ -108,11 +108,18 @@ namespace ScannerWebAppUpdate.Controllers
         //Selects a Random Part to load (REMOVE DURING PRODUCTION)
         public IActionResult LoadRandomPart()
         {
-            Random rand = new Random();
+            try
+            {
+                Random rand = new Random();
 
-            int randomInd = rand.Next(0, PartsList.Count);
+                int randomInd = rand.Next(0, PartsList.Count);
 
-            return RedirectToAction("ScannedPart", PartsList[randomInd]);
+                return RedirectToAction("ScannedPart", PartsList[randomInd]);
+            }
+            catch (Exception ex) {
+                return RedirectToAction("Index");
+            }
+          
 
         }
 

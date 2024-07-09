@@ -23,6 +23,7 @@
     <style>
         .navbar-fixed .nav-wrapper{
             height: 65px;
+           
         }
 
         .brand-logo img{
@@ -38,9 +39,9 @@
     <header>
 
 
-        <div class="navbar-fixed">
+        <div class="navbar-fixed z-depth-1">
             <nav>
-                <div class="nav-wrapper white">
+                <div class="nav-wrapper z-depth-1 white">
                     <a class="brand-logo responsive-img" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/Resize APS.png"></a>
                     <a href="!#" data-target="mobile-demo" class="sidenav-trigger hide-on-large-only text-blue"><i class="material-icons">menu</i></a>
                     
@@ -52,23 +53,23 @@
 
 
     <!-- Mobile Sidenav -->
-    <ul class="sidenav blue darken-2 white-text" id="mobile-demo">
+    <ul class="sidenav blue darken-3 white-text" id="mobile-demo">
         <li><a class="white-text" asp-area="" asp-controller="Home" asp-action="Index"><i class="material-icons left indigo-text text-darken-4">dashboard</i>Dashboard</a></li>
         <li> <a class="white-text" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Scanner</a></li>
         <li><a class="white-text" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left  indigo-text text-darken-4">print</i>Print Barcode</a></li>
-        <li><a><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li>
-        <li><a><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="ScanHistory" asp-action=""><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="PartDeliveries" asp-action=""><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Settings" asp-action=""><i class="material-icons left  indigo-text text-darken-4">settings</i>Settings</a></li>
         <li><a class="white-text" asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
     </ul>
 
     <!--Fixed SideNav-->
-    <ul class="sidenav blue darken-2 white-text sidenav-fixed hide-on-med-and-down invesible-top" id="mobile-nav">
+    <ul class="sidenav blue darken-3 white-text sidenav-fixed hide-on-med-and-down invesible-top" id="mobile-nav">
         <li><a class="white-text" asp-area="" asp-controller="Home" asp-action="Index"><i class="material-icons left  indigo-text text-darken-4">dashboard</i>Dashboard</a></li>
         <li> <a class="white-text" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Scanner</a></li>
         <li><a class="white-text" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left indigo-text text-darken-4">print</i>Print Barcode</a></li>
-        <li><a><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li>
-        <li><a><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="ScanHistory" asp-action=""><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li>
+        <li><a class="white-text" asp-area="" asp-controller="PartDeliveries" asp-action=""><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Settings" asp-action=""><i class="material-icons left  indigo-text text-darken-4">settings</i>Settings</a></li>
         <li><a class="white-text" asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
     </ul>

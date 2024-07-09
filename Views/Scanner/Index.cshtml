@@ -67,6 +67,8 @@
     }
 
 
+
+
     /*
         .modal-container {
             width: 100%;
@@ -150,12 +152,41 @@
 </div>
 <!-- Scan Modal Trigger -->
 @* <button data-target="ScanDialog" class="btn modal-trigger">Scan Item</button> *@
-
-<div>
+<div class="center-help-container">
    
-    <h3 class="title-header">Scanner:</h3>
+  
    
     <div>
+        <div class="row valign-wrapper">
+            <div class="col s12">
+
+                <!--Options for scanning bar codes-->
+                <div id="scanOptions" class=" valign-wrapper">
+                    <button class="btn waves-effect blue darken-2" id="cameraScan"><i class="material-icons">photo_camera</i></button>
+                    <button class="btn waves-effect blue darken-2" id="readerScan"><i class="material-icons">barcode_reader</i></button>
+                </div>
+            
+                <!--Options avalible if reader is selected-->
+                <div id="readerOptions" style="display: none;" class="valign-wrapper">
+
+                    <button class="btn waves-effect red accent-4 valign" id="cancelReader">Cancel</button>
+                    <h7 class="valign">Waiting For Barcode Reader Input....</h7>
+                    <div class="preloader-wrapper small active valign">
+                        <div class="spinner-layer spinner-green-only valign">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+          
+            </div>
+        </div>
         <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
             <!--Scanner text box and buttons-->
             <div class="row">
@@ -225,6 +256,8 @@
         let resultText = document.getElementById('resultText');
         let unlockimg = document.getElementById('unlockimg');
         let lockimg = document.getElementById('lockimg');
+
+     
 
        // lockimg.style.display = "block";
        // unlockimg.style.display = "none";

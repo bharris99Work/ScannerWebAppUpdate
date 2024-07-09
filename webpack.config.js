@@ -4,7 +4,8 @@ module.exports = {
     entry: {
         capture: './wwwroot/js/capture.js',
         testCapture: './wwwroot/js/testCapture.js',
-        codeTable: './wwwroot/js/codeTable.js'
+        codeTable: './wwwroot/js/codeTable.js',
+        scanHistoryTable: './wwwroot/js/scanHistoryTable.js'
     },
     output: {
         filename: '[name].bundle.js',
