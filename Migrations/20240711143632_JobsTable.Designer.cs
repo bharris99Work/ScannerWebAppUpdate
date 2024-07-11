@@ -11,14 +11,63 @@ using ScannerWebAppUpdate.Models;
 namespace ScannerWebAppUpdate.Migrations
 {
     [DbContext(typeof(ScannerContext))]
-    [Migration("20240709173734_PartDeliveryTable")]
-    partial class PartDeliveryTable
+    [Migration("20240711143632_JobsTable")]
+    partial class JobsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
+
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.AssignedPart", b =>
+                {
+                    b.Property<int>("AssignedPartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("AssignedPartId");
+
+                    b.ToTable("AssignedParts");
+                });
+
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.Jobs", b =>
+                {
+                    b.Property<int>("JobsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JobNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("JobsId");
+
+                    b.ToTable("Jobs");
+                });
 
             modelBuilder.Entity("ScannerWebAppUpdate.Models.Part", b =>
                 {

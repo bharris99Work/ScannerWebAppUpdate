@@ -6,11 +6,43 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ScannerWebAppUpdate.Migrations
 {
     /// <inheritdoc />
-    public partial class PartDeliveryTable : Migration
+    public partial class JobsTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AssignedParts",
+                columns: table => new
+                {
+                    AssignedPartId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PartId = table.Column<int>(type: "INTEGER", nullable: false),
+                    JobId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssignedParts", x => x.AssignedPartId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Jobs",
+                columns: table => new
+                {
+                    JobsId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    JobNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Location = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Jobs", x => x.JobsId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "PartHistory",
                 columns: table => new
@@ -73,6 +105,12 @@ namespace ScannerWebAppUpdate.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AssignedParts");
+
+            migrationBuilder.DropTable(
+                name: "Jobs");
+
             migrationBuilder.DropTable(
                 name: "PartHistory");
 

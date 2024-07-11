@@ -13,6 +13,8 @@ namespace ScannerWebAppUpdate.Models
         public DbSet<ReturnOption> ReturnOptions { get; set; }
         public DbSet<TechOption> TechOptions { get; set; }
         public DbSet<PartHistory> PartHistory { get; set; }
+        public DbSet<AssignedPart> AssignedParts { get; set; }
+        public DbSet<Jobs> Jobs { get; set; }
 
 
         public string DbPath { get; }
@@ -26,6 +28,26 @@ namespace ScannerWebAppUpdate.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
+
+        public async Task<bool> AddJobAsync(Jobs job)
+        {
+            try
+            {
+                if (!Jobs.Any(jobs => jobs.JobNumber == job.JobNumber))
+                {
+                    Jobs.Add(job);
+                    await SaveChangesAsync();
+                    return true;
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+        }
 
         public async Task<bool> AddPartAsync(Part part)
         {
@@ -158,8 +180,6 @@ namespace ScannerWebAppUpdate.Models
                 return false;
 
             }
-
-
         }
 
         public async Task<bool> UpdatePart(Part newPart)
@@ -219,23 +239,23 @@ namespace ScannerWebAppUpdate.Models
 
                 if (newPart.ItemNumber != oldPart.ItemNumber)
                 {
-                    changes += "OldItemNumber: " + oldPart.ItemNumber + " -> NewItemNumber: " + newPart.ItemNumber + "; ";
+                    changes += "OldItemNumber: " + oldPart.ItemNumber + " to NewItemNumber: " + newPart.ItemNumber + "; ";
                 }
                 if (newPart.JobNumber != oldPart.JobNumber)
                 {
-                    changes += "OldJobNumber: " + oldPart.JobNumber + " -> NewJobNumber: " + newPart.JobNumber + "; ";
+                    changes += "OldJobNumber: " + oldPart.JobNumber + " to NewJobNumber: " + newPart.JobNumber + "; ";
                 }
                 if (newPart.Quantity != oldPart.Quantity)
                 {
-                    changes += "OldQuantity: " + oldPart.Quantity + " -> NewQuantity: " + newPart.Quantity + "; ";
+                    changes += "OldQuantity: " + oldPart.Quantity + " to NewQuantity: " + newPart.Quantity + "; ";
                 }
                 if (newPart.ReturnOption != oldPart.ReturnOption)
                 {
-                    changes += "OldReturn: " + oldPart.ReturnOption + " -> NewReturn: " + newPart.ReturnOption + "; ";
+                    changes += "OldReturn: " + oldPart.ReturnOption + " to NewReturn: " + newPart.ReturnOption + "; ";
                 }
                 if (newPart.TechOption != oldPart.TechOption)
                 {
-                    changes += "OldTech: " + oldPart.TechOption + " -> NewTech: " + newPart.TechOption + "; ";
+                    changes += "OldTech: " + oldPart.TechOption + " to+ NewTech: " + newPart.TechOption + "; ";
                 }
 
                 PartHistory partHistory = new PartHistory()

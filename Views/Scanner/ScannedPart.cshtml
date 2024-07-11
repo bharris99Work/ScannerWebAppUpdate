@@ -15,24 +15,24 @@
 
 <!-- Admin Modal Structure TODO: Add password function to dialog -->
 <div id="AdminDialog" class="modal admin-Dialog">
-        <div class="row">
-            <div class="col s12">
+    <div class="row">
+        <div class="col s12">
             <button class="btn-flat right"><i class="material-icons">close</i></button>
-                <h6>Please enter Admin passcode to change information: </h6>
-            </div>
+            <h6>Please enter Admin passcode to change information: </h6>
         </div>
-        <div class="row">
-            <div class="col s12">
-                <label class="text-black text-darken-2">Enter Passcode (1234): </label>
-                <input type="text" id="enteredPasscode" />
-            </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <label class="text-black text-darken-2">Enter Passcode (1234): </label>
+            <input type="text" id="enteredPasscode" />
         </div>
-        <div class="row">
-            <div class="col s12">
-                <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-                <button class="waves-effect btn blue darken-2 modal-close" id="enterPasscode">Enter</button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+            <button class="waves-effect btn blue darken-2 modal-close" id="enterPasscode">Enter</button>
         </div>
+    </div>
 </div>
 
 
@@ -89,11 +89,11 @@
         <!--PartNumber form-->
         <div class="row">
             <div class="input-field">
-                <div class="col s11">
+                <div class="col s11 l7">
                     <label class="text-black text-darken-2" for="partNumber">Part Number:</label>
                     <input type="text" id="partNumber" name="ItemNumber" value="@ViewBag.ScannedPart.ItemNumber" />
                 </div>
-                <div class="col s1">
+                <div class="col s1 l5">
                     <i class="material-icons prefix">lock</i>
                 </div>
             </div>
@@ -102,11 +102,11 @@
         <!--JobNumber form-->
         <div class="row">
             <div class="input-field">
-                <div class="col s11">
+                <div class="col s11 l7">
                     <label class="text-black text-darken-2" for="jobNumber">Job Number: </label>
                     <input type="text" id="jobNumber" name="JobNumber" value="@ViewBag.ScannedPart.JobNumber" />
                 </div>
-                <div class="col s1">
+                <div class="col s1 l5">
                     <i class="material-icons prefix">lock</i>
                 </div>
             </div>
@@ -115,11 +115,11 @@
         <!--Quantity form-->
         <div class="row">
             <div class="input-field">
-                <div class="col s3">
+                <div class="col s4 l1">
                     <label class="text-black text-darken-2" for="partQuantity">Quantity: </label>
                     <input type="text" id="partQuantity" name="Quantity" value="@ViewBag.ScannedPart.Quantity" />
                 </div>
-                <div class="col s9">
+                <div class="col s8 l11">
 
                     <div class="col s12 m12 l12 left-align">
 
@@ -216,6 +216,21 @@
                     </div>
 
 
+                </div>
+            </div>
+        </div>
+
+        <!--Warehouse selection-->
+        <div class="row">
+            <div class="input-field">
+                <div class="col s12 l7">
+                    <label class="text-black text-darken-2" for="techOptions">Warehouse:</label>
+                    <div>
+                        <select>
+                            <option value="0">Lumberton</option>
+
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

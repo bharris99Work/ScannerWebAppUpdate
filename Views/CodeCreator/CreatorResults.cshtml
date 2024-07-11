@@ -35,33 +35,12 @@
             <!--Allows user to share QR Code-->
             <a id="shareButton" class="waves-effect btn blue darken-2">Share</a>
             <!--Allows user to go back and select another part-->
+            <a id="printButton" class="waves-effect btn blue darken-2">Print</a>
+            <!-- Allows user to go back and select another part -->
             <a class="waves-effect btn blue darken-2" asp-action="" asp-controller="CodeCreator">Select New</a>
         </div>
     </div>
 </div>
 
 
-<script>
-    document.getElementById('shareButton').addEventListener('click', async() => {
-        if(navigator.share){
-            const img = document.getElementById('qrImage');
-            const base64Image = img.src.split(',')[1];
-            const blob = await fetch(`data:image/png;base64,${base64Image}`).then(res => res.blob());
-            const file = new File([blob], 'QRCode.png', { type: blob.type });
-
-            try{
-                await navigator.share({
-                    title: 'Check This Out',
-                    text: 'This right hur',
-                    files: [file],
-
-                });
-                console.log('content shared');
-            } catch(error){
-                console.error('error sharing', error)
-            }
-        }else{
-            alert('Sharing not allowed in this browser')
-        }
-    });
-</script>
+<script src="~/js/printShare.js"></script>

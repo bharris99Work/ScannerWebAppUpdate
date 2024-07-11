@@ -76,6 +76,29 @@
 
                 </div>
                 </div>
+
+    <!--Add Test Job: REMOVE DURING PRODUCTION-->
+    <button data-target="AddJob" class="btn modal-trigger waves-effect blue darken-2">Add Test Job: </button>
+    <div id="AddJob" class="modal">
+        <div>
+            <form asp-action="UploadJob" asp-controller="Settings" method="post">
+                <!--Job Number-->
+                <div class="row">
+                    <label for="jobnumber">Job Number: </label>
+                    <input id="jobnumber" type="text" name="jobNumber">
+                </div>
+                <!--Job Number-->
+                <div class="row">
+                    <label for="location">Location: </label>
+                    <input id="location" type="text" name="location">
+                </div>
+                <!--Submits changes to database-->
+                <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+            </form>
+            <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+
+        </div>
+    </div>
             
 </div>
 </div>

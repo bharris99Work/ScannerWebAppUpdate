@@ -43,11 +43,58 @@ document.addEventListener('DOMContentLoaded', function () {
     openreader.addEventListener('click', function () {
         readeroptions.style.display = 'block';
         scanoptions.style.display = 'none';
+        let lastKeyTime = Date.now(); // Initialize lastKeyTime
+
+        var savedString = '';
+
+        //Max time allowed between strokes
+        var maxTime = 700;
+
+        //Start reader
+        document.addEventListener('keydown', function (event) {
+            const currentTime = Date.now();
+            const timeDiff = currentTime - lastKeyTime;
+
+            //Time difference is too large to be from scanner
+            if (timeDiff > maxTime) {
+                //reset string
+                savedString = '';
+                console.log('Time to far apart of characters: ' + event.key + "Time Diff: " + timeDiff)
+            }
+            else {
+                //Add char to string
+                if (event.key.length === 1) {
+                    savedString += event.key;
+                    console.log('Wrting: ' + event.key )
+                }
+
+                // Do something with the input string if it meets criteria
+                if (savedString.length > 2) {
+                    console.log('Current Input String:', savedString);
+                    resultext.value = savedString;
+                    if (event.key === 'Enter') {
+                        submit.click();
+                    }
+                }
+            }
+            lastKeyTime = currentTime; // Update the last keypress time
+
+        });
+
+        //Close Keyboard
+
+        //If time between keypresses is > maxtime, do not remove character from string
+
+        //If time betwen is less, and more than 2 characters, add to string
+        
+
     });
 
     cancelreader.addEventListener('click', function () {
         readeroptions.style.display = 'none';
         scanoptions.style.display = 'block';
+
+        //Open keyboard cancel reader
 
     });
 

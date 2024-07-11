@@ -124,6 +124,17 @@ main {
         margin: 2px;
     }
 
+@media print{
+    form, .btn-container {
+        display: none;
+    }
+
+    .navbar-fixed,
+    .sidenav-fixed {
+        display: none !important;
+    }
+}
+
 @media only screen and (min-width: 993px) {
 
     .form-container {

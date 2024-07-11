@@ -143,49 +143,49 @@
     <div class="modal-container">
         <!--QR Code Reader-->
         <div id="reader"></div>
-        @* <button class="btn-floating btn-small waves-effect blue darken-2" id="startScan"><i class="material-icons">play_arrow</i>Start Scan</button> *@
-        @* <button class="btn-floating btn-small waves-effect blue darken-2" id="stopScan"><i class="material-icons">pause</i>Pause Scan</button> *@
         <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
-
-
     </div>
 </div>
+
+
 <!-- Scan Modal Trigger -->
 @* <button data-target="ScanDialog" class="btn modal-trigger">Scan Item</button> *@
 <div class="center-help-container">
-   
+    <div class="row center-align">
+        <div class="col s12 center-align">
+
+            <!--Options for scanning bar codes-->
+            <div id="scanOptions" class="center-align">
+                <button class="btn waves-effect blue darken-2" id="cameraScan"><i class="material-icons">photo_camera</i></button>
+                <button class="btn waves-effect blue darken-2" id="readerScan"><i class="material-icons">barcode_reader</i></button>
+            </div>
+
+            <!--Options avalible if reader is selected-->
+            <div id="readerOptions" style="display: none;" class="center-align valign-wrapper">
+
+                <button class="btn waves-effect red accent-4 valign" id="cancelReader">Cancel</button>
+                <h7 class="valign">Waiting For Barcode Reader Input....</h7>
+                <div class="preloader-wrapper small active valign-wrapper">
+                    <div class="spinner-layer spinner-green-only valign">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
   
    
     <div>
         <div class="row valign-wrapper">
-            <div class="col s12">
-
-                <!--Options for scanning bar codes-->
-                <div id="scanOptions" class=" valign-wrapper">
-                    <button class="btn waves-effect blue darken-2" id="cameraScan"><i class="material-icons">photo_camera</i></button>
-                    <button class="btn waves-effect blue darken-2" id="readerScan"><i class="material-icons">barcode_reader</i></button>
-                </div>
-            
-                <!--Options avalible if reader is selected-->
-                <div id="readerOptions" style="display: none;" class="valign-wrapper">
-
-                    <button class="btn waves-effect red accent-4 valign" id="cancelReader">Cancel</button>
-                    <h7 class="valign">Waiting For Barcode Reader Input....</h7>
-                    <div class="preloader-wrapper small active valign">
-                        <div class="spinner-layer spinner-green-only valign">
-                            <div class="circle-clipper left">
-                                <div class="circle"></div>
-                            </div><div class="gap-patch">
-                                <div class="circle"></div>
-                            </div><div class="circle-clipper right">
-                                <div class="circle"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-          
-            </div>
+       
         </div>
         <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
             <!--Scanner text box and buttons-->
@@ -232,12 +232,8 @@
                     </button>
                 </div>
             </div>
-
         </form>
-   
-
     </div>
-  
 </div>
 
 <script src="~/js/materialize.min.js"></script>

@@ -1,0 +1,31 @@
+﻿<div>
+    <!--Header-->
+    <div class="row">
+        <div class="col s12">
+            <h3>Selected Job: </h3>
+        </div>
+    </div>
+
+    <!--Job Menu Buttons-->
+    <div class="row">
+        <div class="col s12">
+            <a class="btn blue darken-2" asp-action="CurrentParts" asp-controller="Jobs">Current Parts:</a>
+            <a class="btn blue darken-2" asp-action="ReturnQueue" asp-controller="Jobs">Return Queue:</a>
+            <a class="btn blue darken-2" asp-action="WarehouseParts" asp-controller="Jobs">Warehouse Parts:</a>
+        </div>
+    </div>
+
+    <!--Job Information-->
+    <div class="row">
+        <div class="col s12">
+            <textarea>@ViewBag.SelectedJob.JobNumber</textarea>
+            <textarea>@ViewBag.SelectedJob.DateCreated</textarea>
+            <textarea>@ViewBag.SelectedJob.DateModified</textarea>
+            <textarea>@ViewBag.SelectedJob.Location</textarea>
+            <textarea>@ViewBag.SelectedJob.Status</textarea>
+        </div>
+    </div>
+
+
+
+</div>

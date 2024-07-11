@@ -44,12 +44,17 @@ namespace ScannerWebAppUpdate.Controllers
         public async Task<IActionResult> ProcessScannedPart(string scannedPart)
         {
             ResultPart resultPart = new ResultPart();
-            // Simulate an asynchronous database search
-            var matchingPart = await Task.Run(() =>
-                PartsList.FirstOrDefault(part =>
-                    part.ItemNumber.ToLower().Trim() == scannedPart.ToLower().Trim()
-                )
-            );
+            Part matchingPart = null;
+
+            if (scannedPart != null && scannedPart != string.Empty) {
+                // Simulate an asynchronous database search
+                 matchingPart = await Task.Run(() =>
+                    PartsList.FirstOrDefault(part =>
+                        part.ItemNumber.ToLower().Trim() == scannedPart.ToLower().Trim()
+                    )
+                );
+            }
+          
 
             if (matchingPart != null)
             {

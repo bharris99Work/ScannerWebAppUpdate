@@ -8,17 +8,20 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\codeCreatorSearch.js" />
+    <Content Remove="wwwroot\js\printShare.js" />
     <Content Remove="wwwroot\js\settings.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\styles.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\codeCreatorSearch.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\printShare.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\settings.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\js\codeCreatorSearch.js" />
+    <None Include="wwwroot\js\printShare.js" />
     <None Include="wwwroot\js\settings.js" />
   </ItemGroup>
 

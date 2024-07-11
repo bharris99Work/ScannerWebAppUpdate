@@ -81,6 +81,23 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
 
+
+        [HttpPost]
+        public async Task<IActionResult> UploadJob(string jobNumber, string location)
+        {
+            if(jobNumber != null && jobNumber != string.Empty && location != null && location != string.Empty)
+            {
+                Jobs job = new Jobs(jobNumber, location);
+
+                bool upload= await _context.AddJobAsync(job);
+
+                return uploadStatus(upload);
+            }
+
+            return uploadStatus(false);
+        }
+
+
         public async Task<IActionResult> uploadTestReturns()
         {
             try
