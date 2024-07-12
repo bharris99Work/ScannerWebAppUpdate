@@ -1,0 +1,57 @@
+﻿<div>
+    <div class="row valign-wrapper">
+        <div class="col s6">
+            <h3>Parts: </h3>
+        </div>
+        <div class="col s6">
+            <!--Opens Add Part Dialog-->
+            <button id="addPart" class="btn blue darken-2 right">Add Part + </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Number: </th>
+                        <th>Description: </th>
+                        <th>Status: </th>
+                        <th>Quantity: </th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                   
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#addPart').click(function () {
+                loadPartialView('@Url.Action("AddPart", "Jobs")');
+            });
+
+            function loadPartialView(url) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (result) {
+                        $('#content-container').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error: ' + error);
+                    }
+                });
+            }
+        });
+    </script>
+}

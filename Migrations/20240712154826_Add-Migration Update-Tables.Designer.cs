@@ -11,8 +11,8 @@ using ScannerWebAppUpdate.Models;
 namespace ScannerWebAppUpdate.Migrations
 {
     [DbContext(typeof(ScannerContext))]
-    [Migration("20240711143632_JobsTable")]
-    partial class JobsTable
+    [Migration("20240712154826_Add-Migration Update-Tables")]
+    partial class AddMigrationUpdateTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,14 +26,22 @@ namespace ScannerWebAppUpdate.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("AssignedQuantity")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("JobId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PartId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PartStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReturnReason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("AssignedPartId");
 
@@ -75,24 +83,16 @@ namespace ScannerWebAppUpdate.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ItemNumber")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("JobNumber")
+                    b.Property<string>("ItemNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ReturnOption")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TechOption")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.HasKey("PartId");
 

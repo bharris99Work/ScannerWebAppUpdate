@@ -4,42 +4,20 @@
     {
         public int PartId { get; set; }
         public string ItemNumber { get; set; }
-        public string JobNumber { get; set; }
-
-       
-        public string ReturnOption { get; set; }
-
-        public string TechOption { get; set; }
-
         public int Quantity { get; set; }
+        public string Description {  get; set; }
 
-        public Part(string partNumber, string jobNumber)
+        public Part(string partNumber, string desc, int quant)
         {
             ItemNumber = partNumber;
-            JobNumber = jobNumber;
- 
-            ReturnOption = "";
-            TechOption = "";
-
-            Quantity = 0;
-        }
-
-        public Part(string partNumber, string jobNumber, string tech, string returnOpt, int quant)
-        {
-            ItemNumber = partNumber;
-            JobNumber = jobNumber;
-
-            ReturnOption = returnOpt;
-            TechOption = tech;
-
             Quantity = quant;
+            Description = desc;
+
         }
         public Part() {
             ItemNumber = "";
-            JobNumber = "";
-            ReturnOption = "";
-            TechOption = "";
             Quantity = 0;
+            Description = "";
         }
     }
 }

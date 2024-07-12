@@ -8,53 +8,58 @@ namespace ScannerWebAppUpdate.Controllers
     public class JobsController : Controller
     {
         private readonly ScannerContext _context = new ScannerContext();
-        private ObservableCollection<Jobs> jobs;
+        private ObservableCollection<Jobs> JobsList;
+        private ObservableCollection<Part> PartsList;
+        private List<Part> JobPartsList;
+
 
         public JobsController()
         {
             _context.Database.EnsureCreated();
             _context.Jobs.Load();
+            _context.Parts.Load();
+            _context.AssignedParts.Load();
 
-            jobs = _context.Jobs.Local.ToObservableCollection();
+
+            PartsList = _context.Parts.Local.ToObservableCollection();
+            JobsList = _context.Jobs.Local.ToObservableCollection();
         }
 
         public IActionResult Index()
         {
-            ViewBag.JobsList = jobs;
+            ViewBag.JobsList = JobsList;
             return View();
         }
 
-        public IActionResult CurrentParts()
+        public async Task<IActionResult> JobParts(int jobId)
         {
-            return View();
+
+            JobPartsList = await _context.JobPartsFind(jobId);
+            
+            return PartialView("_JobParts", JobPartsList);
         }
 
-        public IActionResult ReturnQueue()
+        public IActionResult Home()
         {
-            return View();
+            return PartialView("_Home");
         }
 
-        public IActionResult WarehouseParts()
+        public IActionResult AddPart()
         {
-            return View();
+            return PartialView("_AddPart");
         }
 
         [HttpPost]
         public IActionResult JobEditor(Jobs job)
         {
             //Job details
-            //Parts Associated With That Job
-            //List of parts in truck/warehouse for picking - these parts have qr code for scanning
-            //
-
             ViewBag.SelectedJob = job;
+            ViewBag.SelectedJobId = job.JobsId;
 
 
             Console.WriteLine(job);
             return View();
         }
-
-
 
     }
 }

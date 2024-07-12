@@ -1,31 +1,59 @@
 ﻿<div>
+    <input type="hidden" id="selectedJobId" value="@ViewBag.SelectedJobId" />
     <!--Header-->
     <div class="row">
         <div class="col s12">
-            <h3>Selected Job: </h3>
+            <h3>@ViewBag.SelectedJob.JobNumber - @ViewBag.SelectedJob.Location </h3>
         </div>
     </div>
 
     <!--Job Menu Buttons-->
     <div class="row">
         <div class="col s12">
-            <a class="btn blue darken-2" asp-action="CurrentParts" asp-controller="Jobs">Current Parts:</a>
-            <a class="btn blue darken-2" asp-action="ReturnQueue" asp-controller="Jobs">Return Queue:</a>
-            <a class="btn blue darken-2" asp-action="WarehouseParts" asp-controller="Jobs">Warehouse Parts:</a>
+            <a class="btn blue darken-2" id="btnJobHome">Home:</a>
+            <a class="btn blue darken-2" id="btnJobParts">Parts:</a>
+            <a class="btn blue darken-2">Return Queue:</a>
         </div>
     </div>
 
-    <!--Job Information-->
+    <div class="section"></div>
+    <div class="divider"></div>
+
+
+    <!--Dynamically changed content-->
     <div class="row">
-        <div class="col s12">
-            <textarea>@ViewBag.SelectedJob.JobNumber</textarea>
-            <textarea>@ViewBag.SelectedJob.DateCreated</textarea>
-            <textarea>@ViewBag.SelectedJob.DateModified</textarea>
-            <textarea>@ViewBag.SelectedJob.Location</textarea>
-            <textarea>@ViewBag.SelectedJob.Status</textarea>
+        <div class="content-container" id="content-container">
+
         </div>
     </div>
-
-
-
 </div>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnJobHome').click(function () {
+                loadPartialView('@Url.Action("Home", "Jobs")');
+            });
+
+            $('#btnJobParts').click(function () {
+                var jobId = $('#selectedJobId').val();
+                loadPartialView('@Url.Action("JobParts", "Jobs")', { jobId: jobId });
+            });
+
+            function loadPartialView(url, data) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: data,
+                    success: function (result) {
+                        $('#content-container').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error: ' + error);
+                    }
+                });
+            }
+        });
+    </script>
+}

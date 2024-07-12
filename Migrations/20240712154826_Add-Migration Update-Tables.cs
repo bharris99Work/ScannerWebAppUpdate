@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ScannerWebAppUpdate.Migrations
 {
     /// <inheritdoc />
-    public partial class JobsTable : Migration
+    public partial class AddMigrationUpdateTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,9 @@ namespace ScannerWebAppUpdate.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     PartId = table.Column<int>(type: "INTEGER", nullable: false),
                     JobId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                    AssignedQuantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    PartStatus = table.Column<string>(type: "TEXT", nullable: false),
+                    ReturnReason = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,10 +67,8 @@ namespace ScannerWebAppUpdate.Migrations
                     PartId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ItemNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    JobNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    ReturnOption = table.Column<string>(type: "TEXT", nullable: false),
-                    TechOption = table.Column<string>(type: "TEXT", nullable: false),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

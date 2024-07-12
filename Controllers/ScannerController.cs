@@ -131,44 +131,44 @@ namespace ScannerWebAppUpdate.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadPart(Part newPart, string returnOther, string techOther)
         {
-            //Other string and no option selected
-            if (techOther != null && techOther.Length > 0) {
-                newPart.TechOption = techOther;
-                Console.WriteLine("Tech Other string was selected");
+            ////Other string and no option selected
+            //if (techOther != null && techOther.Length > 0) {
+            //    newPart.TechOption = techOther;
+            //    Console.WriteLine("Tech Other string was selected");
             
-            }
-            //Option selected, no other string
-            else if (newPart.TechOption != null && newPart.TechOption.Length > 0) {
+            //}
+            ////Option selected, no other string
+            //else if (newPart.TechOption != null && newPart.TechOption.Length > 0) {
 
-                Console.WriteLine("Tech Option was selected");
+            //    Console.WriteLine("Tech Option was selected");
 
-            }
-            //No Option selected
-            else {
-                newPart.TechOption = "";
-                Console.WriteLine("No Option was selected");
-            }
+            //}
+            ////No Option selected
+            //else {
+            //    newPart.TechOption = "";
+            //    Console.WriteLine("No Option was selected");
+            //}
 
 
 
-            //Other string and no option selected
-            if (returnOther != null && returnOther.Length > 0) {
+            ////Other string and no option selected
+            //if (returnOther != null && returnOther.Length > 0) {
 
-                newPart.ReturnOption = returnOther;
-                Console.WriteLine("Return Other string was selected");
+            //    newPart.ReturnOption = returnOther;
+            //    Console.WriteLine("Return Other string was selected");
 
-            }
-            //Option selected, no other string
-            else if (newPart.ReturnOption != null && newPart.ReturnOption.Length > 0) {
+            //}
+            ////Option selected, no other string
+            //else if (newPart.ReturnOption != null && newPart.ReturnOption.Length > 0) {
 
-                Console.WriteLine("Return Option was selected");
-            }
-            //No Option selected
-            else {
-                newPart.ReturnOption = "";
-                Console.WriteLine("No Option was selected");
+            //    Console.WriteLine("Return Option was selected");
+            //}
+            ////No Option selected
+            //else {
+            //    newPart.ReturnOption = "";
+            //    Console.WriteLine("No Option was selected");
 
-            }
+            //}
             PartUpdate partUpdate = new PartUpdate(newPart, await _context.UpdatePart(newPart));
             string serializedPartUpdate = JsonConvert.SerializeObject(partUpdate);
 

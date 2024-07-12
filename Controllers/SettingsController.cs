@@ -26,24 +26,7 @@ namespace ScannerWebAppUpdate.Controllers
             return View();
         }
 
-        public async Task<IActionResult> UploadTech(string techDescription)
-        {
-            try
-            {
-                if (techDescription != null & techDescription != string.Empty)
-                {
-                    TechOption techOption = new TechOption(techDescription);
-                    bool updateStatus = await _context.AddTech(techOption);
-                    return uploadStatus(updateStatus);
-                }
-                return uploadStatus(false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return uploadStatus(false);
-            }
-        }
+
 
         public async Task<IActionResult> UploadReturn(string returnDescription)
         {
@@ -73,8 +56,6 @@ namespace ScannerWebAppUpdate.Controllers
             bool uploadstatus = false;
             if (testPart != null)
             {
-                testPart.ReturnOption = "";
-                testPart.TechOption = "";
                 uploadstatus = await _context.AddPartAsync(testPart);
             }
             return uploadStatus(uploadstatus);
@@ -119,42 +100,20 @@ namespace ScannerWebAppUpdate.Controllers
 
         }
 
-        public async Task<IActionResult> uploadTestTechs()
+
+        public async Task<IActionResult> uploadTestParts(string ItemNumber, string Description, int Quantity)
         {
             try
             {
+                Part newPart = new Part() {
+                ItemNumber = ItemNumber,
+                Description = Description,
+                Quantity = Quantity
+                };
+               
 
 
-                TestTechs = new ObservableCollection<TechOption>() { new TechOption("Tech Option 1"),
-                new TechOption("Tech Option 2"), new TechOption("Tech Option 3")};
-
-                bool updateStatus = await _context.AddTechList(TestTechs);
-
-                return uploadStatus(updateStatus);
-            }
-            catch (Exception ex)
-            {
-              
-                Console.WriteLine(ex.ToString());
-                return uploadStatus(false);
-            }
-
-
-        }
-
-        public async Task<IActionResult> uploadTestParts()
-        {
-            try
-            {
-                TestParts = new ObservableCollection<Part> { new Part("TestPart1", "TestJob1", "Tech Option 3","Missing Parts", 5),
-                new Part("TestPart2", "TestJob2", "Tech Option 2","Extra Parts", 12),
-                new Part("TestPart3", "TestJob3", "Tech Option 1","Repair", 1),
-                new Part("TestPart4", "TestJob4", "Tech Option 2","Abandoned Job", 132),
-                new Part("TestPart5", "TestJob5", "Tech Option 1","Wrong Part", 65) };
-
-                bool updateStatus = await _context.AddPartsList(TestParts);
-
-                return uploadStatus(updateStatus);
+                return uploadStatus(true);
             }
             catch (Exception ex)
             {

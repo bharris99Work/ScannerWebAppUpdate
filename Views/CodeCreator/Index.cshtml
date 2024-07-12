@@ -75,10 +75,8 @@
                     <thead>
                         <tr>
                             <th>Part Number: </th>
-                            <th>Job Number: </th>
+                            <th>Description: </th>
                             <th>Quantity: </th>
-                            <th>Return Option: </th>
-                            <th>Tech Option: </th>
                             <th></th>
                         </tr>
                     </thead>
@@ -89,17 +87,13 @@
                         {
                             <tr>
                                 <td>@part.ItemNumber</td>
-                                <td>@part.JobNumber</td>
+                                <td>@part.Description</td>
                                 <td>@part.Quantity</td>
-                                <td>@part.ReturnOption</td>
-                                <td>@part.TechOption</td>
                                 <td>
                                     <form asp-action="Create" asp-controller="CodeCreator" method="post">
                                         <input type="hidden" name="ItemNumber" value="@part.ItemNumber" />
-                                        <input type="hidden" name="JobNumber" value="@part.JobNumber" />
+                                        <input type="hidden" name="JobNumber" value="@part.Description" />
                                         <input type="hidden" name="Quantity" value="@part.Quantity" />
-                                        <input type="hidden" name="ReturnOption" value="@part.ReturnOption" />
-                                        <input type="hidden" name="TechOption" value="@part.TechOption" />
                                         <!--Creates an QR code based off part attached-->
                                         <button class="waves-effect btn blue darken-2" type="submit">Create</button>
                                     </form>

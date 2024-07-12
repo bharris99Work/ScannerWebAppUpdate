@@ -64,6 +64,7 @@
                             <td>@job.Status</td>
                             <td>
                                 <form asp-action="JobEditor" asp-controller="Jobs" method="post">
+                                    <input type="hidden" name="JobsId" value="@job.JobsId" />
                                     <input type="hidden" name="JobNumber" value="@job.JobNumber" />
                                     <input type="hidden" name="DateCreated" value="@job.DateCreated" />
                                     <input type="hidden" name="DateModified" value="@job.DateModified" />

@@ -187,41 +187,7 @@ namespace ScannerWebAppUpdate.Models
             try
             {
                 var part = Parts.FirstOrDefault(p => p.PartId == newPart.PartId);
-
-                if (part != null)
-                {
-                    Part foundPart = part;
-                    Part oldPart = new Part()
-                    {
-                        ItemNumber = part.ItemNumber,
-                        JobNumber = part.JobNumber,
-                        Quantity = part.Quantity,
-                        ReturnOption = part.ReturnOption,
-                        TechOption = part.TechOption
-                    };
-
-                    foundPart.ItemNumber = newPart.ItemNumber;
-                    if(newPart.JobNumber != null && newPart.JobNumber != string.Empty)
-                    {
-                        foundPart.JobNumber = newPart.JobNumber;
-
-                    }
-                    else
-                        foundPart.JobNumber = "";
-
-                    foundPart.Quantity = newPart.Quantity;
-                    foundPart.TechOption = newPart.TechOption;
-                    foundPart.ReturnOption = newPart.ReturnOption;
-                    await SaveChangesAsync();
-                    bool added = await AddToPartHistory(foundPart, oldPart);
-                    Console.WriteLine();
-                    return true;
-                }
-                else
-                {
-                    Console.Write("Part not found");
-                    return false;
-                }
+                return true;
 
             }
             catch (Exception ex)
@@ -235,37 +201,37 @@ namespace ScannerWebAppUpdate.Models
         {
             try
             {
-                string changes = "";
+                //string changes = "";
 
-                if (newPart.ItemNumber != oldPart.ItemNumber)
-                {
-                    changes += "OldItemNumber: " + oldPart.ItemNumber + " to NewItemNumber: " + newPart.ItemNumber + "; ";
-                }
-                if (newPart.JobNumber != oldPart.JobNumber)
-                {
-                    changes += "OldJobNumber: " + oldPart.JobNumber + " to NewJobNumber: " + newPart.JobNumber + "; ";
-                }
-                if (newPart.Quantity != oldPart.Quantity)
-                {
-                    changes += "OldQuantity: " + oldPart.Quantity + " to NewQuantity: " + newPart.Quantity + "; ";
-                }
-                if (newPart.ReturnOption != oldPart.ReturnOption)
-                {
-                    changes += "OldReturn: " + oldPart.ReturnOption + " to NewReturn: " + newPart.ReturnOption + "; ";
-                }
-                if (newPart.TechOption != oldPart.TechOption)
-                {
-                    changes += "OldTech: " + oldPart.TechOption + " to+ NewTech: " + newPart.TechOption + "; ";
-                }
+                //if (newPart.ItemNumber != oldPart.ItemNumber)
+                //{
+                //    changes += "OldItemNumber: " + oldPart.ItemNumber + " to NewItemNumber: " + newPart.ItemNumber + "; ";
+                //}
+                //if (newPart.JobNumber != oldPart.JobNumber)
+                //{
+                //    changes += "OldJobNumber: " + oldPart.JobNumber + " to NewJobNumber: " + newPart.JobNumber + "; ";
+                //}
+                //if (newPart.Quantity != oldPart.Quantity)
+                //{
+                //    changes += "OldQuantity: " + oldPart.Quantity + " to NewQuantity: " + newPart.Quantity + "; ";
+                //}
+                //if (newPart.ReturnOption != oldPart.ReturnOption)
+                //{
+                //    changes += "OldReturn: " + oldPart.ReturnOption + " to NewReturn: " + newPart.ReturnOption + "; ";
+                //}
+                //if (newPart.TechOption != oldPart.TechOption)
+                //{
+                //    changes += "OldTech: " + oldPart.TechOption + " to+ NewTech: " + newPart.TechOption + "; ";
+                //}
 
-                PartHistory partHistory = new PartHistory()
-                {
-                    PartId = newPart.PartId,
-                    DateChanged = DateTime.Now,
-                    ChangedValues = changes
-                };
+                //PartHistory partHistory = new PartHistory()
+                //{
+                //    PartId = newPart.PartId,
+                //    DateChanged = DateTime.Now,
+                //    ChangedValues = changes
+                //};
 
-                PartHistory.Add(partHistory);
+                //PartHistory.Add(partHistory);
                 await SaveChangesAsync();
                 return true;
             }
@@ -277,6 +243,28 @@ namespace ScannerWebAppUpdate.Models
 
         }
 
+        public async Task<List<Part>> JobPartsFind(int JobsId)
+        {
+            try
+            {
+                //X = Find all AssignedParts where AssignedPart.JobId = job.JobId
+                //Grab all parts where X.PartId = AssignedPart.PartId
+                //Save as list 
+                //Send back
+
+                var parts = await (from ap in AssignedParts
+                                   join p in Parts on ap.PartId equals p.PartId
+                                   where ap.JobId == JobsId
+                                   select p).Distinct().ToListAsync();
+
+                return parts;
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log the error)
+                throw new Exception("An error occurred while retrieving parts assigned to the job", ex);
+            }
+        }
 
         public async Task<bool> UploadPartsFromExcelAsync(DataTable partsTable)
         {
@@ -286,10 +274,10 @@ namespace ScannerWebAppUpdate.Models
                 {
                     var part = new Part
                     {
-                        ItemNumber = row["PartNumber"].ToString(),
-                        JobNumber = row["JobName"].ToString(),
-                        Quantity = int.Parse(row["Quantity"].ToString()),
-                        ReturnOption = row["ReturnReason"].ToString()
+                        //ItemNumber = row["PartNumber"].ToString(),
+                        //JobNumber = row["JobName"].ToString(),
+                        //Quantity = int.Parse(row["Quantity"].ToString()),
+                        //ReturnOption = row["ReturnReason"].ToString()
                     };
                     await AddPartAsync(part);
                 }
@@ -318,7 +306,7 @@ namespace ScannerWebAppUpdate.Models
             }
             if (!string.IsNullOrEmpty(jobNumber))
             {
-                query = query.Where(p => p.JobNumber.ToLower().Trim().Contains(jobNumber.ToLower().Trim()));
+                //query = query.Where(p => p.JobNumber.ToLower().Trim().Contains(jobNumber.ToLower().Trim()));
             }
 
             var items = await query.ToListAsync();
