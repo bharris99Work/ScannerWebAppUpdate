@@ -17,34 +17,6 @@ namespace ScannerWebAppUpdate.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
-            modelBuilder.Entity("ScannerWebAppUpdate.Models.AssignedPart", b =>
-                {
-                    b.Property<int>("AssignedPartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AssignedQuantity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("JobId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PartId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PartStatus")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReturnReason")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("AssignedPartId");
-
-                    b.ToTable("AssignedParts");
-                });
-
             modelBuilder.Entity("ScannerWebAppUpdate.Models.Jobs", b =>
                 {
                     b.Property<int>("JobsId")
@@ -52,9 +24,6 @@ namespace ScannerWebAppUpdate.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateModified")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("JobNumber")
@@ -74,6 +43,34 @@ namespace ScannerWebAppUpdate.Migrations
                     b.ToTable("Jobs");
                 });
 
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.POPart", b =>
+                {
+                    b.Property<int>("POPartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PurchaseOrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ReturnStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("POPartId");
+
+                    b.ToTable("POParts");
+                });
+
             modelBuilder.Entity("ScannerWebAppUpdate.Models.Part", b =>
                 {
                     b.Property<int>("PartId")
@@ -84,37 +81,38 @@ namespace ScannerWebAppUpdate.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ItemNumber")
+                    b.Property<string>("PartNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("PartId");
 
                     b.ToTable("Parts");
                 });
 
-            modelBuilder.Entity("ScannerWebAppUpdate.Models.PartHistory", b =>
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.PurchaseOrder", b =>
                 {
-                    b.Property<int>("PartHistoryId")
+                    b.Property<int>("PurchaseOrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ChangedValues")
+                    b.Property<int>("JobId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateChanged")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PartId")
+                    b.Property<int>("TruckId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("PartHistoryId");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("PartHistory");
+                    b.HasKey("PurchaseOrderId");
+
+                    b.ToTable("PurchaseOrders");
                 });
 
             modelBuilder.Entity("ScannerWebAppUpdate.Models.ReturnOption", b =>
@@ -132,19 +130,77 @@ namespace ScannerWebAppUpdate.Migrations
                     b.ToTable("ReturnOptions");
                 });
 
-            modelBuilder.Entity("ScannerWebAppUpdate.Models.TechOption", b =>
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.Tech", b =>
                 {
                     b.Property<int>("TechId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("TechName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("TechId");
 
-                    b.ToTable("TechOptions");
+                    b.ToTable("Techs");
+                });
+
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.TechTruck", b =>
+                {
+                    b.Property<int>("TechTruckId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TechId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TruckId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("TechTruckId");
+
+                    b.ToTable("TechTrucks");
+                });
+
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.Truck", b =>
+                {
+                    b.Property<int>("TruckId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TruckName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TruckId");
+
+                    b.ToTable("Trucks");
+                });
+
+            modelBuilder.Entity("ScannerWebAppUpdate.Models.TruckPart", b =>
+                {
+                    b.Property<int>("TruckPartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuantityAllocated")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuantityAvalible")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TruckId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("TruckPartId");
+
+                    b.ToTable("TruckParts");
                 });
 #pragma warning restore 612, 618
         }

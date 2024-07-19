@@ -68,7 +68,7 @@ namespace ScannerWebAppUpdate.Controllers
             // For example, you can save it to the database or perform other logic
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            string dataStored = part.ItemNumber;
+            string dataStored = part.PartNumber;
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(dataStored, QRCodeGenerator.ECCLevel.Q);
             string image;
 
@@ -82,7 +82,7 @@ namespace ScannerWebAppUpdate.Controllers
 
 
             // Redirect to a result page or back to the index
-            return RedirectToAction("CreatorResults", new { image, displayedPart = part.ItemNumber });
+            return RedirectToAction("CreatorResults", new { image, displayedPart = part.PartNumber });
         }
 
         [HttpPost]

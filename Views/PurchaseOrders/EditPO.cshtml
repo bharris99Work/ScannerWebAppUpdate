@@ -1,0 +1,143 @@
+﻿@model PartsQuantityViewModel
+<html>
+    <head>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    </head>
+
+    <div class="row">
+        <h3>@ViewBag.POName</h3>
+        <h5>@ViewBag.Type</h5>
+    </div>
+    <!-- Scaan Modal Structure-->
+    <div id="ScanDialog" class="modal">
+        <div class="modal-container">
+            <!--QR Code Reader-->
+            <div class="row">
+                <div id="reader"></div>
+            </div>
+            <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
+        </div>
+    </div>
+
+    <!--Dialog if checking in-->
+    <div id="checkin-dialog" class="modal">
+        <div class="modal-content">
+            <div class="row">
+                <h3 id="partNumberRec">Part Number:</h3>
+            </div>
+            <div class="row">
+                <label for="partQuantityRec">Quantity:</label>
+                <input id="partQuantityRec" type="number"/>
+            </div>
+            <div class="row">
+                <button>Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!--Dialog if returning-->
+    <div id="return-dialog" class="modal">
+        <div class="modal-content">
+            <div class="row">
+                <h3 id="partNumberRet">Part Number:</h3>
+            </div>
+            <div class="row">
+                <label for="returnReason">Return Reason:</label>
+                <select id="returnReason"></select>
+            </div>
+            <div class="row">
+                <label for="partQuantityRet">Quantity:</label>
+                <input id="partQuantityRet" type="number" />
+            </div>
+            <div class="row">
+                <button>Submit</button>
+            </div>
+        </div>
+    </div>
+   
+    <div class="row">
+        <div class="col s12">
+            <!-- Include the search component -->
+            @await Component.InvokeAsync("Search")
+        </div>
+    </div>
+    <div class="row">
+        <div class="consolecontainer"></div>
+    </div>
+ 
+
+   @*  <!--Options for scanning bar codes-->
+    <div class="row">
+        <div id="scanOptions" class="center-align">
+            <button class="btn waves-effect blue darken-2" id="cameraScan"><i class="material-icons">photo_camera</i></button>
+            <button class="btn waves-effect blue darken-2" id="readerScan"><i class="material-icons">barcode_reader</i></button>
+        </div>
+    </div> *@
+
+ @*    <!--Reult and search bar-->
+    <div class="row">
+        <div class="col s12">
+            <label for="resultText">Part Number:</label>
+            <input id="resultText" placeholder="Part Number" />
+        </div>
+    </div> *@
+
+    <!--Table of parts-->
+    <div class="row">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Part Number:</th>
+                        <th>Part Description:</th>
+                        <th>Quantity:</th>
+                        <th>Status:</th>
+                        <th>Warehouse:</th>
+                        <th>Job:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (PartsQuantityViewModel part in ViewBag.POParts)
+                    {
+                        <tr>
+                            <td>@part.PartName</td>
+                            <td>@part.PartDescription</td>
+                            <td>@part.QuantityOrdered</td>
+                            <td>@part.Status</td>
+                            <td>@part.TruckName</td>
+                            <td>@part.JobName</td>
+                            <td></td>
+                            <td></td>
+
+                            <td>
+                                <form>
+                                    <button>Return</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form>
+                                    <button>Check-In</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <script src="~/dist/scanditscanning.bundle.js"></script>
+    <script src="~/js/materialize.min.js"></script>
+
+<script>
+    eruda.init();
+    let el = document.createElement('div');
+    document.body.appendChild(el);
+
+    eruda.init({
+        container: el,
+        tool: ['console', 'elements']
+    });
+</script>
+</html>

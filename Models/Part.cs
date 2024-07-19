@@ -3,20 +3,17 @@
     public class Part
     {
         public int PartId { get; set; }
-        public string ItemNumber { get; set; }
-        public int Quantity { get; set; }
+        public string PartNumber { get; set; }
         public string Description {  get; set; }
 
-        public Part(string partNumber, string desc, int quant)
+        public Part(string partNumber, string desc)
         {
-            ItemNumber = partNumber;
-            Quantity = quant;
+            PartNumber = partNumber;
             Description = desc;
 
         }
         public Part() {
-            ItemNumber = "";
-            Quantity = 0;
+            PartNumber = "";
             Description = "";
         }
     }

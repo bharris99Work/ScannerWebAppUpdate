@@ -1,33 +1,74 @@
 ﻿<div>
-    <input type="hidden" id="selectedJobId" value="@ViewBag.SelectedJobId" />
-    <!--Header-->
+    <div class="row">
+        <h3>Job Number: </h3>
+    </div>
+
+
+    <!-- Scaan Modal Structure-->
+    <div id="ScanDialog" class="modal">
+        <div class="modal-container">
+            <!--QR Code Reader-->
+            <div class="row">
+                <div id="reader"></div>
+            </div>
+            <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
+        </div>
+    </div>
     <div class="row">
         <div class="col s12">
-            <h3>@ViewBag.SelectedJob.JobNumber - @ViewBag.SelectedJob.Location </h3>
+            <!--Search Component-->
+            @await Component.InvokeAsync("Search")
         </div>
     </div>
 
-    <!--Job Menu Buttons-->
     <div class="row">
-        <div class="col s12">
-            <a class="btn blue darken-2" id="btnJobHome">Home:</a>
-            <a class="btn blue darken-2" id="btnJobParts">Parts:</a>
-            <a class="btn blue darken-2">Return Queue:</a>
-        </div>
+        <h3>Parts:</h3>
     </div>
 
-    <div class="section"></div>
-    <div class="divider"></div>
-
-
-    <!--Dynamically changed content-->
     <div class="row">
-        <div class="content-container" id="content-container">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Part Number: </th>
+                        <th>Part Description: </th>
+                        <th>Part Status: </th>
+                        <th>Quantity: </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                      
+                       @*  @foreach(var part in ViewBag.JobParts){
+                            <tr>
+                                <td>@part.PartName</td>
+                                <td>@part.PartDescription</td>
+                                <td>@part.POName</td>
+                                <td>@part.Status</td>
+                                <td>@part.QuantityAssigned</td>
+                            <td>
+                                <form asp-action="" asp-controller="">
+                                    <input name="PartId" value="@part.PartId"/>
+                                    <input name="PartName" value="@part.PartName" />
+                                    <input name="JobId" value="@part.JobId" />
+                                    <input name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                    <input name="Status" value="@part.Status" />
+                                    <input name="QuantityAssigned" value="@part.QuantityAssigned" />
 
+                                    <button type="submit">Edit</button>
+                                </form>
+                            </td>
+                        </tr>
+                        } *@
+
+                   
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+<script src="~/dist/scanditscanning.bundle.js"></script>
 @section Scripts{
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
@@ -44,7 +85,7 @@
             function loadPartialView(url, data) {
                 $.ajax({
                     url: url,
-                    type: 'GET',
+                    type: 'POST',
                     data: data,
                     success: function (result) {
                         $('#content-container').html(result);
@@ -57,3 +98,4 @@
         });
     </script>
 }
+

@@ -12,7 +12,6 @@ namespace ScannerWebAppUpdate.Controllers
 
         private readonly ScannerContext _context = new ScannerContext();
         private ObservableCollection<ReturnOption>? TestReturns;
-        private ObservableCollection<TechOption>? TestTechs;
         private ObservableCollection<Part>? TestParts;
 
 
@@ -26,6 +25,19 @@ namespace ScannerWebAppUpdate.Controllers
             return View();
         }
 
+        public async Task<IActionResult> UploadTestTruck()
+        {
+            await _context.AddTestTruck();
+
+            return uploadStatus(true);
+        }
+
+        public async Task<IActionResult> uploadTestTruckParts()
+        {
+            //await _context.AddPartsToTestTruck();
+
+            return uploadStatus(true);
+        }
 
 
         public async Task<IActionResult> UploadReturn(string returnDescription)
@@ -106,9 +118,9 @@ namespace ScannerWebAppUpdate.Controllers
             try
             {
                 Part newPart = new Part() {
-                ItemNumber = ItemNumber,
+                PartNumber = ItemNumber,
                 Description = Description,
-                Quantity = Quantity
+              
                 };
                
 
@@ -139,6 +151,65 @@ namespace ScannerWebAppUpdate.Controllers
           return RedirectToAction("Index", new { uploadStat = updateString });
 
         }
+
+        public async Task<IActionResult> SeedTestData()
+        {
+            try
+            {
+                bool success = false;
+
+                //Create Test Parts and Jobs
+                for (int i = 1; i < 10; i++)
+                {
+                    Part tempPart = new Part()
+                    {
+                        PartNumber = "TestPart" + i,
+                        Description = "Test Description for test part " + i
+                    };
+
+                    Jobs tempJob = new Jobs()
+                    {
+                        JobNumber = "TestJob" + i,
+                        DateCreated = DateTime.Now,
+                        Location = "Lumberton",
+                        Status = "In Development"
+
+                    };
+
+                    success = await _context.AddPartAsync(tempPart);
+                    success = await _context.AddJobAsync(tempJob);
+                }
+
+
+                //Create Test Trucks and techs
+                Truck tempTruck = new Truck()
+                {
+                    TruckName = "TestTruck"
+                };
+
+                Tech tempTech = new Tech()
+                {
+                    TechName = "Admin"
+                };
+
+                success = await _context.AddTruck(tempTruck);
+                success = await _context.AddTech(tempTech);
+
+               //Assign Truck to tech
+               success = await _context.AssignTruck(tempTruck, tempTech);
+
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+
+
+                return RedirectToAction("Index");
+            }
+        }
+
+
 
         /// <summary>
         /// Takes in parts excel file
@@ -178,7 +249,7 @@ namespace ScannerWebAppUpdate.Controllers
                     await file.CopyToAsync(stream);
                 }
             }
-            return RedirectToAction("Index")     ;
+            return RedirectToAction("Index");
         }
 
 

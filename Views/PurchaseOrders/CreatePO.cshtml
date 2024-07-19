@@ -1,0 +1,71 @@
+﻿<div>
+    <form asp-action="UploadPo" asp-controller="PurchaseOrders">
+        <!--PO Name-->
+        <label for="poNumber">PO Number: </label>
+        <input id="poNumber" type="text" placeholder="PO Number" name="poNumber" />
+
+        <!--Parts selected-->
+        <label for="partsSelected">Parts To Select: </label>
+        <input id="partsSelected" type="number" placeholder="Parts To Select" name="partsSelected" />
+
+       @*  <!--Type Of PO-->
+        <select id="poTypeSelect">
+            @{
+                foreach (var potypes in ViewBag.potypes)
+                {
+                    <option value="@potypes">@potypes</option>
+
+                }
+            }
+        </select> *@
+
+        <!--JobNumber-->
+        <select id="jobNumbersSelect" name="selectedJob">
+            <option value="" >No Job</option>
+
+            @{
+                int jobscounter = 1;
+                foreach (var job in ViewBag.jobs)
+                {
+                        <option value="@job.JobsId">@job.JobNumber</option>
+                    jobscounter++;
+
+                }
+            }
+        </select>
+        <input id="hiddenJobSelect" type="hidden" name="JobOption"/>
+
+        <!--TruckName-->
+        <select id="truckNameSelect" name="selectedTruck">
+            @{
+                int truckcounter = 1;
+                foreach (var truck in ViewBag.trucks)
+                {
+                        <option value="@truck.TruckId">@truck.TruckName</option>
+                    truckcounter++;
+                }
+            }
+        </select>
+        <input id="hiddenTruckSelect" type="hidden" name="TruckOption" />
+
+        <button id="submitbn" type="submit">Submit</button>
+    </form>
+</div>
+@section scripts{
+    <script>
+        // var submit = document.getElementById('submitbn');
+
+        // submit.addEventListener('click', function (event) {
+        //     //event.preventDefault();
+
+
+
+        // });
+
+
+    </script>
+
+}
+
+
+<script src="~/js/partForm.js"></script>

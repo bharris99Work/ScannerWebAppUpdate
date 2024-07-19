@@ -1,11 +1,102 @@
-﻿<div>
+﻿@model List<ScannerWebAppUpdate.Models.Part>
+
+
+<!-- Scaan Modal Structure-->
+<div id="ScanDialog" class="modal">
+    <div class="modal-container">
+        <!--QR Code Reader-->
+        <div id="reader"></div>
+        <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
+    </div>
+</div>
+
+
+<!-- Main Modal Structure-->
+<div id="MainDialog" class="modal">
+    <div class="modal-container">
+
+        <!--Options for scanning bar codes-->
+        <div id="scanOptions" class="center-align">
+            <button class="btn waves-effect blue darken-2" id="cameraScan"><i class="material-icons">photo_camera</i></button>
+            <button class="btn waves-effect blue darken-2" id="readerScan"><i class="material-icons">barcode_reader</i></button>
+        </div>
+
+     <!--Search Functions-->
+     <div class="row">
+         <label for="resultText">Part Number:</label>
+         <input id="resultText" type="text" placeholder="Enter Part Number" />
+     </div>
+
+        <!--Avalible Parts-->
+        <div class="row">
+            <div class="table-container">
+                <table class="dataTable">
+                    <thead>
+                        <tr>Part Number:</tr>
+                        <tr>Location:</tr>
+                        <tr>Quantity:</tr>
+                        <tr></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var part in Model)
+                        {
+                            <tr>
+                                <td>@part.PartNumber</td>
+                                <td>@part.Description</td>
+                                <td>
+                                    <form asp-action="AddPart" asp-controller="Jobs">
+                                        <input type="hidden" name="ItemNumber" value="@part.PartNumber" />
+                                        <input type="hidden" name="Description" value="@part.Description" />
+                                        <input type="hidden" name="PartId" value="@part.PartId" />
+
+                                        <input type="hidden" id="assignedQuantity" name="AssignedQuantiy" value="1"/>
+                                        <input type="hidden" name="jobId" value="@ViewBag.JobID" />
+                                        <!--Opens Add Part Dialog-->
+                                        <button type="button" id="addPartsub" class="btn blue darken-2 right">Add</button>
+                                        <button style="display: none;" id="submit">Submit</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add Part Modal Structure -->
+<div id="AddPartDialog" class="modal">
+    <div class="modal-container">
+     
+        <div class="row">
+            <label for="partNumber">Part Number:</label>
+            <input id="partNumber" type="text" placeholder="Part Number" />
+        </div>
+
+        <div class="row">
+            <label for="quantityinp">Quantity:</label>
+            <input id="quantityinp" type="text" placeholder="Quantity" />
+        </div>
+
+        <div class="row">
+            <button id="submitqty">Submit</button>
+        </div>
+
+    </div>
+</div>
+
+
+<!--Parts List for job-->
+<div>
     <div class="row valign-wrapper">
         <div class="col s6">
             <h3>Parts: </h3>
         </div>
         <div class="col s6">
             <!--Opens Add Part Dialog-->
-            <button id="addPart" class="btn blue darken-2 right">Add Part + </button>
+            <button id="addPart" data-target="MainDialog" class="btn modal-trigger blue darken-2 right">Add Part + </button>
         </div>
     </div>
     <div class="row">
@@ -33,25 +124,45 @@
 </div>
 
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#addPart').click(function () {
-                loadPartialView('@Url.Action("AddPart", "Jobs")');
-            });
+<script>
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var addpart = document.getElementById('addPartsub');
+        var addpartdialog = document.getElementById('AddPartDialog');
+        var addpartdialoginst = M.Modal.getInstance(addpartdialog);
+        var submitqty = document.getElementById('submitqty');
 
-            function loadPartialView(url) {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function (result) {
-                        $('#content-container').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Error: ' + error);
-                    }
-                });
-            }
+        var assignedqty = document.getElementById('assignedQuantity');
+
+        var qtyinput = document.getElementById('quantityinp');
+
+
+        var submit = document.getElementById('submit');
+
+
+        addpart.addEventListener('click', function (event) {
+            event.preventDefault();
+            console.log("Opened Add part");
+            addpartdialoginst.open();
+
         });
-    </script>
-}
+
+        submitqty.addEventListener('click', function () {
+            var newqty = qtyinput.value;
+            assignedqty.value = newqty;
+
+            console.log("Submit btn click");
+
+
+            //submit.click();
+        });
+    });
+</script>
+
+
+
+
+

@@ -45,7 +45,6 @@
                     <tr>
                         <th>Job Number: </th>
                         <th>Date Created: </th>
-                        <th>Date Modified: </th>
                         <th>Location: </th>
                         <th>Status: </th>
                         <th></th>
@@ -59,7 +58,6 @@
 
                             <td>@job.JobNumber</td>
                             <td>@job.DateCreated</td>
-                            <td>@job.DateModified</td>
                             <td>@job.Location</td>
                             <td>@job.Status</td>
                             <td>
@@ -67,7 +65,6 @@
                                     <input type="hidden" name="JobsId" value="@job.JobsId" />
                                     <input type="hidden" name="JobNumber" value="@job.JobNumber" />
                                     <input type="hidden" name="DateCreated" value="@job.DateCreated" />
-                                    <input type="hidden" name="DateModified" value="@job.DateModified" />
                                     <input type="hidden" name="Location" value="@job.Location" />
                                     <input type="hidden" name="Status" value="@job.Status" />
                                     <button>Submit</button>

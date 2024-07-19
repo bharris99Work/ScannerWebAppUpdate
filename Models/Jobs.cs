@@ -8,7 +8,6 @@ namespace ScannerWebAppUpdate.Models
         public int JobsId { get; set; }
         public string JobNumber { get; set; }
         public DateTime DateCreated { get; set; }
-        public DateTime DateModified { get; set; }
         public string Location { get; set; }
         public string Status { get; set; }
 
@@ -16,11 +15,10 @@ namespace ScannerWebAppUpdate.Models
         {
             JobNumber = string.Empty;
             DateCreated = DateTime.Now;
-            DateModified = DateTime.Now;
             Location = string.Empty;
             Status = string.Empty;
-
         }
+
 
         public Jobs(string jobnum, string loc)
         {
@@ -28,7 +26,6 @@ namespace ScannerWebAppUpdate.Models
             Location = loc;
             Status = "";
             DateCreated = DateTime.Now;
-            DateModified = DateTime.Now;
 
         }
     }

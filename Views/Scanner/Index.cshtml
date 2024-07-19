@@ -1,5 +1,4 @@
 ﻿<style>
-
     .modal-container {
         position: relative;
         display: flex;
@@ -45,7 +44,6 @@
         z-index: 1;
     }
 
-
     .vertical-btn-container {
         display: flex;
         flex-direction: column;
@@ -65,9 +63,6 @@
         align-self: flex-end;
         width: 75vw;
     }
-
-
-
 
     /*
         .modal-container {
@@ -129,8 +124,6 @@
                 justify-content: center;
                 display: none;
             }
-
-
         }
      */
 
@@ -138,7 +131,7 @@
 
 </style>
 
-<!-- Scaan Modal Structure TODO: Add password function to dialog -->
+<!-- Scaan Modal Structure-->
 <div id="ScanDialog" class="modal">
     <div class="modal-container">
         <!--QR Code Reader-->
@@ -176,16 +169,13 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
   
    
     <div>
         <div class="row valign-wrapper">
-       
         </div>
         <form asp-controller="Scanner" asp-action="ProcessScannedPart" method="post">
             <!--Scanner text box and buttons-->
@@ -193,8 +183,11 @@
                 <!--Form containing scanned part number-->
                 <div class="col s12">
                     <h5 class="red-text">@ViewBag.PartFound</h5>
+
                     <div class="text-btn-container">
+
                         <div class="scantext-container">
+
                             <!--Displays scanned part number-->
                             <label class="text-black text-darken-2" for="resultText">Part Number:</label>
                             <input placeholder="Scan or Enter Part Number" type="text" id="resultText" readonly name="scannedPart" value="@ViewBag.ScannedText">

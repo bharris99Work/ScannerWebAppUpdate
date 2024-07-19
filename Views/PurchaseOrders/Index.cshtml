@@ -1,0 +1,50 @@
+﻿@model PurchaseOrderViewModel
+<div>
+    <div class="row">
+        <h3>PO Numbers: </h3>
+    </div>
+
+    <div class="row">
+        <a asp-action="CreatePO" asp-controller="PurchaseOrders">Create PO</a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Purchase Order #:</th>
+                    <th>Type:</th>
+                    <th>Job #:</th>
+                    <th>Warehouse:</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (PurchaseOrderViewModel po in ViewBag.PurchaseOrders)
+                {
+                    <tr>
+                        <td>@po.POName</td>
+                        <td>@po.Type</td>
+                        <td>@po.JobName</td>
+                        <td>@po.TruckName</td>
+                        <td>
+                            <form asp-action="EditPO" asp-controller="PurchaseOrders">
+                                <input value="@po.PurchaseOrderID" name="PurchaseOrderID" type="hidden" />
+                                <input value="@po.POName" name="POName" type="hidden" />
+                                <input value="@po.JobId" name="JobId" type="hidden" />
+                                <input value="@po.JobName" name="JobName" type="hidden" />
+                                <input value="@po.TruckId" name="TruckId" type="hidden" />
+                                <input value="@po.TruckName" name="TruckName" type="hidden" />
+                                <input value="@po.Type" name="Type" type="hidden" />
+                                <button type="submit" class="btn">Select</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+
+        </table>
+    </div>
+</div>

@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let scanoptions = document.getElementById('scanOptions');
     let openreader = document.getElementById('readerScan');
 
+
     openreader.addEventListener('click', function () {
         readeroptions.style.display = 'block';
         scanoptions.style.display = 'none';

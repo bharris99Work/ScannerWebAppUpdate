@@ -12,11 +12,11 @@ namespace ScannerWebAppUpdate.Controllers
         {
             _context.Database.EnsureCreated();
             _context.Parts.Load();
-            _context.PartHistory.Load();
+           // _context.PartHistory.Load();
             //PartsList = _context.Parts.Local.ToObservableCollection();
         }
         public IActionResult Index()
-        {
+        {/*
             var partHistoryViemModels = _context.PartHistory
                 .Join(_context.Parts,
                 partHistory => partHistory.PartId,
@@ -25,9 +25,11 @@ namespace ScannerWebAppUpdate.Controllers
                 {
                     Part = part,
                     PartHistory = partHistory
-                }).ToList();
+                }).ToList();*/
 
-            ViewBag.PartHistoryList = partHistoryViemModels;
+            ViewBag.PartHistoryList = null;
+                
+                //partHistoryViemModels;
 
             return View();
         }

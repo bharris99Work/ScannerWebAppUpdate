@@ -10,18 +10,15 @@ namespace ScannerWebAppUpdate.Controllers
     {
         private readonly ScannerContext _context = new ScannerContext();
         private ObservableCollection<Part> PartsList;
-        private ObservableCollection<TechOption> TechOptionsList;
         private ObservableCollection<ReturnOption> ReturnOptionsList;
 
         public ScannerController() {
 
             _context.Database.EnsureCreated();
             _context.Parts.Load();
-            _context.TechOptions.Load();
             _context.ReturnOptions.Load();
 
             PartsList = _context.Parts.Local.ToObservableCollection();
-            TechOptionsList = _context.TechOptions.Local.ToObservableCollection();
             ReturnOptionsList = _context.ReturnOptions.Local.ToObservableCollection();
         }
 
@@ -50,7 +47,7 @@ namespace ScannerWebAppUpdate.Controllers
                 // Simulate an asynchronous database search
                  matchingPart = await Task.Run(() =>
                     PartsList.FirstOrDefault(part =>
-                        part.ItemNumber.ToLower().Trim() == scannedPart.ToLower().Trim()
+                        part.PartNumber.ToLower().Trim() == scannedPart.ToLower().Trim()
                     )
                 );
             }
@@ -72,38 +69,38 @@ namespace ScannerWebAppUpdate.Controllers
 
         public IActionResult ScannedPart(Part scannedPart, string updatedPartJson)
         {
-            PartUpdate? updatedPart = null;
+            //PartUpdate? updatedPart = null;
 
-            if(updatedPartJson != null && updatedPartJson != "")
-            {
-                updatedPart = JsonConvert.DeserializeObject<PartUpdate>(updatedPartJson);
+            //if(updatedPartJson != null && updatedPartJson != "")
+            //{
+            //    updatedPart = JsonConvert.DeserializeObject<PartUpdate>(updatedPartJson);
 
-            }
+            //}
 
 
-            if(updatedPart == null || updatedPart.part == null)
-            {
-                ViewBag.ScannedPart = scannedPart;
-                ViewBag.ReturnOptions = ReturnOptionsList;
-                ViewBag.TechOptions = TechOptionsList;
+            //if(updatedPart == null || updatedPart.part == null)
+            //{
+            //    ViewBag.ScannedPart = scannedPart;
+            //    ViewBag.ReturnOptions = ReturnOptionsList;
+            //    ViewBag.TechOptions = TechOptionsList;
+            //    return View();
+            //}
+            //else
+            //{
+            //    ViewBag.ScannedPart = updatedPart.part;
+            //    ViewBag.ReturnOptions = ReturnOptionsList;
+            //    ViewBag.TechOptions = TechOptionsList;
+
+            //    if (updatedPart.updated)
+            //    {
+            //        ViewBag.UploadStatus = "Successfully Updated: " + updatedPart.part.ItemNumber;
+            //    }
+            //    else
+            //    {
+            //        ViewBag.UploadStatus = "Failed to Update: " + updatedPart.part.ItemNumber;
+            //    }
                 return View();
-            }
-            else
-            {
-                ViewBag.ScannedPart = updatedPart.part;
-                ViewBag.ReturnOptions = ReturnOptionsList;
-                ViewBag.TechOptions = TechOptionsList;
-
-                if (updatedPart.updated)
-                {
-                    ViewBag.UploadStatus = "Successfully Updated: " + updatedPart.part.ItemNumber;
-                }
-                else
-                {
-                    ViewBag.UploadStatus = "Failed to Update: " + updatedPart.part.ItemNumber;
-                }
-                return View();
-            }
+           // }
   
         }
 
@@ -135,7 +132,7 @@ namespace ScannerWebAppUpdate.Controllers
             //if (techOther != null && techOther.Length > 0) {
             //    newPart.TechOption = techOther;
             //    Console.WriteLine("Tech Other string was selected");
-            
+
             //}
             ////Option selected, no other string
             //else if (newPart.TechOption != null && newPart.TechOption.Length > 0) {
@@ -169,11 +166,12 @@ namespace ScannerWebAppUpdate.Controllers
             //    Console.WriteLine("No Option was selected");
 
             //}
-            PartUpdate partUpdate = new PartUpdate(newPart, await _context.UpdatePart(newPart));
-            string serializedPartUpdate = JsonConvert.SerializeObject(partUpdate);
+            // PartUpdate partUpdate = new PartUpdate(newPart, await _context.UpdatePart(newPart));
+            // string serializedPartUpdate = JsonConvert.SerializeObject(partUpdate);
 
 
-            return RedirectToAction("ScannedPart", new { updatedPartJson = serializedPartUpdate });
+            //return RedirectToAction("ScannedPart", new { updatedPartJson = serializedPartUpdate });
+            return RedirectToAction("Index");
         }
 
 
