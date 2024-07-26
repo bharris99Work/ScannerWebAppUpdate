@@ -1,168 +1,141 @@
-﻿@model List<ScannerWebAppUpdate.Models.Part>
-
-
-<!-- Scaan Modal Structure-->
-<div id="ScanDialog" class="modal">
-    <div class="modal-container">
-        <!--QR Code Reader-->
-        <div id="reader"></div>
-        <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
-    </div>
+﻿@model JobPartsPartialViewModel
+<div class="row">
+    <h3>Parts:</h3>
 </div>
+<div class="row">
+    <div class="col s12">
+        <form id="scanPartForm" asp-action="UpdatePart" asp-controller="Jobs" method="post" class="update-part-form">
+            <input type="hidden" id="JobPartId" name="JobPartId" value="" />
+            <input type="hidden" id="PartId" name="PartId" value="" />
+            <input type="hidden" id="PartName" name="PartName" value="" />
+            <input type="hidden" id="JobId" name="JobId" value="" />
+            <input type="hidden" id="PurchaseOrderId" name="PurchaseOrderId" value="" />
+            <input type="hidden" id="Status" name="Status" value="" />
+            <input type="hidden" id="AssignedParts" name="AssignedParts" value="" />
+            <input type="hidden" id="AvailableQuantity" name="AvailableQuantity" value="" />
+            <button id="scanUpdatePart" type="submit">Update</button>
+            <button id="scanAddPart" type="submit">Update</button>
 
+        </form>
 
-<!-- Main Modal Structure-->
-<div id="MainDialog" class="modal">
-    <div class="modal-container">
+        <form asp-action="AddPart" asp-controller="Jobs" method="post" class="add-part-form">
+        
+        </form>
 
-        <!--Options for scanning bar codes-->
-        <div id="scanOptions" class="center-align">
-            <button class="btn waves-effect blue darken-2" id="cameraScan"><i class="material-icons">photo_camera</i></button>
-            <button class="btn waves-effect blue darken-2" id="readerScan"><i class="material-icons">barcode_reader</i></button>
+        <!--Table of Availible Parts-->
+        <div class="table-container">
+            <table id="partsTable">
+                <thead>
+                    <tr>
+                        <th>Part Number: </th>
+                        <th>Part Description: </th>
+                        <th>Quantity: </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (JobPartsViewModel part in Model.AvailableParts)
+                    {
+                        <tr>
+                            <td>@part.PartName</td>
+                            <td>@part.PartDescription</td>
+                            <td>@part.AvailableQuantity</td>
+                            <td>
+                                <form id="addPartForm" asp-action="AddPart" asp-controller="Jobs" method="post" class="add-part-form">
+                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                    <input type="hidden" name="PartName" value="@part.PartName" />
+                                    <input type="hidden" name="JobId" value="@part.JobId" />
+                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                    <input type="hidden" name="Status" value="@part.Status" />
+                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+
+                                    <button id="addpart" type="submit">Add</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form id="updatePartForm" asp-action="UpdatePart" asp-controller="Jobs" method="post" class="update-part-form">
+                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                    <input type="hidden" name="PartName" value="@part.PartName" />
+                                    <input type="hidden" name="JobId" value="@part.JobId" />
+                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                    <input type="hidden" name="Status" value="@part.Status" />
+                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+
+                                    <button id="updatepart" type="submit">Update</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
+                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                    <input type="hidden" name="PartNumber" value="@part.PartName" />
+                                    <button type="submit">Print QR Code</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
-     <!--Search Functions-->
-     <div class="row">
-         <label for="resultText">Part Number:</label>
-         <input id="resultText" type="text" placeholder="Enter Part Number" />
-     </div>
-
-        <!--Avalible Parts-->
-        <div class="row">
-            <div class="table-container">
-                <table class="dataTable">
-                    <thead>
-                        <tr>Part Number:</tr>
-                        <tr>Location:</tr>
-                        <tr>Quantity:</tr>
-                        <tr></tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var part in Model)
-                        {
-                            <tr>
-                                <td>@part.PartNumber</td>
-                                <td>@part.Description</td>
-                                <td>
-                                    <form asp-action="AddPart" asp-controller="Jobs">
-                                        <input type="hidden" name="ItemNumber" value="@part.PartNumber" />
-                                        <input type="hidden" name="Description" value="@part.Description" />
-                                        <input type="hidden" name="PartId" value="@part.PartId" />
-
-                                        <input type="hidden" id="assignedQuantity" name="AssignedQuantiy" value="1"/>
-                                        <input type="hidden" name="jobId" value="@ViewBag.JobID" />
-                                        <!--Opens Add Part Dialog-->
-                                        <button type="button" id="addPartsub" class="btn blue darken-2 right">Add</button>
-                                        <button style="display: none;" id="submit">Submit</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
 
 
-<!-- Add Part Modal Structure -->
-<div id="AddPartDialog" class="modal">
-    <div class="modal-container">
-     
-        <div class="row">
-            <label for="partNumber">Part Number:</label>
-            <input id="partNumber" type="text" placeholder="Part Number" />
-        </div>
-
-        <div class="row">
-            <label for="quantityinp">Quantity:</label>
-            <input id="quantityinp" type="text" placeholder="Quantity" />
-        </div>
-
-        <div class="row">
-            <button id="submitqty">Submit</button>
-        </div>
-
-    </div>
-</div>
-
-
-<!--Parts List for job-->
-<div>
-    <div class="row valign-wrapper">
-        <div class="col s6">
-            <h3>Parts: </h3>
-        </div>
-        <div class="col s6">
-            <!--Opens Add Part Dialog-->
-            <button id="addPart" data-target="MainDialog" class="btn modal-trigger blue darken-2 right">Add Part + </button>
-        </div>
-    </div>
-    <div class="row">
+        <!--Table of Assigned Parts-->
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Item Number: </th>
+                        <th>Part Number: </th>
                         <th>Description: </th>
+                        <th>Purchase Order:</th>
                         <th>Status: </th>
-                        <th>Quantity: </th>
-                        <th></th>
+                        <th>Quantity Used: </th>
+                        <th>Quantity Availible: </th>
                     </tr>
                 </thead>
-
                 <tbody>
-                   
-                </tbody>
+                    @foreach (JobPartsViewModel part in Model.AssignedParts)
+                    {
+                        <tr>
+                            <td>@part.PartName</td>
+                            <td>@part.PartDescription</td>
+                            <td>@part.POName</td>
+                            <td>@part.Status</td>
+                            <td>@part.AssignedParts</td>
+                            <td>@part.AvailableQuantity</td>
+                            <td>
+                                <form id="updatePartForm" asp-action="UpdatePart" asp-controller="Jobs" method="post" class="update-part-form">
+                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                    <input type="hidden" name="PartName" value="@part.PartName" />
+                                    <input type="hidden" name="JobId" value="@part.JobId" />
+                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                    <input type="hidden" name="Status" value="@part.Status" />
+                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
 
+                                    <button id="updatepart" type="submit">Update</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-action="RemovePart" asp-controller="Jobs" method="post" class="remove-part-form">
+                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                    <input type="hidden" name="PartName" value="@part.PartName" />
+                                    <input type="hidden" name="JobId" value="@part.JobId" />
+                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                    <input type="hidden" name="Status" value="@part.Status" />
+                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
     </div>
-    <div class="row">
-    </div>
 </div>
-
-
-<script>
-    var elems = document.querySelectorAll('.modal');
-    var instances = M.Modal.init(elems);
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var addpart = document.getElementById('addPartsub');
-        var addpartdialog = document.getElementById('AddPartDialog');
-        var addpartdialoginst = M.Modal.getInstance(addpartdialog);
-        var submitqty = document.getElementById('submitqty');
-
-        var assignedqty = document.getElementById('assignedQuantity');
-
-        var qtyinput = document.getElementById('quantityinp');
-
-
-        var submit = document.getElementById('submit');
-
-
-        addpart.addEventListener('click', function (event) {
-            event.preventDefault();
-            console.log("Opened Add part");
-            addpartdialoginst.open();
-
-        });
-
-        submitqty.addEventListener('click', function () {
-            var newqty = qtyinput.value;
-            assignedqty.value = newqty;
-
-            console.log("Submit btn click");
-
-
-            //submit.click();
-        });
-    });
-</script>
-
-
-
-
-

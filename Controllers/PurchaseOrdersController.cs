@@ -66,6 +66,7 @@ namespace ScannerWebAppUpdate.Controllers
         public async Task<IActionResult> UploadPo(string poNumber, int partsSelected, string selectedJob, string selectedTruck) 
         {
             bool success = false;
+            int POId = 0;
 
             //Stock Order
             if (selectedJob == null && selectedTruck != string.Empty) {
@@ -84,11 +85,11 @@ namespace ScannerWebAppUpdate.Controllers
 
                 if (success) {
 
-                   success = await _context.CreatePOParts(partsSelected, poNumber);
+                   POId = await _context.CreatePOParts(partsSelected, poNumber);
                 }
                 if (success) {
 
-                    success = await _context.AddTruckParts(poNumber, int.Parse(selectedTruck.Trim()));
+                    success = await _context.AddTruckParts(POId, int.Parse(selectedTruck.Trim()));
                 
                 }
 
@@ -98,13 +99,38 @@ namespace ScannerWebAppUpdate.Controllers
             }
 
             //Job Order
-           else if (selectedJob != string.Empty && selectedTruck == string.Empty)
+           else if (selectedJob != string.Empty && selectedTruck == null)
             {
+                //Save PO
+                PurchaseOrder newPo = new PurchaseOrder()
+                {
+                    Name = poNumber,
+                    JobId = int.Parse(selectedJob.Trim()),
+                    Type = "Job Order"
+                };
+
+                success = await _context.AddPurchaseOrder(newPo);
+
+                //CreatePOParts
+                //Return PO Id
+                if (success)
+                {
+                    POId = await _context.CreatePOParts(partsSelected, poNumber);
+                }
+
+                //CreateJobOrder
+                if (POId != 0)
+                {
+                    success = await _context.CreateJobOrder(int.Parse(selectedJob.Trim()), POId);
+                }
+
+                //success = context.createjobparts(id, jobid)
 
 
             }
+
             //Pick List
-           else if (selectedJob != string.Empty && selectedTruck != string.Empty)
+            else if (selectedJob != string.Empty && selectedTruck != string.Empty)
             {
 
 

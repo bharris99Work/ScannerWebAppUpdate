@@ -62,11 +62,11 @@
                             <td>@job.Status</td>
                             <td>
                                 <form asp-action="JobEditor" asp-controller="Jobs" method="post">
-                                    <input type="hidden" name="JobsId" value="@job.JobsId" />
-                                    <input type="hidden" name="JobNumber" value="@job.JobNumber" />
+                                    <input type="hidden" name="jobId" value="@job.JobsId" />
+                                   @*  <input type="hidden" name="JobNumber" value="@job.JobNumber" />
                                     <input type="hidden" name="DateCreated" value="@job.DateCreated" />
                                     <input type="hidden" name="Location" value="@job.Location" />
-                                    <input type="hidden" name="Status" value="@job.Status" />
+                                    <input type="hidden" name="Status" value="@job.Status" /> *@
                                     <button>Submit</button>
                                 </form>
                             </td>

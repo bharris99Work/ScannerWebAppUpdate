@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq.Expressions;
+using System.Runtime.Intrinsics.X86;
 
 namespace ScannerWebAppUpdate.Models
 {
@@ -102,9 +103,7 @@ namespace ScannerWebAppUpdate.Models
             }
         }
 
-
-
-
+        
         public async Task<bool> AddReturnList(ObservableCollection<ReturnOption> TestReturnOptions)
         {
             try
@@ -173,20 +172,35 @@ namespace ScannerWebAppUpdate.Models
         }
 
 
-        public async Task<List<PartsQuantityViewModel>> JobPartsFind(Jobs selectedJob)
+        public async Task<List<JobPartsViewModel>> JobPartsFind(int jobId)
         {
             try
             {
-                //X = Find all AssignedParts where AssignedPart.JobId = job.JobId
-                //Grab all parts where X.PartId = AssignedPart.PartId
-                //Save as list 
-                //Send back
+                //Using JobId
 
-                //var parts = from jobpart in JobParts
-                //            join part in Parts on jobpart.PartId equals part.PartId
-                //            join job in Jobs on jobpart.JobId equals job.JobsId
-                //            join po 
-                
+                //Find all JobParts with JobId
+                //Find all Parts with JobParts.PartId equals Parts.PartId
+                //Find all PurchaseOrders with JobParts.PoId = PurchaseOrders.ID
+
+                var parts = await (from joparts in JobParts
+                            join part in Parts on joparts.PartId equals part.PartId
+                            join po in PurchaseOrders on joparts.PurchaseOrderId equals po.PurchaseOrderId
+                            where joparts.JobId == jobId
+                            select new JobPartsViewModel()
+                            {
+                                JobPartId = joparts.JobPartId,
+                                JobId = jobId,
+                                PartId = joparts.PartId,
+                                PartName = part.PartNumber,
+                                PartDescription = part.Description,
+                                PurchaseOrderId = joparts.PurchaseOrderId,
+                                POName = po.Name,
+                                Status = joparts.Status,
+                                AssignedParts = joparts.AssignedQuantity,
+                                AvailableQuantity = joparts.AvailableQuantity
+                            }).ToListAsync();
+
+                return parts;
 
                 // return parts;
                 throw new Exception("An error occurred while retrieving parts assigned to the job");
@@ -195,6 +209,115 @@ namespace ScannerWebAppUpdate.Models
             {
                 // Handle exception (e.g., log the error)
                 throw new Exception("An error occurred while retrieving parts assigned to the job", ex);
+            }
+        }
+
+
+        public async Task<bool> AssignPart(JobPartsViewModel selectedjobPart, int quantity)
+        {
+            try
+            {
+                var foundpart = JobParts.FirstOrDefault(jobpart => jobpart.PartId == selectedjobPart.PartId && jobpart.PurchaseOrderId == selectedjobPart.PurchaseOrderId);
+
+                if (foundpart != null) {
+                    if(foundpart.AvailableQuantity - quantity >= 0)
+                    {
+                        int newQuantity = foundpart.AvailableQuantity - quantity;
+                        int newAllocated = foundpart.AssignedQuantity + quantity;
+                        foundpart.AvailableQuantity = newQuantity;
+                        foundpart.AssignedQuantity = newAllocated;
+
+                        await SaveChangesAsync();
+                        return true;
+                    }
+                    return false;
+                }
+                else
+                    return false;  
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateJobPart(JobPartsViewModel selectedjobPart)
+        {
+            try
+            {
+                var foundpart = JobParts.FirstOrDefault(jobpart => jobpart.PartId == selectedjobPart.PartId && jobpart.PurchaseOrderId == selectedjobPart.PurchaseOrderId);
+
+                if (foundpart != null)
+                {
+                    foundpart.AssignedQuantity = selectedjobPart.AssignedParts;
+                    foundpart.AvailableQuantity = selectedjobPart.AvailableQuantity;
+                    if(selectedjobPart.Status != null && selectedjobPart.Status != string.Empty)
+                    {
+                        foundpart.Status = selectedjobPart.Status;
+                    }
+
+                    await SaveChangesAsync();
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+        public async Task<bool> RemovePart(JobPartsViewModel selectedjobPart, int quantity)
+        {
+            try
+            {
+                var foundpart = JobParts.FirstOrDefault(jobpart => jobpart.PartId == selectedjobPart.PartId && jobpart.PurchaseOrderId == selectedjobPart.PurchaseOrderId);
+
+                if (foundpart != null)
+                {
+                    if (foundpart.AssignedQuantity - quantity >= 0)
+                    {
+                        int newAllocated = foundpart.AssignedQuantity - quantity;
+                        int newQuantity = foundpart.AvailableQuantity + quantity;
+                        foundpart.AssignedQuantity = newAllocated;
+                        foundpart.AvailableQuantity = newQuantity;
+                        
+
+                        await SaveChangesAsync();
+                        return true;
+                    }
+                    return false;
+                }
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<JobPartsPartialViewModel> GetJobPartPartialVM (int jobId)
+        {
+            try
+            {
+                List<JobPartsViewModel> jobParts = await JobPartsFind(jobId);
+                List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
+
+                JobPartsPartialViewModel jppv = new JobPartsPartialViewModel()
+                {
+                    jobId = jobId,
+                    AssignedParts = assignedParts,
+                    AvailableParts = jobParts
+                };
+                return jppv;
+
+            }
+            catch (Exception ex)
+            {
+                return new JobPartsPartialViewModel();
             }
         }
         #endregion
@@ -305,11 +428,11 @@ namespace ScannerWebAppUpdate.Models
             }
         }
 
-        public async Task<bool> AddTruckParts(string poNumber, int truckId)
+        public async Task<bool> AddTruckParts(int poNum, int truckId)
         {
             try
             {
-                int poNum = PurchaseOrders.FirstOrDefault(po => po.Name == poNumber).PurchaseOrderId;
+                //int poNum = PurchaseOrders.FirstOrDefault(po => po.Name == poNumber).PurchaseOrderId;
 
                 List<POPart> poParts = POParts.Where(po => po.PurchaseOrderId == poNum).ToList();
 
@@ -360,10 +483,12 @@ namespace ScannerWebAppUpdate.Models
             }
         }
 
-        public async Task<bool> CreatePOParts(int numberOfParts, string POName)
+        public async Task<int> CreatePOParts(int numberOfParts, string POName)
         {
             try
             {
+                List<POPart> tempPoPartList = new List<POPart>();
+
                 int PONumId = PurchaseOrders.FirstOrDefault(po => po.Name == POName).PurchaseOrderId;
                 if (PONumId != 0) {
 
@@ -382,23 +507,64 @@ namespace ScannerWebAppUpdate.Models
                             Status = "Ordered",
                             ReturnStatus = ""
                         };
+                        //Check if part exist in popart with poid and part id
+                        if (!tempPoPartList.Any(popart => popart.PartId == part.PartId))
+                        {
+                            POParts.Add(part);
+                            tempPoPartList.Add(part);
+                        };
 
-                        POParts.Add(part);
+                        if(tempPoPartList.Count < numberOfParts)
+                        {
+                            i -= 1;
+                        }
                     }
                 }
                 else
                 {
-                    return false;
+                    return 0;
                 }
                 await SaveChangesAsync ();
-                return true;
+                return PONumId;
             }
             catch (Exception ex) 
             {
             
-                return false;
+                return 0;
             }
 
+        }
+
+        public async Task<bool> CreateJobOrder(int jobid, int POId)
+        {
+            try
+            {
+                //Using PO grab all PoParts
+                //Create new JobParts
+                var parts = await (from popart in POParts
+                            where popart.PurchaseOrderId == POId
+                            select new JobPart()
+                            {
+                                PartId = popart.PartId,
+                                JobId = jobid,
+                                PurchaseOrderId = popart.PurchaseOrderId,
+                                AvailableQuantity = popart.Quantity,
+                                Status = "Ordered"
+                               
+                            }).ToListAsync();
+               
+                JobParts.AddRange(parts);
+
+
+
+
+                await SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<List<PartsQuantityViewModel>> GetPoParts(int poid)

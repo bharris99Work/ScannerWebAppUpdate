@@ -8,7 +8,8 @@ module.exports = {
         scanHistoryTable: './wwwroot/js/scanHistoryTable.js',
         scanningoptions: './wwwroot/js/ScanningOptions.js',
         scanditscanning: './wwwroot/js/ScanditScanning.js',
-        scanditscanner: './wwwroot/js/ScanditScanner.js'
+        scanditscanner: './wwwroot/js/ScanditScanner.js',
+        uploadScanPart: '/wwwroot/js/uploadScannedPart.js'
     },
     output: {
         filename: '[name].bundle.js',

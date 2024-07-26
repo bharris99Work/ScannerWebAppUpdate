@@ -31,73 +31,103 @@ namespace ScannerWebAppUpdate.Controllers
             return View();
         }
 
-        [HttpPost]
+   
+        public async Task<IActionResult> JobEditor(int jobId)
+        {
+     
+            List<JobPartsViewModel> jobParts = await _context.JobPartsFind(jobId);
+
+            List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
+
+            ViewBag.JobParts = jobParts;
+            ViewBag.AssignedParts = assignedParts;
+            ViewBag.JobId = jobId;
+            JobPartsPartialViewModel JPPV = await _context.GetJobPartPartialVM(jobId);
+
+            Console.WriteLine(jobId);
+            return View(JPPV);
+        }
+
         public async Task<IActionResult> JobParts(int jobId)
         {
+        
 
-           // JobPartsList = await _context.JobPartsFind(jobId);
-            var PartsOnTruck = await _context.GetTruckParts("TestTruck");
-            ViewBag.JobID = jobId;  
-            return PartialView("_JobParts", PartsOnTruck);
-        }
-
-        public IActionResult Home()
-        {
-            return PartialView("_Home");
-        }
-
-        public IActionResult AddPart()
-        {
-            return PartialView("_AddPart");
+            JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobId);
+            return PartialView("_JobParts", jppv);
         }
 
         [HttpPost]
-        public async Task<IActionResult> JobEditor(Jobs job)
-        {
-            //Job details
-            //ViewBag.JobParts = await _context.JobPartsFind(job);
-
-          
-            //Removing part from truck
-
-            Console.WriteLine(job);
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult AddPart(Part part, int AssignedQuanity, int jobId)
+        public async Task<IActionResult> AddPart(JobPartsViewModel jobPart)
         {
             try
             {
-                //User clicks add
-                //Dialog asking for quantity opens
-                //User hits submit
-                //Informaiton is sent
+                bool success = await _context.AssignPart(jobPart, 1);
 
-
-               //AddPart Dialog:
-               //Add All Option
-               //Add One by default
-               //Add Multiple
-
-                //Assignments:
-                //Part.Quantity -= Assigned Quantity
-                //AssignedPart.Quantity = Assigned Quantity
-                //AssignedPart.JobId = JobId
-                //AssignedPart.Status = Idle
-                //ReturnReason = null
-
-                //Update Part
-                //Update AssignedPart
-                //Save Changes
+                if (success)
+                {
+                    JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
+                    return PartialView("_JobParts", jppv);
+                }
                 return View();
+                //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
+
+
 
             }
             catch (Exception ex) {
-
                 return View();
+                //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdatePart(JobPartsViewModel jobPart)
+        {
+            try
+            {
+                bool success = await _context.UpdateJobPart(jobPart);
+
+                if (success)
+                {
+                    JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
+                    return PartialView("_JobParts", jppv);
+                }
+                return View();
+                //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return View();
+                //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> RemovePart(JobPartsViewModel jobPart)
+        {
+            try
+            {
+
+                bool success = await _context.RemovePart(jobPart, 1);
+
+                if (success)
+                {
+                    JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
+                    return PartialView("_JobParts", jppv);
+                }
+                return View();
+                //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
+
+            }
+            catch (Exception ex)
+            {
+                return View();
+                //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
+            }
+        }
     }
 }

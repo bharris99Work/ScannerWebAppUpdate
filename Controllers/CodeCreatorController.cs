@@ -88,7 +88,6 @@ namespace ScannerWebAppUpdate.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(string itemNumber, string description, string jobNumber)
         {
-            
             var items = await _context.SearchPartAsync(itemNumber, jobNumber, description);
             
             ViewBag.PartsList = items;

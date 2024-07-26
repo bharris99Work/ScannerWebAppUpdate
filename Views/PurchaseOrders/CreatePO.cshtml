@@ -37,6 +37,7 @@
 
         <!--TruckName-->
         <select id="truckNameSelect" name="selectedTruck">
+            <option value="">No Job</option>
             @{
                 int truckcounter = 1;
                 foreach (var truck in ViewBag.trucks)

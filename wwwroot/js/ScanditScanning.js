@@ -4,17 +4,19 @@ import * as SDCBarcode from "scandit-web-datacapture-barcode";
 document.addEventListener('DOMContentLoaded', async function () {
 
 
-
+    var continousbn = document.getElementById('continousBN');
+    var isContinous = false;
 
     let scanoptions = document.getElementById('scanOptions');
 
+    //camera attributes
     var cameraview = document.getElementById("reader");
     var camerascan = document.getElementById('cameraScan');
     let camera = SDCCore.Camera.default;
     let cameraSettings = SDCBarcode.BarcodeCapture.recommendedCameraSettings;
     await camera.applySettings(cameraSettings);
 
-
+    //Reader attributes
     let openreader = document.getElementById('readerScan');
     let readeroptions = document.getElementById('readerOptions');
     let cancelreader = document.getElementById('cancelReader');
@@ -31,6 +33,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     //Grabs instance of scanner dialog
     var scanmodal = document.getElementById('ScanDialog');
     var scanmodalinst = M.Modal.getInstance(scanmodal);
+
+    var submitbn = document.getElementById('SpecificSearch');
 
 
     var context;
@@ -81,7 +85,13 @@ document.addEventListener('DOMContentLoaded', async function () {
                     console.log('Current Input String:', savedString);
                     resulttext.value = savedString;
                     if (event.key === 'Enter') {
-                        //submit.click();
+                        if (isContinous) {
+                            submitbn.click();
+                        }
+                        else {
+                            submitbn.click();
+                        }
+                        
                     }
                 }
             }
@@ -173,8 +183,18 @@ document.addEventListener('DOMContentLoaded', async function () {
                 console.log(recognizedBarcodes[0]._data);  // Do something with the barcodes
                 resulttext.value = "";
                 resulttext.value = recognizedBarcodes[0]._data;
-                scanmodalinst.close();
-                stopRec();
+
+                if (isContinous) {
+                    //scanmodalinst.close();
+                    //stopRec();
+                    submitbn.click();
+                }
+                else {
+                    scanmodalinst.close();
+                    stopRec();
+                    submitbn.click();
+                }
+                
             }
         };
         barcodeCapture.addListener(listener);
@@ -230,6 +250,18 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error("Error initializing scanner:", error);
         }
     }
+
+    continousbn.addEventListener('click', function () {
+
+        if (!isContinous) {
+            isContinous = true;
+            continousbn.innerHTML = "True";
+        }
+        else {
+            isContinous = false;
+            continousbn.innerHTML = "false";
+        }
+    })
 
     function ScanReady() {
        
