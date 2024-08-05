@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScannerWebAppUpdate.Models;
 
@@ -10,9 +11,11 @@ using ScannerWebAppUpdate.Models;
 namespace ScannerWebAppUpdate.Migrations
 {
     [DbContext(typeof(ScannerContext))]
-    partial class ScannerContextModelSnapshot : ModelSnapshot
+    [Migration("20240731165617_truckpartsUPdate")]
+    partial class truckpartsUPdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
@@ -36,9 +39,6 @@ namespace ScannerWebAppUpdate.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PurchaseOrderId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SignedOff")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Status")

@@ -32,19 +32,22 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
    
-        public async Task<IActionResult> JobEditor(int jobId)
+        public async Task<IActionResult> JobEditor(Jobs selectedJob)
         {
      
-            List<JobPartsViewModel> jobParts = await _context.JobPartsFind(jobId);
+            List<JobPartsViewModel> jobParts = await _context.JobPartsFind(selectedJob.JobsId);
 
             List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
 
+
+          
             ViewBag.JobParts = jobParts;
             ViewBag.AssignedParts = assignedParts;
-            ViewBag.JobId = jobId;
-            JobPartsPartialViewModel JPPV = await _context.GetJobPartPartialVM(jobId);
+            ViewBag.JobId = selectedJob.JobsId;
+            ViewBag.JobName = selectedJob.JobNumber;
+            JobPartsPartialViewModel JPPV = await _context.GetJobPartPartialVM(selectedJob.JobsId);
 
-            Console.WriteLine(jobId);
+            Console.WriteLine(selectedJob.JobsId);
             return View(JPPV);
         }
 
@@ -81,11 +84,29 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdatePart(JobPartsViewModel jobPart)
+        public async Task<IActionResult> UpdatePart(JobPartsViewModel jobPart, string FunctionType)
         {
             try
             {
-                bool success = await _context.UpdateJobPart(jobPart);
+                bool success = false;
+                if (FunctionType.Trim() == "1")
+                {
+                    success = await _context.SignOffParts(jobPart);
+                }
+                else if (FunctionType.Trim() == "2")
+                {
+                    success = await _context.AddTruckPart(jobPart);
+                }
+                else if (FunctionType.Trim() == "3") 
+                {
+                    //Return Part
+                }
+                else if (FunctionType.Trim() == "4")
+                {
+                    success = await _context.UpdateJobPart(jobPart);
+                }
+
+
 
                 if (success)
                 {
@@ -94,7 +115,6 @@ namespace ScannerWebAppUpdate.Controllers
                 }
                 return View();
                 //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
-
 
 
             }

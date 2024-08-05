@@ -1,19 +1,34 @@
 ﻿@model JobPartsPartialViewModel
-
 <!-- Include jQuery Library -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<input id="jobId" type="hidden" value="@ViewBag.JobId" />
 
+<input id="jobId" type="hidden" value="@ViewBag.JobId" />
+<input id="functionType" type="hidden" />
+
+<button id="openScanDialog" style="display:none;"></button>
 
 <div>
-    <div class="row">
-        <h3>Job Number: @ViewBag.JobId</h3>
-    </div>
 
-    <div class="row">
-        <div class="col s12">
-            <h6>Continous Scanning: </h6>
-            <button id="continousBN">False</button>
+    <div id="SearchDialog" class="modal result-Dialog">
+        <div class="modal-container">
+            <div class="row">
+                <div class="col s12">
+                    <div class="row">
+                        <div class="col s12">
+                            <!--Search Component-->
+                            @await Component.InvokeAsync("Search")
+                        </div>
+                    </div>
+                    @*     <div class="row">
+                    <div class="col s12">
+                    <h6>Response: </h6>
+                    <p id="responseText" class=" red-text"></p>
+                    </div>
+
+                    </div> *@
+
+                </div>
+            </div>
         </div>
     </div>
 
@@ -21,11 +36,52 @@
     <!-- Scaan Modal Structure-->
     <div id="ScanDialog" class="modal">
         <div class="modal-container">
+            <!--Result Header-->
+            <div id="resultHeader" style="display:block;" class="result-header-container">
+                @*   <!--Result-->
+                <div class="row">
+                <h6 id="resultStatus"></h6>
+                </div>
+                <!--Scanned Number & Google Button-->
+                <div class="row">
+                <div class="part-google">
+                <a id="partGoogle" target="_blank"></a>
+                <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a>
+                </div>
+                </div> *@
+            </div>
+
             <!--QR Code Reader-->
             <div class="row">
                 <div id="reader"></div>
             </div>
-            <button class="btn-floating btn-small waves-effect blue darken-2 btn-scanning" id="switchCamera"><i class="material-icons">cameraswitch</i>Switch</button>
+
+            <!--StartScan and PauseScan buttons-->
+            <div class="scan-button-container">
+                <button class=" waves-effect scan-button btn-small light-blue darken-4" id="startScanning">Start Scanning</button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div>
+        <div style="display:none;" id="resultModal" class="modal bottom-sheet">
+            @*    <div class="modal-content">
+            <!--Result-->
+            <div class="row">
+            <h6 id="resultStatus"></h6>
+            </div>
+            <!--Scanned Number & Google Button-->
+            <div class="row">
+            <div class="part-google">
+            <a id="partGoogle" target="_blank"></a>
+            <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a>
+            </div>
+            </div>
+            </div> *@
+
         </div>
     </div>
 
@@ -37,13 +93,13 @@
                 <h3 id="JobPartHeader">Part: </h3>
             </div>
             <div class="row">
-                    <button id="googlePartButton">Google Part</button>
+                <button id="googlePartButton">Google Part</button>
             </div>
             <div class="row">
                 <div class="col s12">
                     <label>Quantity:</label>
                     <input id="inputQty" type="text" />
-                    <input id="maxQty" type="text" disabled/>
+                    <input id="maxQty" type="text" disabled />
 
                     <div class="btn-container">
                         <button id="assignPart">Assign</button>
@@ -55,9 +111,7 @@
                 <label for="jobPartStatus">Status:</label>
                 <select id="jobPartStatus"></select>
             </div>
-            <div>
-                
-            </div>
+
             <div class="row">
                 <button id="updatePart">Update Part</button>
             </div>
@@ -65,27 +119,234 @@
     </div>
 
 
+
+
     <div class="row">
-        <div class="col s12">
-            <!--Search Component-->
-            @await Component.InvokeAsync("Search")
+        <h3>@ViewBag.JobName</h3>
+    </div>
+
+    <!--Result for Scanned/Reader -->
+    <div id="resultCard" style="display: none;" class="result-card card small">
+        <!-- Header - Exit Button right aligned-->
+        <div class="row">
+            <!--Header-->
+            <div class="col s6 ">
+                <h5>Result:</h5>
+                <h6 id="resultStatus"></h6>
+            </div>
+            <!--Exit-->
+            <div class="col s6 ">
+                <button id="exitResults" class="right">X</button>
+            </div>
+        </div>
+        <div class="divider"></div>
+
+        <div class="section"></div>
+        <!-- Result - Google Button-->
+        <div class="row">
+
+            <div class="part-google">
+                <a id="partGoogle" target="_blank"></a>
+                <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a>
+            </div>
+            @*      <!--Scanned Number-->
+            <div class="col s6">
+            </div>
+            <!--Google Button-->
+            <div class="col s6">
+            </div>  *@
+        </div>
+        <!-- OK (Exit Button)-->
+        <div class="row">
+            <button id="closeResults">Close</button>
         </div>
     </div>
 
-    <button id="SpecificSearch"></button>
-    
+    <div class="row">
+        <div class="col s12">
+            @* <h6>Continous Scanning: </h6> *@
+            <button style="display:none;" id="continousBN">False</button>
+            <input type="hidden" id="ScanType" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="btn-container">
+
+                <button class="btn red" id="notUsedPart"><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Not Used (Scan)</button>
+                <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="signPart"><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Sign Off (Scan)</button>
+                <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="usedPart"><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Use Part (Scan)</button>
+                <a class="btn" id="testBtn">Test</a>
+            </div>
+
+
+        </div>
+    </div>
+
+    @*   <div class="row">
+    <div class="col s12">
+    <!--Search Component-->
+    @await Component.InvokeAsync("Search")
+    </div>
+    </div> *@
+
+
+
     <div class="row">
         <div id="divPartial" class="col s12">
             @await Html.PartialAsync("_JobParts", Model)
         </div>
     </div>
-    
 </div>
+</div>
+@section Scripts {
 
-@section Scripts{
+
+    <script>
+        // Attach event listeners once the modal instance is available
+        $('#signPart').on('click', function () {
+            $('#functionType').val("1");
+            console.log('Sign Part Function');
+        });
+
+        $('#addPart').on('click', function () {
+            $('#functionType').val("2");
+            console.log('Add Part Function');
+        });
+
+        $('#notUsedPart').on('click', function () {
+            $('#functionType').val("3");
+            console.log('Not Used Part Function');
+        });
+
+        $('#usedPart').on('click', function () {
+            $('#functionType').val("4");
+            console.log('Update Part Function');
+        });
+
+        //# sourceURL=openscan.js
+    </script>
+
+    <script>
+        function scannedPartSearch() {
+            var result = $('#resultText').val();
+
+            var found = false;
+            if ($('#functionType').val() === "1" || $('#functionType').val() === "3" || $('#functionType').val() === "4") {
+                //Grab list of parts from jobParts
+                $('#partsTable tbody tr').each(function () {
+
+                    var partName = $(this).find('td').eq(0).text().toLowerCase();
+
+                    //Search list for specific part
+                    if (partName.trim() == result.toLocaleLowerCase().trim()) {
+                        console.log("Part Found" + partName.trim());
+
+                        //Get List of details about the part
+                        var jobPartId = $(this).find('input[name="JobPartId"]').val();
+                        var partId = $(this).find('input[name="PartId"]').val();
+                        var partName = $(this).find('input[name="PartName"]').val();
+                        var jobId = $(this).find('input[name="JobId"]').val();
+                        var purchaseOrderId = $(this).find('input[name="PurchaseOrderId"]').val();
+                        var status = $(this).find('input[name="Status"]').val();
+                        var assignedParts = $(this).find('input[name="AssignedParts"]').val();
+                        var availableQuantity = $(this).find('input[name="AvailableQuantity"]').val();
+                        var signedOff = $(this).find('input[name="SignedOff"]').val();
+
+
+
+                        $('#JobPartId').val(jobPartId);
+                        $('#PartId').val(partId);
+                        $('#PartName').val(partName);
+                        $('#JobId').val(jobId);
+                        $('#PurchaseOrderId').val(purchaseOrderId);
+                        $('#Status').val(status);
+                        $('#AssignedParts').val(assignedParts);
+                        $('#AvailableQuantity').val(availableQuantity);
+                        $('#SignedOff').val(signedOff);
+
+                        $('#updateScanPart').click();
+
+                        found = true;
+                        console.log("Part has been found");
+                        return false;
+
+                    }
+
+                    console.log(partName);
+                });
+
+            }
+            else if ($('#functionType').val() === "2") {
+
+                //Grab list of Truck Parts
+                $('#truckPartsTable tbody tr').each(function () {
+
+                    var partName = $(this).find('td').eq(0).text().toLowerCase();
+
+                    //Search list for specific part
+                    if (partName.trim() == result.toLocaleLowerCase().trim()) {
+                        console.log("Part Found" + partName.trim());
+
+                        //Get List of details about the part
+                        var jobPartId = $(this).find('input[name="JobPartId"]').val();
+                        var partId = $(this).find('input[name="PartId"]').val();
+                        var partName = $(this).find('input[name="PartName"]').val();
+                        //var jobId = $(this).find('input[name="JobId"]').val();
+                        var purchaseOrderId = $(this).find('input[name="PurchaseOrderId"]').val();
+                        var status = $(this).find('input[name="Status"]').val();
+                        var truckId = $(this).find('input[name="TruckId"]').val();
+                        var assignedParts = $(this).find('input[name="AssignedParts"]').val();
+                        var availableQuantity = $(this).find('input[name="AvailableQuantity"]').val();
+
+                        var jobid = $('#jobId').val();
+
+                        $('#JobPartId').val(jobPartId);
+                        $('#PartId').val(partId);
+                        $('#PartName').val(partName);
+                        $('#JobId').val(jobid);
+                        $('#PurchaseOrderId').val(purchaseOrderId);
+                        $('#Status').val(status);
+                        $('#AssignedParts').val(assignedParts);
+                        $('#AvailableQuantity').val(availableQuantity);
+                        $('#TruckId').val(truckId);
+
+                        $('#updateScanPart').click();
+
+                        found = true;
+                        console.log("Part has been found");
+                        return false;
+
+                    }
+
+                    console.log(partName);
+                });
+            }
+
+
+            return found;
+
+            //false
+            //Click Search button
+            //Show Search results for item
+            //TODO: ADD SEARCH FUNCITON
+            //console.log("This scan was succesful: " + result);
+
+        }
+        //# sourceURL=somename.js
+    </script>
+
+
+
     <script src="~/js/materialize.min.js"></script>
-    <script src="~/dist/scanditscanning.bundle.js"></script>
     <script src="~/dist/uploadScanPart.bundle.js"></script>
+    <script src="~/dist/scanditscanning.bundle.js"></script>
+
+
+
+
+
 }
 
 

@@ -16,5 +16,7 @@
         public int AssignedQuantity { get; set; }
         public int AvailableQuantity { get; set; }
 
+        public int SignedOff { get; set; }
+
     }
 }

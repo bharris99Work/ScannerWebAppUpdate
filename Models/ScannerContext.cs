@@ -197,6 +197,7 @@ namespace ScannerWebAppUpdate.Models
                                 POName = po.Name,
                                 Status = joparts.Status,
                                 AssignedParts = joparts.AssignedQuantity,
+                                SignedOff = joparts.SignedOff,
                                 AvailableQuantity = joparts.AvailableQuantity
                             }).ToListAsync();
 
@@ -241,6 +242,63 @@ namespace ScannerWebAppUpdate.Models
             }
         }
 
+        public async Task<bool> AddTruckPart(JobPartsViewModel selectedPart)
+        {
+            try
+            {
+                var foundTruckPart = TruckParts.FirstOrDefault(truckpart => selectedPart.TruckId == truckpart.TruckId
+                && truckpart.PartId == selectedPart.PartId && truckpart.PurchaseOrderId == selectedPart.PurchaseOrderId);
+
+                var existingJobPart = JobParts.FirstOrDefault(jobpart => selectedPart.PartId
+                == jobpart.PartId && selectedPart.PurchaseOrderId == jobpart.PurchaseOrderId && selectedPart.JobId == jobpart.JobId);
+
+                //Checks if truck part exists
+                if (foundTruckPart != null)
+                {
+
+                    //Update Existing Part if available
+                    if (existingJobPart != null)
+                    {
+                        existingJobPart.AvailableQuantity += selectedPart.AssignedParts;
+
+                        foundTruckPart.QuantityAvalible -= selectedPart.AssignedParts;
+                        foundTruckPart.QuantityAllocated += selectedPart.AssignedParts;
+
+                        await SaveChangesAsync();
+                        return true;
+                    }
+
+                    else
+                    {
+                        JobPart newPart = new JobPart()
+                        {
+                            PartId = selectedPart.PartId,
+                            truckId = selectedPart.PartId,
+                            PurchaseOrderId = selectedPart.PurchaseOrderId,
+                            AssignedQuantity = 0,
+                            AvailableQuantity = selectedPart.AssignedParts,
+                            Status = "Added From Truck",
+                            JobId = selectedPart.JobId
+                        };
+
+                        foundTruckPart.QuantityAvalible -= selectedPart.AssignedParts;
+                        foundTruckPart.QuantityAllocated += selectedPart.AssignedParts;
+
+                        JobParts.Add(newPart);
+                        await SaveChangesAsync();
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.ToString());
+                return false;
+            
+            }
+        }
+
         public async Task<bool> UpdateJobPart(JobPartsViewModel selectedjobPart)
         {
             try
@@ -253,7 +311,7 @@ namespace ScannerWebAppUpdate.Models
                     foundpart.AvailableQuantity = selectedjobPart.AvailableQuantity;
                     if(selectedjobPart.Status != null && selectedjobPart.Status != string.Empty)
                     {
-                        foundpart.Status = selectedjobPart.Status;
+                        foundpart.Status = "Parts Used";
                     }
 
                     await SaveChangesAsync();
@@ -266,6 +324,34 @@ namespace ScannerWebAppUpdate.Models
             {
                 return false;
             }
+        }
+
+        public async Task<bool> SignOffParts(JobPartsViewModel selectedjobPart)
+        {
+            try
+            {
+                var foundpart = JobParts.FirstOrDefault(jobpart => jobpart.PartId == selectedjobPart.PartId && jobpart.PurchaseOrderId == selectedjobPart.PurchaseOrderId);
+
+                if (foundpart != null)
+                {
+                    foundpart.SignedOff = selectedjobPart.SignedOff;
+                    
+                    if (selectedjobPart.Status != null && selectedjobPart.Status != string.Empty)
+                    {
+                        foundpart.Status = "Signed Off Parts";
+                    }
+
+                    await SaveChangesAsync();
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
         }
 
 
@@ -306,11 +392,14 @@ namespace ScannerWebAppUpdate.Models
                 List<JobPartsViewModel> jobParts = await JobPartsFind(jobId);
                 List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
 
+
+                //Get List of available truck parts
                 JobPartsPartialViewModel jppv = new JobPartsPartialViewModel()
                 {
                     jobId = jobId,
                     AssignedParts = assignedParts,
-                    AvailableParts = jobParts
+                    AvailableParts = jobParts,
+                    AvailableTruckParts = await GetTechParts(1)
                 };
                 return jppv;
 
@@ -443,6 +532,7 @@ namespace ScannerWebAppUpdate.Models
                         PartId = part.PartId,
                         TruckId = truckId,
                         QuantityAvalible = part.Quantity,
+                        PurchaseOrderId = part.PurchaseOrderId
                     };
 
                     TruckParts.Add(truckPart);
@@ -455,10 +545,35 @@ namespace ScannerWebAppUpdate.Models
             return false;
             
             }
-     
-
 
         }
+
+        public async Task<List<JobPartsViewModel>> GetTechParts(int TechId)
+        {
+            var parts = await (from tech in Techs
+                               join techtruck in TechTrucks on tech.TechId equals techtruck.TechId
+                               join truckpart in TruckParts on techtruck.TruckId equals truckpart.TruckId
+                               join part in Parts on truckpart.PartId equals part.PartId
+                               join po in PurchaseOrders on truckpart.PurchaseOrderId equals po.PurchaseOrderId
+                               where tech.TechId == TechId
+                               select new JobPartsViewModel()
+                               {
+                                   //JobPartId = truckpart.JobPartId,
+                                   //JobId = jobId,
+                                   PartId = part.PartId,
+                                   PartName = part.PartNumber,
+                                   PartDescription = part.Description,
+                                   PurchaseOrderId = po.PurchaseOrderId,
+                                   POName = po.Name,
+                                   TruckId = truckpart.TruckId,
+                                   //Status = joparts.Status,
+                                   AssignedParts = 0,
+                                   AvailableQuantity = truckpart.QuantityAvalible
+                               }).ToListAsync();
+            return parts;
+        }
+
+
         #endregion
 
         //Purchase Order Functions

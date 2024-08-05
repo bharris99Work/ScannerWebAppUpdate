@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     let cameraSettings = SDCBarcode.BarcodeCapture.recommendedCameraSettings;
     await camera.applySettings(cameraSettings);
 
+    var pausedoverlay = document.getElementById('scannerPause');
+    var workingoverlay = document.getElementById('scannerScanning');
+
+    var startscanningbn = document.getElementById('startScanning');
+    var scanning = false;
+
     //Reader attributes
     let openreader = document.getElementById('readerScan');
     let readeroptions = document.getElementById('readerOptions');
@@ -34,14 +40,36 @@ document.addEventListener('DOMContentLoaded', async function () {
     var scanmodal = document.getElementById('ScanDialog');
     var scanmodalinst = M.Modal.getInstance(scanmodal);
 
+    //Grab instance of SearchDialog
+    var searchmodal = document.getElementById('SearchDialog');
+    var searchmodalinst = M.Modal.getInstance(searchmodal)
+
     var submitbn = document.getElementById('SpecificSearch');
 
+    //Result helpers
+    //var responseText = document.getElementById('responseText');
+    var responseText = document.getElementById('resultStatus');
+    var resultheader = document.getElementById('resultHeader');
+    var resultcard = document.getElementById('resultCard');
+    var testbtn = document.getElementById('testBtn');
+
+    var closeresults = document.getElementById('closeResults');
+    var exitresults = document.getElementById('exitResults');
 
     var context;
     var view;
     var barcodeCapture
 
     var canScan = false;
+
+    var scanType = document.getElementById('ScanType');
+    scanType.value = 'NotContinous';
+
+    var resultstatus = document.getElementById('resultStatus');
+
+
+    // Store reference to the keydown event listener
+    let keydownEventListener;
 
     try {
         ScanReady();
@@ -50,6 +78,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.error("Error initializing scanner:", error);
     }
 
+
+    testbtn.addEventListener('click', function () {
+        
+    });
+
+    closeresults.addEventListener('click', function () {
+        resultcard.style.display = 'none';
+    });
+
+    exitresults.addEventListener('click', function () {
+        resultcard.style.display = 'none';
+    });
 
     //Reader functions and logic
     openreader.addEventListener('click', function () {
@@ -63,41 +103,111 @@ document.addEventListener('DOMContentLoaded', async function () {
         var maxTime = 700;
 
         //Start reader
-        document.addEventListener('keydown', function (event) {
+        //document.addEventListener('keydown', function (event) {
+        //    const currentTime = Date.now();
+        //    const timeDiff = currentTime - lastKeyTime;
+
+        //    //Time difference is too large to be from scanner
+        //    if (timeDiff > maxTime) {
+        //        //reset string
+        //        savedString = '';
+        //        console.log('Time to far apart of characters: ' + event.key + "Time Diff: " + timeDiff)
+        //    }
+        //    else {
+        //        //Add char to string
+        //        if (event.key.length === 1) {
+        //            savedString += event.key;
+        //            console.log('Wrting: ' + event.key)
+        //        }
+
+        //        // Do something with the input string if it meets criteria
+        //        if (savedString.length > 2) {
+        //            console.log('Current Input String:', savedString);
+        //            resulttext.value = savedString;
+
+
+
+
+        //            if (event.key === 'Enter') {
+        //            var correctlyAdded = scannedPartSearch();
+
+        //            if (correctlyAdded) {
+        //                //handle correct
+        //                responseText.textContent = 'Reader Correctly Found: ' + savedString;
+        //                console.log('Reader Correctly Found: ' + savedString);
+        //            }
+        //            else {
+        //                //handle error
+        //                responseText.textContent = 'Reader Failed To Find: ' + savedString;
+
+        //                resultcard.style.display = 'block';
+        //                resultstatus.textContent = "Failed To Find Part";
+        //                var partgoogle = document.getElementById('partGoogle');
+        //                var pnumber = resulttext.value;
+        //                partgoogle.innerHTML = pnumber;
+        //                var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
+        //                partgoogle.href = googleSearchURL;
+        //                console.log('Reader Failed To Find: ' + savedString);
+        //            }
+
+        //            }
+        //        }
+        //    }
+        //    lastKeyTime = currentTime; // Update the last keypress time
+
+        //});
+
+        // Define the keydown event listener function
+        keydownEventListener = function (event) {
             const currentTime = Date.now();
             const timeDiff = currentTime - lastKeyTime;
 
-            //Time difference is too large to be from scanner
+            // Time difference is too large to be from scanner
             if (timeDiff > maxTime) {
-                //reset string
+                // Reset string
                 savedString = '';
-                console.log('Time to far apart of characters: ' + event.key + "Time Diff: " + timeDiff)
-            }
-            else {
-                //Add char to string
+                console.log('Time too far apart of characters: ' + event.key + " Time Diff: " + timeDiff);
+            } else {
+                // Add char to string
                 if (event.key.length === 1) {
                     savedString += event.key;
-                    console.log('Wrting: ' + event.key)
+                    console.log('Writing: ' + event.key);
                 }
 
                 // Do something with the input string if it meets criteria
                 if (savedString.length > 2) {
                     console.log('Current Input String:', savedString);
                     resulttext.value = savedString;
+
                     if (event.key === 'Enter') {
-                        if (isContinous) {
-                            submitbn.click();
+                        var correctlyAdded = scannedPartSearch();
+
+                        if (correctlyAdded) {
+                            // Handle correct
+                            responseText.textContent = 'Reader Correctly Found: ' + savedString;
+                            console.log('Reader Correctly Found: ' + savedString);
+                        } else {
+                            // Handle error
+                            responseText.textContent = 'Reader Failed To Find: ' + savedString;
+
+                            resultcard.style.display = 'block';
+                            resultstatus.textContent = "Failed To Find Part";
+                            var partgoogle = document.getElementById('partGoogle');
+                            var pnumber = resulttext.value;
+                            partgoogle.innerHTML = pnumber;
+                            var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
+                            partgoogle.href = googleSearchURL;
+                            console.log('Reader Failed To Find: ' + savedString);
                         }
-                        else {
-                            submitbn.click();
-                        }
-                        
                     }
                 }
             }
             lastKeyTime = currentTime; // Update the last keypress time
+        };
 
-        });
+        // Add the keydown event listener
+        document.onkeydown = keydownEventListener;
+   
 
         //Close Keyboard
 
@@ -111,11 +221,55 @@ document.addEventListener('DOMContentLoaded', async function () {
         scanoptions.style.display = 'block';
 
         //Open keyboard cancel reader
+        console.log('Removing ability to of scanner');
+        //document.removeEventListener('keydown');
+        document.onkeydown = null;
+        console.log('Scanner no longer reading.');
 
     });
 
 
+    startscanningbn.addEventListener('click', async function () {
 
+        if (!scanning) {
+            
+
+            startScanner();
+            startscanningbn.innerHTML = '...Scanning...';
+        }
+        else {
+            
+            pauseScanner();
+            startscanningbn.innerHTML ='Start Scanner';
+        }
+
+    });
+
+
+  
+
+    async function pauseScanner() {
+        scanning = false;
+        startscanningbn.innerHTML = 'Start Scanner';
+
+        await barcodeCapture.setEnabled(false);
+
+        //pausedoverlay.style.display = 'block';
+       // workingoverlay.style.display = 'none';
+
+
+    }
+
+    async function startScanner() {
+        scanning = true;
+        startscanningbn.innerHTML = '...Scanning...';
+        await barcodeCapture.setEnabled(true);
+
+       // pausedoverlay.style.display = 'none';
+        //workingoverlay.style.display = 'block';
+
+
+    }
 
 
     camerascan.addEventListener('click', async function () {
@@ -129,6 +283,23 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
     async function stopRec() {
+        //Reset Values
+
+        resulttext.value = '';
+
+        readeroptions.style.display = 'none';
+
+        scanoptions.style.display = 'block';
+
+        //Open keyboard cancel reader
+        console.log('Removing ability to of scanner');
+
+        // $(document).off('keydown');
+        document.onkeydown = null;
+
+        console.log('Scanner no longer reading.');
+
+
         console.log("Turning off camera...");
         await camera.switchToDesiredState(SDCCore.FrameSourceState.Standby);
         await barcodeCapture.setEnabled(false);
@@ -136,6 +307,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
     async function initializeScanner() {
+
         console.log("Configuring Scandit SDK...");
         await SDCCore.configure({
             libraryLocation: new URL("/lib/engine/", document.baseURI).toString(),
@@ -171,30 +343,48 @@ document.addEventListener('DOMContentLoaded', async function () {
         settings.locationSelection = new SDCCore.RadiusLocationSelection(
             new SDCCore.NumberWithUnit(5, SDCCore.MeasureUnit.Pixel)
         );
-        settings.codeDuplicateFilter = 500;
+        settings.codeDuplicateFilter = 1000;
 
         console.log("Creating barcode capture...");
         barcodeCapture = await SDCBarcode.BarcodeCapture.forContext(context, settings);
+
+        // Asynchronous helper function
+        const handleScanResult = async (recognizedBarcodes) => {
+            console.log(recognizedBarcodes[0]._data);  // Do something with the barcodes
+            resulttext.value = "";
+            resulttext.value = recognizedBarcodes[0]._data;
+
+            //Pause camera
+            console.log("Pausing Camera.....");
+            await pauseScanner();
+
+            console.log("Starting Search...");
+                var correctlyAdded = scannedPartSearch();
+
+                if (correctlyAdded) {
+                   // responsetextcamera.textContent = 'Camera Correctly Found Part';
+                    //pauseScanner();
+                    scanmodalinst.close();
+                }
+                else {
+                    resultcard.style.display = 'block';
+                    resultstatus.textContent = "Failed To Find Part";
+                    //responsetextcamera.textContent = 'Camera Did Not Find Part';
+                    var partgoogle = document.getElementById('partGoogle');
+                    var pnumber = resulttext.value;
+                    partgoogle.innerHTML = pnumber;
+                    var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
+                    partgoogle.href = googleSearchURL;
+
+                   // pauseScanner();
+                }
+        };
 
         // Listener to handle barcode scan results
         const listener = {
             didScan: (barcodeCapture, session) => {
                 const recognizedBarcodes = session.newlyRecognizedBarcodes;
-                console.log(recognizedBarcodes[0]._data);  // Do something with the barcodes
-                resulttext.value = "";
-                resulttext.value = recognizedBarcodes[0]._data;
-
-                if (isContinous) {
-                    //scanmodalinst.close();
-                    //stopRec();
-                    submitbn.click();
-                }
-                else {
-                    scanmodalinst.close();
-                    stopRec();
-                    submitbn.click();
-                }
-                
+                handleScanResult(recognizedBarcodes);
             }
         };
         barcodeCapture.addListener(listener);
@@ -228,6 +418,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
         console.log("Scanner ready")
+        await barcodeCapture.setEnabled(false);
         canScan = true;
         ScanReady();
         return Promise.resolve();
@@ -240,7 +431,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log("Turning on the camera...");
             if (context && camera && barcodeCapture) {
                 await camera.switchToDesiredState(SDCCore.FrameSourceState.On);
-                await barcodeCapture.setEnabled(true);
+                //await barcodeCapture.setEnabled(false);
+                resultstatus.value = "";
                 scanmodalinst.open();
 
 
@@ -256,10 +448,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!isContinous) {
             isContinous = true;
             continousbn.innerHTML = "True";
+            scanType.value = 'Continous';
+            console.log('Scan Type (Should Be Continous): ' + scanType.value)
         }
         else {
             isContinous = false;
             continousbn.innerHTML = "false";
+            scanType.value = 'NotContinous';
+            console.log('Scan Type (Should Be NotContinous): ' + scanType.value)
         }
     })
 
@@ -273,10 +469,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log("Changing scan to yes");
             camerascan.disabled = false;
         }
-
         
     }
-
-
 
 });

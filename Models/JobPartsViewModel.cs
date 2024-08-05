@@ -14,5 +14,6 @@
         public string TruckName { get; set; }
         public int AssignedParts {  get; set; }
         public int AvailableQuantity { get; set; }
+        public int SignedOff { get; set; }
     }
 }
