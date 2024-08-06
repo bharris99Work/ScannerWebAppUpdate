@@ -306,6 +306,7 @@ $(document).ready(function () {
             // Get the instance of the quantity modal and open it
             var QuantityModalInst = M.Modal.getInstance($("#quantityModal"));
             var SearchDialogInst = M.Modal.getInstance($('#SearchDialog'));
+            var TruckPartsInst = M.Modal.getInstance($('#truckPartsModal'));
             if (QuantityModalInst) {
                 QuantityModalInst.close();
             } else {
@@ -313,6 +314,9 @@ $(document).ready(function () {
             }
             if (SearchDialogInst) {
                 SearchDialogInst.close();
+            }
+            if (TruckPartsInst) {
+                TruckPartsInst.close();
             }
 
             // Optionally send the form data via AJAX

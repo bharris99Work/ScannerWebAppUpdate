@@ -1,13 +1,16 @@
 ﻿.btn-large {
     margin: 2px;
+    border-radius: 20px;
 }
 
 .btn {
     margin: 2px;
+    border-radius: 20px;
 }
 
 .btn-small {
     margin: 2px;
+    border-radius: 5px;
 }
 
 .perfect-center {
@@ -30,10 +33,20 @@
     border-radius: 15px; /* Adjust the value as needed */
 }
 
+.quantity-dialog {
+    width: 80vw;
+    height: 88vh;
+    border-radius: 15px; /* Adjust the value as needed */
+}
+
 .admin-Dialog {
     width: 80vw;
     height: 50vh;
     border-radius: 15px; /* Adjust the value as needed */
+}
+
+.modal-content{
+    height:100%;
 }
 
 
@@ -137,88 +150,157 @@ main {
 
     .btn-container button {
         margin: 2px;
+        width:100%;
     }
 
-@media print{
-    form, .btn-container {
-        display: none;
-    }
 
-    .navbar-fixed,
-    .sidenav-fixed {
-        display: none !important;
-    }
+
+.multi-btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 
-
-@media only screen and (min-width: 993px) {
-    .result-card {
-        position: fixed;
-        top: 10%; /* Position it at the top of the viewport */
-        left: 50%;
-        transform: translate(-50%, -10%); /* Center the card horizontally */
-        width: 80%; /* Adjust width as needed */
-        max-width: 600px; /* Maximum width */
-        z-index: 1003; /* Ensure it's above the modal */
-        background: white;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        border-radius: 8px;
-    }
-
-    .form-container {
-        margin: 2px 0px 0px 0px;
-    }
-
-    /* Custom container margin */
-    .page-container {
-        width: 95%;
-        margin: 5px auto;
-        padding-bottom: 50px; /* Adjust this value as needed */
-        padding-left: 265px;
-    }
-
-    .invesible-top {
-        top: 65px;
-    }
-
-    .result-Dialog {
-        width: 35vw;
-        height: 45vh;
-        border-radius: 15px; /* Adjust the value as needed */
-    }
-
-    .admin-Dialog {
-        width: 35vw;
-        height: 45vh;
-        border-radius: 15px; /* Adjust the value as needed */
-    }
-
-    #ScanDialog {
-        width: 50vw;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        display: none;
-    }
-
-    .btn-container {
-        display: inline-grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 1fr;
-        padding: 10px;
-        margin-top: 20px;
-    }
-
-        .btn-container a {
-            margin: 0 4px;
-        }
-
-        .btn-container button {
-            margin: 0 4px;
-        }
+/* Basic styles for button containers */
+.left-btn-container, .right-btn-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%; /* Ensure containers take full width */
+    margin-bottom: 10px; /* Add space between stacked buttons */
 }
+
+    /* Ensure buttons fill the width of their containers */
+    .left-btn-container button, .right-btn-container button {
+        width: 100%;
+    }
+
+
+
+.result-container {
+    /*display: none;*/ /* Hide initially */
+    position: fixed;
+    top: 75%;
+    left: 0;
+    bottom: 1%;
+    right: 0;
+    margin: auto;
+    z-index: 1006;
+    width: 80%;
+    max-height: 70%;
+    background: rgba(0,0,0,0.7); /*  70% opaque green */
+    border-radius: 20px;
+}
+   
+
+
+    @media print {
+        form, .btn-container {
+            display: none;
+        }
+
+        .navbar-fixed,
+        .sidenav-fixed {
+            display: none !important;
+        }
+    }
+
+
+
+    @media only screen and (min-width: 993px) {
+
+        .result-container {
+            top: 82%;
+            bottom: 1%;
+            width: 35%;
+        }
+
+        .quantity-dialog {
+            width: 80vw;
+            height: 65vh;
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+
+        /* Ensure buttons fill the width of their containers */
+        .left-btn-container button, .right-btn-container button {
+            width: auto;
+        }
+
+        .right-btn-container {
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+
+        .left-btn-container {
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+
+
+        .multi-btn-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+
+
+        .form-container {
+            margin: 2px 0px 0px 0px;
+        }
+
+        /* Custom container margin */
+        .page-container {
+            width: 95%;
+            margin: 5px auto;
+            padding-bottom: 50px; /* Adjust this value as needed */
+            padding-left: 265px;
+        }
+
+        .invesible-top {
+            top: 65px;
+        }
+
+        .result-Dialog {
+            width: 35vw;
+            height: 45vh;
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+
+        .admin-Dialog {
+            width: 35vw;
+            height: 45vh;
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+
+        #ScanDialog {
+            width: 50vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .btn-container {
+            display: inline-grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 1fr;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+            .btn-container a {
+                margin: 0 4px;
+            }
+
+            .btn-container button {
+                margin: 0 4px;
+                width: 20%;
+            }
+    }
 
 

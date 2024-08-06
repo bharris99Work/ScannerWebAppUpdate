@@ -100,7 +100,6 @@
                 </div>
               </div>
 
-        <a class="waves-effect btn modal-trigger green accent-4 " href="#truckPartsModal">AddPart +</a>
 
         <!--Table of Job Parts-->
         <div class="table-container">
@@ -140,7 +139,7 @@
                                     <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
                                     <input type="hidden" name="FunctionType" value="" />
 
-                                    <button type="submit">Use</button>
+                                    <button class="waves-effect btn-small blue darken-2" type="submit">Use</button>
                                 </form>
                             </td>
                             <td>
@@ -157,14 +156,14 @@
                                     <input type="hidden" name="SignedOff" value="@part.SignedOff" />
                                     <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
                                     <input type="hidden" name="FunctionType" value="" />
-                                    <button type="submit">Sign Off</button>
+                                    <button class="waves-effect btn-small blue darken-2" type="submit">Sign Off</button>
                                 </form>
                             </td>
                             <td>
                                 <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
                                     <input type="hidden" name="PartId" value="@part.PartId" />
                                     <input type="hidden" name="PartNumber" value="@part.PartName" />
-                                    <button class="waves-effect btn blue darken-2" type="submit">Print QR Code</button>
+                                    <button class="waves-effect btn-small blue darken-2" type="submit">Print QR Code</button>
                                 </form>
                             </td>
                         </tr>

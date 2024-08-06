@@ -8,7 +8,6 @@
 <button id="openScanDialog" style="display:none;"></button>
 
 <div>
-
     <div id="SearchDialog" class="modal result-Dialog">
         <div class="modal-container">
             <div class="row">
@@ -29,6 +28,7 @@
 
                 </div>
             </div>
+   
         </div>
     </div>
 
@@ -60,40 +60,51 @@
             <div class="scan-button-container">
                 <button class=" waves-effect scan-button btn-small light-blue darken-4" id="startScanning">Start Scanning</button>
             </div>
+
         </div>
 
     </div>
 
+    <div id="resultContainer" class="result-container">
 
-
-    <div>
-        <div style="display:none;" id="resultModal" class="modal bottom-sheet">
-            @*    <div class="modal-content">
-            <!--Result-->
+            <!-- Header - Exit Button right aligned-->
             <div class="row">
-            <h6 id="resultStatus"></h6>
+                <!--Header-->
+                <div class="col s6 ">
+                    <h6 class="white-text left" id="resultStatus"></h6>
+                </div>
+                <!--Exit-->
+                <div class="col s6">
+                <button id="exitResults" class="right waves-effect scan-button btn-small light-blue darken-4">X</button>
+                </div>
             </div>
-            <!--Scanned Number & Google Button-->
+            <!-- Result - Google Button-->
             <div class="row">
-            <div class="part-google">
-            <a id="partGoogle" target="_blank"></a>
-            <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a>
+                <div class="part-google">
+                    <a class="white-text" id="partGoogle" target="_blank"></a>
+                    @* <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a> *@
+                </div>
             </div>
+            <!-- OK (Exit Button)-->
+        <div class="row center">
+                <div class="col s12">
+                <button class=" waves-effect btn-small light-blue darken-4" id="closeResults">Close</button>
+                </div>
             </div>
-            </div> *@
-
-        </div>
     </div>
 
 
     <!-- Quantity Modal -->
-    <div id="quantityModal" class="modal">
+    <div id="quantityModal" class="modal quantity-dialog">
         <div class="modal-content">
             <div class="row">
-                <h3 id="JobPartHeader">Part: </h3>
+                <h4 id="functionTypeHeader">FunctionType</h4>
             </div>
             <div class="row">
-                <button id="googlePartButton">Google Part</button>
+                <h5 id="JobPartHeader">Part: </h5>
+            </div>
+            <div class="row">
+                <button class="waves-effect btn blue darken-2" id="googlePartButton"><i class="material-icons right indigo-text text-darken-4">travel_explore</i>Google Part</button>
             </div>
             <div class="row">
                 <div class="col s12">
@@ -101,10 +112,10 @@
                     <input id="inputQty" type="text" />
                     <input id="maxQty" type="text" disabled />
 
-                    <div class="btn-container">
-                        <button id="assignPart">Assign</button>
-                        <button id="removePart">Remove</button>
-                    </div>
+                        <button class="waves-effect btn blue darken-2" id="assignPart">
+                            <i class="material-icons indigo-text text-darken-4">add</i>
+                            </button>
+                        <button class="waves-effect btn blue darken-2" id="removePart"><i class="material-icons indigo-text text-darken-4">remove</i></button>
                 </div>
             </div>
             <div class="row">
@@ -113,86 +124,71 @@
             </div>
 
             <div class="row">
-                <button id="updatePart">Update Part</button>
+                <button class="waves-effect btn blue darken-2" id="updatePart">Update Part</button>
             </div>
         </div>
-    </div>
-
-
-
-
-    <div class="row">
-        <h3>@ViewBag.JobName</h3>
     </div>
 
     <!--Result for Scanned/Reader -->
     <div id="resultCard" style="display: none;" class="result-card card small">
-        <!-- Header - Exit Button right aligned-->
-        <div class="row">
-            <!--Header-->
-            <div class="col s6 ">
-                <h5>Result:</h5>
-                <h6 id="resultStatus"></h6>
-            </div>
-            <!--Exit-->
-            <div class="col s6 ">
-                <button id="exitResults" class="right">X</button>
-            </div>
-        </div>
-        <div class="divider"></div>
+       
+    </div>
 
-        <div class="section"></div>
-        <!-- Result - Google Button-->
-        <div class="row">
 
-            <div class="part-google">
-                <a id="partGoogle" target="_blank"></a>
-                <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a>
-            </div>
-            @*      <!--Scanned Number-->
-            <div class="col s6">
-            </div>
-            <!--Google Button-->
-            <div class="col s6">
-            </div>  *@
+
+    <!--Header-->
+    <div class="row">
+        <h3 class="title-header">@ViewBag.JobName</h3>
+
+    </div>
+
+    <!--Add Part btn-->
+    <div class="row">
+        <div class="col s12">
+            <a class="btn" style="display:none;" id="testBtn">Test</a>
+            <a class="waves-effect btn modal-trigger right green accent-4 " href="#truckPartsModal"><i class="material-icons right indigo-text text-darken-4">add</i>AddPart</a>
+
         </div>
-        <!-- OK (Exit Button)-->
-        <div class="row">
-            <button id="closeResults">Close</button>
+    </div>
+
+    <!--Scan and Sign Off btns-->
+    <div class="row">
+        <div class="multi-btn-container">
+
+            
+
+            <!--Not used btn-->
+            <div class="left-btn-container">
+                    <button class="btn red" id="notUsedPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Not Used (Scan)</button>
+            </div>
+
+            <div class="right-btn-container">
+                    <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="signPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Sign Off (Scan)</button>
+                    <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="usedPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Use Part (Scan)</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!--Search Form Items-->
+    <div class="row">
+        <div class="col s12 z-depth-1">
+            <label for="itemNumberSearch">Item Number:</label>
+            <input type="text" id="itemNumberSearch" placeholder="Item Number" />
+
+            <button class="waves-effect btn-small blue darken-2">Search</button>
         </div>
     </div>
 
     <div class="row">
         <div class="col s12">
-            @* <h6>Continous Scanning: </h6> *@
-            <button style="display:none;" id="continousBN">False</button>
-            <input type="hidden" id="ScanType" />
         </div>
     </div>
 
-    <div class="row">
-        <div class="col s12">
-            <div class="btn-container">
 
-                <button class="btn red" id="notUsedPart"><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Not Used (Scan)</button>
-                <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="signPart"><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Sign Off (Scan)</button>
-                <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="usedPart"><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Use Part (Scan)</button>
-                <a class="btn" id="testBtn">Test</a>
-            </div>
-
-
-        </div>
-    </div>
-
-    @*   <div class="row">
-    <div class="col s12">
-    <!--Search Component-->
-    @await Component.InvokeAsync("Search")
-    </div>
-    </div> *@
-
-
-
+    <!--Partial VIew of Job Parts-->
     <div class="row">
         <div id="divPartial" class="col s12">
             @await Html.PartialAsync("_JobParts", Model)
@@ -200,34 +196,43 @@
     </div>
 </div>
 </div>
+
+
+
+
 @section Scripts {
 
-
+    <!--Sets Type of Button Clicked-->
     <script>
         // Attach event listeners once the modal instance is available
         $('#signPart').on('click', function () {
             $('#functionType').val("1");
+            $('#functionTypeHeader').text("Sign Parts Off");
             console.log('Sign Part Function');
         });
 
         $('#addPart').on('click', function () {
             $('#functionType').val("2");
+            $('#functionTypeHeader').text("Add Part To Job");
             console.log('Add Part Function');
         });
 
         $('#notUsedPart').on('click', function () {
             $('#functionType').val("3");
+            $('#functionTypeHeader').text("Not Used");
             console.log('Not Used Part Function');
         });
 
         $('#usedPart').on('click', function () {
             $('#functionType').val("4");
+            $('#functionTypeHeader').text("Update Used");
             console.log('Update Part Function');
         });
 
         //# sourceURL=openscan.js
     </script>
 
+    <!--Searches JobPartsTable or TruckPartsTable-->
     <script>
         function scannedPartSearch() {
             var result = $('#resultText').val();
@@ -338,15 +343,9 @@
     </script>
 
 
-
     <script src="~/js/materialize.min.js"></script>
     <script src="~/dist/uploadScanPart.bundle.js"></script>
     <script src="~/dist/scanditscanning.bundle.js"></script>
-
-
-
-
-
 }
 
 

@@ -4,8 +4,6 @@ import * as SDCBarcode from "scandit-web-datacapture-barcode";
 document.addEventListener('DOMContentLoaded', async function () {
 
 
-    var continousbn = document.getElementById('continousBN');
-    var isContinous = false;
 
     let scanoptions = document.getElementById('scanOptions');
 
@@ -50,11 +48,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     //var responseText = document.getElementById('responseText');
     var responseText = document.getElementById('resultStatus');
     var resultheader = document.getElementById('resultHeader');
-    var resultcard = document.getElementById('resultCard');
+    var resultcard = document.getElementById('resultContainer');
     var testbtn = document.getElementById('testBtn');
 
     var closeresults = document.getElementById('closeResults');
     var exitresults = document.getElementById('exitResults');
+
+
+    var resultcontainer = document.getElementById('resultContainer');
 
     var context;
     var view;
@@ -62,8 +63,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     var canScan = false;
 
-    var scanType = document.getElementById('ScanType');
-    scanType.value = 'NotContinous';
+    //var scanType = document.getElementById('ScanType');
+    //scanType.value = 'NotContinous';
 
     var resultstatus = document.getElementById('resultStatus');
 
@@ -299,6 +300,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         console.log('Scanner no longer reading.');
 
+        resultcard.style.display = 'none';
+
 
         console.log("Turning off camera...");
         await camera.switchToDesiredState(SDCCore.FrameSourceState.Standby);
@@ -372,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     //responsetextcamera.textContent = 'Camera Did Not Find Part';
                     var partgoogle = document.getElementById('partGoogle');
                     var pnumber = resulttext.value;
-                    partgoogle.innerHTML = pnumber;
+                    partgoogle.innerHTML = "Google: " +  pnumber;
                     var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
                     partgoogle.href = googleSearchURL;
 
@@ -435,6 +438,14 @@ document.addEventListener('DOMContentLoaded', async function () {
                 resultstatus.value = "";
                 scanmodalinst.open();
 
+                // Get the modal's position and dimensions
+                var modalRect = scanmodalinst.getBoundingClientRect();
+
+                // Position the popupYoContainer below the modal
+                resultcontainer.style.top = (modalRect.bottom + window.scrollY) + 'px';
+                resultcontainer.style.left = (modalRect.left + (modalRect.width / 2) - (resultcontainer.offsetWidth / 2)) + 'px';
+                resultcontainer.style.display = 'block';
+
 
             }
             
@@ -443,22 +454,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-    continousbn.addEventListener('click', function () {
-
-        if (!isContinous) {
-            isContinous = true;
-            continousbn.innerHTML = "True";
-            scanType.value = 'Continous';
-            console.log('Scan Type (Should Be Continous): ' + scanType.value)
-        }
-        else {
-            isContinous = false;
-            continousbn.innerHTML = "false";
-            scanType.value = 'NotContinous';
-            console.log('Scan Type (Should Be NotContinous): ' + scanType.value)
-        }
-    })
-
+   
     function ScanReady() {
        
         if (!canScan) {
