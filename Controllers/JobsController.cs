@@ -9,19 +9,23 @@ namespace ScannerWebAppUpdate.Controllers
     {
         private readonly ScannerContext _context = new ScannerContext();
         private ObservableCollection<Jobs> JobsList;
-        private ObservableCollection<Part> PartsList;
-        private List<Part> JobPartsList;
+        private ObservableCollection<ReturnOption> ReturnOptionsList;
+
+
 
 
         public JobsController()
         {
             _context.Database.EnsureCreated();
+            _context.ReturnOptions.Load();
+
+
             _context.Jobs.Load();
-            _context.Parts.Load();
+            //_context.Parts.Load();
             //_context.AssignedParts.Load();
 
 
-            PartsList = _context.Parts.Local.ToObservableCollection();
+            ReturnOptionsList = _context.ReturnOptions.Local.ToObservableCollection();
             JobsList = _context.Jobs.Local.ToObservableCollection();
         }
 
@@ -45,6 +49,7 @@ namespace ScannerWebAppUpdate.Controllers
             ViewBag.AssignedParts = assignedParts;
             ViewBag.JobId = selectedJob.JobsId;
             ViewBag.JobName = selectedJob.JobNumber;
+            ViewBag.ReturnOptions = ReturnOptionsList;
             JobPartsPartialViewModel JPPV = await _context.GetJobPartPartialVM(selectedJob.JobsId);
 
             Console.WriteLine(selectedJob.JobsId);
@@ -84,7 +89,7 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdatePart(JobPartsViewModel jobPart, string FunctionType)
+        public async Task<IActionResult> UpdatePart(JobPartsViewModel jobPart, string FunctionType, string ReturnReason, string ReturnNumber)
         {
             try
             {
@@ -99,7 +104,16 @@ namespace ScannerWebAppUpdate.Controllers
                 }
                 else if (FunctionType.Trim() == "3") 
                 {
+                    ReturnPart rp = new ReturnPart()
+                    {
+                        ReturnPartNumber = ReturnNumber,
+                        JobPartId = jobPart.JobPartId,
+                        QuantityReturned = jobPart.AssignedParts,
+                        ReturnReason = ReturnReason
+                    };
+
                     //Return Part
+                    success = await _context.AddReturnPart(rp);
                 }
                 else if (FunctionType.Trim() == "4")
                 {
@@ -110,8 +124,9 @@ namespace ScannerWebAppUpdate.Controllers
 
                 if (success)
                 {
-                    JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
-                    return PartialView("_JobParts", jppv);
+                        JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
+                        return PartialView("_JobParts", jppv);
+                 
                 }
                 return View();
                 //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });

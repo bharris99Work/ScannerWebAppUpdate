@@ -1,0 +1,227 @@
+﻿@model ReturnPartsViewModel
+
+
+
+<!--Dialog which shows the Search VIewComponent which features read and search-->
+<div id="SearchDialog" class="modal result-Dialog">
+    <div class="modal-container">
+        <div class="row">
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12">
+                        <!--Search Component-->
+                        @await Component.InvokeAsync("Search")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scaan Modal: Features Camera View-->
+<div id="ScanDialog" class="modal">
+    <div class="modal-container">
+
+        <!--QR Code Reader-->
+        <div class="row">
+            <div id="reader"></div>
+        </div>
+
+        <!--StartScan and PauseScan buttons-->
+        <div class="scan-button-container">
+            <button class=" waves-effect scan-button btn-small light-blue darken-4" id="startScanning">Start Scanning</button>
+        </div>
+    </div>
+</div>
+
+<!--Displays at bottom of Scan/Read and presents result-->
+<div id="resultContainer" class="result-container">
+    <!-- Header - Exit Button right aligned-->
+    <div class="row">
+        <!--Header-->
+        <div class="col s6 ">
+            <h6 class="white-text left" id="resultStatus"></h6>
+        </div>
+        <!--Exit-->
+        <div class="col s6">
+            <button id="exitResults" class="right waves-effect scan-button btn-small red">X</button>
+        </div>
+    </div>
+    <!-- Result - Google Button-->
+    <div class="row">
+        <div class="part-google">
+            <a id="partGoogle" target="_blank">This is Test Text</a>
+            @* <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a> *@
+        </div>
+    </div>
+    <!-- OK (Exit Button)-->
+    <div class="row center">
+        <div class="col s12">
+            <button class=" waves-effect btn-small light-blue darken-4" id="closeResults">Close</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Quantity Modal -->
+<div id="quantityModal" class="modal quantity-dialog">
+    <div class="row">
+        <!--Part Info-->
+        <div class="row">
+            <h4 class="center" id="ReturnNumberHeader">Part: </h4>
+            <h5 id="PartHeader"></h5>
+            <h5 id="JobHeader"></h5>
+        </div>
+        <!--Google Search Part-->
+        <div class="row">
+            <button class="waves-effect btn blue darken-2" id="googlePartButton"><i class="material-icons right indigo-text text-darken-4">travel_explore</i>Google Part</button>
+        </div>
+        <!--Adding and Subtracting Quantity Buttons and Feedback-->
+        <div class="row">
+            <div class="col s12">
+                <label>Check-In:</label>
+                <input id="inputQty" type="text" />
+                <input id="maxQty" type="text" disabled />
+
+                <button class="waves-effect btn blue darken-2" id="assignPart">
+                    <i class="material-icons indigo-text text-darken-4">add</i>
+                </button>
+                <button class="waves-effect btn blue darken-2" id="removePart"><i class="material-icons indigo-text text-darken-4">remove</i></button>
+            </div>
+        </div>
+
+        <!--Triggers Submission-->
+        <div class="row">
+            <button class="waves-effect btn blue darken-2" id="updatePartReturn">Check-In Parts</button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col s12">
+        <h3>Return Queue:</h3>
+    </div>
+
+</div>
+<!--Scan button-->
+<div class="row">
+    <div class="col s12">
+        <button class="waves-effect btn modal-trigger red" href="#SearchDialog">Check-In (Scan)</button>
+    </div>
+</div>
+
+<!--Search Form-->
+<div class="row">
+    <div class="col s12" style="display:none;">
+        <label for="returnNumberSearch">Return Number: </label>
+        <input type="text" id="returnNumberSearch" placeholder="ReturnNumber" />
+        <button>Search</button>
+    </div>
+</div>
+
+<!--Return Parts Table-->
+<div class="row">
+    <div class="col s12">
+        <div class="table-container">
+            <!--Table featuring parts that where returned from search-->
+            <table id="returnParts" class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>Return Number: </th>
+                        <th>Part Number: </th>
+                        <th>Job Number: </th>
+                        <th>Purchase Order:</th>
+                        <th>Return Reason: </th>
+                        <th>Currently Returned: </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!--Fills each column with apropriate info from parts-->
+                    @foreach (ReturnPartsViewModel part in ViewBag.PartsList)
+                    {
+                        <tr>
+                            <td>@part.ReturnPartNumber</td>
+                            <td>@part.PartNumber</td>
+                            <td>@part.JobNumber</td>
+                            <td>@part.POName</td>
+                            <td>@part.ReturnReason</td>
+                            <td>@part.QuantityReturned</td>
+                            <td>
+                                <form asp-action="CheckIn" asp-controller="Returns" method="post" class="checkin-part-form">
+                                    <input type="hidden" name="ReturnPartNumber" value="@part.ReturnPartNumber" />
+                                    <input type="hidden" name="PartNumber" value="@part.PartNumber" />
+                                    <input type="hidden" name="JobNumber" value="@part.JobNumber" />
+                                    <input type="hidden" name="POName" value="@part.POName" />
+                                    <input type="hidden" name="ReturnReason" value="@part.ReturnReason" />
+                                    <input type="hidden" name="QuantityReturned" value="@part.QuantityReturned" />
+                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                    <input type="hidden" name="ReturnPartId" value="@part.ReturnPartId" />
+                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+
+                                    <input type="hidden" name="CheckedInQTY" value="" />
+                                    <!--Creates an QR code based off part attached-->
+                                    <button id="checkInBN" class="waves-effect btn blue darken-2" type="submit">Check-In</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-action="CreateBarcode" asp-controller="Returns" target="_blank" method="post">
+                                    <input type="hidden" name="ReturnPartNumber" value="@part.ReturnPartNumber" />
+                                    <input type="hidden" name="PartNumber" value="@part.PartNumber" />
+                                    <input type="hidden" name="JobNumber" value="@part.JobNumber" />
+                                    <input type="hidden" name="POName" value="@part.POName" />
+                                    <input type="hidden" name="ReturnReason" value="@part.ReturnReason" />
+                                    <!--Creates an QR code based off part attached-->
+                                    <button class="waves-effect btn blue darken-2" type="submit">Print Label</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        function scannedPartSearch() {
+            var result = $('#resultText').val();
+
+            var found = false;
+
+            //Grab list of parts from jobParts
+            $('#returnParts tbody tr').each(function () {
+
+                var partName = $(this).find('td').eq(0).text().toLowerCase();
+
+                //Search list for specific part
+                if (partName.trim() == result.toLocaleLowerCase().trim()) {
+
+                    $(this).find('#checkInBN').click();
+                 
+                    found = true;
+                    console.log("Part has been found");
+                    return false;
+
+                }
+
+                console.log(partName);
+            });
+
+
+        }
+
+        //# sourceURL=returnSearch.js
+    </script>
+
+    <script src="~/js/materialize.min.js"></script>
+    <script src="~/dist/uploadScanPart.bundle.js"></script>
+
+    <script src="~/dist/scanditscanning.bundle.js"></script>
+
+}

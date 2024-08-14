@@ -91,6 +91,86 @@ namespace ScannerWebAppUpdate.Controllers
         }
 
 
+        //One Click Demo Button
+        //[HttpPost]
+        public async Task<IActionResult> UploadDemo()
+        {
+            try
+            {
+
+
+                bool success = false;
+                //Create List Of Parts
+                List<Part> jobPartList = new List<Part>() {
+            new Part("Part001", "Test Part 1, for testing."),
+             new Part("Part002", "Test Part 2, for testing."),
+              new Part("Part003", "Test Part 3, for testing."),
+               new Part("Part004", "Test Part 4, for testing."),
+
+            };
+
+                List<Part> truckPartList = new List<Part>()
+            {
+                 new Part("TruckPart001", "Test TruckPart 1, for testing."),
+                 new Part("TruckPart002", "Test TruckPart 2, for testing.")
+            };
+
+                //Upload to DB
+                success = await _context.AddPartsList(jobPartList);
+                success = await _context.AddPartsList(truckPartList);
+
+
+
+                //Create Job
+                Jobs testJob = new Jobs("PM0001", "Lumberton, NC");
+
+                //Upload to DB
+                success = await _context.AddJobAsync(testJob);
+
+                //Upload and Create PO's
+                PurchaseOrder pojob = new PurchaseOrder()
+                {
+                    Name = "PO-0001",
+                    Type = "Job Order"
+                };
+
+                PurchaseOrder potruck = new PurchaseOrder()
+                {
+                    Name = "PO-0002",
+                    Type = "Truck Order"
+                };
+                success = await _context.AddPurchaseOrder(pojob);
+                success = await _context.AddPurchaseOrder(potruck);
+
+                //Create POParts (Parts List, PO Name)
+                //Send Parts list
+                //Find the ID for each one
+                int jobPOId = await _context.CreatePOParts(jobPartList, pojob.Name);
+                int truckPOId = await _context.CreatePOParts(truckPartList, potruck.Name);
+
+
+                //Grab JobId
+                int jobid = await _context.GetJobAsync(testJob.JobNumber);
+
+
+
+                //Create JobOrder
+                success = await _context.CreateJobOrder(jobid, jobPOId);
+
+                //Create StockOrder
+                success = await _context.AddTruckParts(truckPOId, 1);
+
+
+                return uploadStatus(success);
+            }
+            catch (Exception ex)
+            {
+                return uploadStatus(false);
+            }
+
+        }
+
+
         public async Task<IActionResult> uploadTestReturns()
         {
             try

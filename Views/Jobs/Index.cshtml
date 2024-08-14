@@ -1,6 +1,9 @@
 ﻿<div>
     <div class="row">
-        <h3>Job Lookup: </h3>
+        <div class="col s12">
+            <h3>Job Lookup: </h3>
+
+        </div>
     </div>
     <div class="row">
         <div class="row">
@@ -23,7 +26,7 @@
         </div>
         <div class="row valign-wrapper center">
             <div class="col s12 l6">
-                <div class="btn-container">
+                <div class="">
                     <!--Searches for part in DB-->
                     <button id="submitbn" class="btn blue darken-2" type="submit" name="action">
                         Submit
@@ -66,8 +69,8 @@
                                     <input type="hidden" name="JobNumber" value="@job.JobNumber" />
                                      <input type="hidden" name="DateCreated" value="@job.DateCreated" /> 
                                     <input type="hidden" name="Location" value="@job.Location" />
-                                    <input type="hidden" name="Status" value="@job.Status" /> 
-                                    <button>Submit</button>
+                                    <input type="hidden" name="Status" value="@job.Status" />
+                                    <button class="waves-effect btn blue darken-2">View</button>
                                 </form>
                             </td>
                         </tr>

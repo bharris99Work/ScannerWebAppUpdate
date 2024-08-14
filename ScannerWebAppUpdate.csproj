@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\codeCreatorSearch.js" />
+    <Content Remove="wwwroot\js\JobParts.js" />
     <Content Remove="wwwroot\js\printShare.js" />
     <Content Remove="wwwroot\js\ScanningOptions.js" />
     <Content Remove="wwwroot\js\settings.js" />
@@ -16,6 +17,7 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\styles.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\codeCreatorSearch.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\JobParts.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\printShare.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\ScanningOptions.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\settings.js" />
@@ -23,6 +25,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\js\codeCreatorSearch.js" />
+    <None Include="wwwroot\js\JobParts.js" />
     <None Include="wwwroot\js\printShare.js" />
     <None Include="wwwroot\js\ScanningOptions.js" />
     <None Include="wwwroot\js\settings.js" />

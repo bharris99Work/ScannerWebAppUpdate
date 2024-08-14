@@ -8,18 +8,25 @@
             <input type="hidden" id="PartName" name="PartName" value="" />
             <input type="hidden" id="JobId" name="JobId" value="" />
             <input type="hidden" id="PurchaseOrderId" name="PurchaseOrderId" value="" />
+           
             <input type="hidden" id="TruckId" name="TruckId" />
 
             <input type="hidden" id="Status" name="Status" value="" />
             <input type="hidden" id="AssignedParts" name="AssignedParts" value="" />
             <input type="hidden" id="SignedOff" name="SignedOff" value="" />
             <input type="hidden" id="AvailableQuantity" name="AvailableQuantity" value="" />
+
             <input type="hidden" id="FunctionType" name="FunctionType" value="" />
+
+            <input type="hidden" id="ReturnNumber" name="ReturnNumber" value="" />
+            <input type="hidden" id="ReturnReason" name="ReturnReason" value="" />
             @* <button id="updateScanPart" style="display:none;" type="submit">Update</button> *@
 
             <button id="updateScanPart" style="display:none;" type="submit">Update</button>
 
         </form>
+
+    
 @* 
         <form asp-action="AddPart" asp-controller="Jobs" method="post" class="add-part-form">
         
@@ -45,9 +52,9 @@
                 </div>
 
                 <div class="row">
+                
                     <!--Table of Truck Parts-->
-                    <div class="table-container">
-                        <table id="truckPartsTable">
+                        <table id="truckPartsTable" class="responsive-table">
                             <thead>
                                 <tr>
                                     <th>Part Number: </th>
@@ -81,29 +88,29 @@
                                                 <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
                                                 <input type="hidden" name="FunctionType" value="" />
 
-                                                <button type="submit">Add</button>
+                                                <button class="waves-effect btn blue darken-2" type="submit">Add</button>
                                             </form>
                                         </td>
                                         <td>
                                             <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
                                                 <input type="hidden" name="PartId" value="@part.PartId" />
                                                 <input type="hidden" name="PartNumber" value="@part.PartName" />
-                                                <button class="waves-effect btn blue darken-2" type="submit">Print QR Code</button>
+                                                <button class="waves-effect btn blue darken-2" type="submit">QR Code</button>
                                             </form>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                    </div>
                 </div>
                 </div>
+          
               </div>
 
 
         <!--Table of Job Parts-->
         <div class="table-container">
-            <table id="partsTable" >
+            <table id="partsTable" class="responsive-table">
                 <thead>
                     <tr>
                         <th>Part Number: </th>
@@ -112,6 +119,8 @@
                         <th>Signed Off:</th>
                         <th>Quantity Used: </th>
                         <th>Quantity Availible: </th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,6 +138,7 @@
                                     <input type="hidden" name="JobPartId" value="@part.JobPartId" />
                                     <input type="hidden" name="PartId" value="@part.PartId" />
                                     <input type="hidden" name="PartName" value="@part.PartName" />
+                                    <input type="hidden" id="POName" name="POName" value="@part.POName" />
                                     <input type="hidden" name="JobId" value="@part.JobId" />
                                     <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
                                     <input type="hidden" name="TruckId" />
@@ -147,6 +157,8 @@
                                     <input type="hidden" name="JobPartId" value="@part.JobPartId" />
                                     <input type="hidden" name="PartId" value="@part.PartId" />
                                     <input type="hidden" name="PartName" value="@part.PartName" />
+                                    <input type="hidden" id="POName" name="POName" value="@part.POName" />
+
                                     <input type="hidden" name="JobId" value="@part.JobId" />
                                     <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
                                     <input type="hidden" name="TruckId" />
@@ -160,10 +172,34 @@
                                 </form>
                             </td>
                             <td>
+                                <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="notused-part-form">
+                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                    <input type="hidden" name="PartName" value="@part.PartName" />
+                                    <input type="hidden" id="POName" name="POName" value="@part.POName" />
+
+                                    <input type="hidden" name="JobId" value="@part.JobId" />
+                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                    <input type="hidden" name="TruckId" />
+
+                                    <input type="hidden" name="Status" value="@part.Status" />
+                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                    <input type="hidden" name="SignedOff" value="@part.SignedOff" />
+                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+                                    <input type="hidden" name="FunctionType" value="" />
+
+                                    <input type="hidden" name="ReturnNumber" value="" />
+                                    <input type="hidden" name="ReturnReason" value="" />
+
+
+                                    <button class="waves-effect btn-small blue darken-2" type="submit">Return</button>
+                                </form>
+                            </td>
+                            <td>
                                 <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
                                     <input type="hidden" name="PartId" value="@part.PartId" />
                                     <input type="hidden" name="PartNumber" value="@part.PartName" />
-                                    <button class="waves-effect btn-small blue darken-2" type="submit">Print QR Code</button>
+                                    <button class="waves-effect btn-small blue darken-2" type="submit">QR Code</button>
                                 </form>
                             </td>
                         </tr>

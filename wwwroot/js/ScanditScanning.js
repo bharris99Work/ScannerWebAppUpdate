@@ -2,20 +2,12 @@
 import * as SDCBarcode from "scandit-web-datacapture-barcode";
 
 document.addEventListener('DOMContentLoaded', async function () {
-
-
-
     let scanoptions = document.getElementById('scanOptions');
 
     //camera attributes
     var cameraview = document.getElementById("reader");
     var camerascan = document.getElementById('cameraScan');
-    let camera = SDCCore.Camera.default;
-    let cameraSettings = SDCBarcode.BarcodeCapture.recommendedCameraSettings;
-    await camera.applySettings(cameraSettings);
-
-    var pausedoverlay = document.getElementById('scannerPause');
-    var workingoverlay = document.getElementById('scannerScanning');
+   
 
     var startscanningbn = document.getElementById('startScanning');
     var scanning = false;
@@ -28,62 +20,212 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     var resulttext = document.getElementById('resultText');
 
+    
+    //Modal init
+    var scanmodal = document.getElementById('ScanDialog');
 
-    var elems = document.querySelectorAll('.modal');
-    const options = { onCloseEnd: stopRec };
-    var instances = M.Modal.init(elems, options);
+    var searchmodal = document.getElementById('SearchDialog');
+
+    var scansearchopt = { onCloseEnd: stopRec };
+
+    var scandialoginit = M.Modal.init(scanmodal, scansearchopt);
+    var searchdialoginit = M.Modal.init(searchmodal, scansearchopt);
 
 
     //Grabs instance of scanner dialog
-    var scanmodal = document.getElementById('ScanDialog');
     var scanmodalinst = M.Modal.getInstance(scanmodal);
 
     //Grab instance of SearchDialog
-    var searchmodal = document.getElementById('SearchDialog');
     var searchmodalinst = M.Modal.getInstance(searchmodal)
 
-    var submitbn = document.getElementById('SpecificSearch');
+
+    // Initialize the first modal with its own onCloseEnd callback
+    $('#ScanDialog').modal({
+        onCloseEnd: stopRec()
+    });
+
+    $('#SearchDialog').modal({
+        onCloseEnd: stopRec()
+    });
 
     //Result helpers
-    //var responseText = document.getElementById('responseText');
     var responseText = document.getElementById('resultStatus');
-    var resultheader = document.getElementById('resultHeader');
     var resultcard = document.getElementById('resultContainer');
-    var testbtn = document.getElementById('testBtn');
+    //var testbtn = document.getElementById('testBtn');
 
     var closeresults = document.getElementById('closeResults');
     var exitresults = document.getElementById('exitResults');
 
-
-    var resultcontainer = document.getElementById('resultContainer');
-
-    var context;
-    var view;
-    var barcodeCapture
-
-    var canScan = false;
-
-    //var scanType = document.getElementById('ScanType');
-    //scanType.value = 'NotContinous';
-
     var resultstatus = document.getElementById('resultStatus');
 
+
+    var canScan = false;
+ 
 
     // Store reference to the keydown event listener
     let keydownEventListener;
 
-    try {
-        ScanReady();
-        await initializeScanner();
-    } catch (error) {
-        console.error("Error initializing scanner:", error);
-    }
 
 
-    testbtn.addEventListener('click', function () {
-        
+
+    camerascan.disabled = true;
+    console.log("Configuring Scandit SDK...");
+    await SDCCore.configure({
+        libraryLocation: new URL("/lib/engine/", document.baseURI).toString(),
+        licenseKey: "AuwUBWZPQ38aOwpSKznFhogWqDlQIdAV1g/WwP0F3cywBkLcAElvM1IdKQOMLYk5Enzh8xtJ+QslEQMl8m7CHJJ3tJdCMj+i8jVAVwASQmEFGIUo4xNzGyELEBGqdIh180WRwblCpRkWQa8SnkPJVXh62Bn0TQFDkFnvvEhb+obEDDIhnRkShiphiNlEbaYMr0zF70xMwQpAWuq14kWbliRu1erjF8CmHWfUrQdhhUgLeEGNYV4I++dkfaZNf5bi4nNAy6BwGImJExK9f2go4H4ggb4/atdSGnAQ2gpFNO7sS/9zCnhDygNEiNHdeSJvn0lOT7NA5U2uf09klk55H+t4qewhdcLqMlfIeV1qHsqGSnNo02Oi5vg7EZqRYeE2JAuyDVZ7VR2MevyOhSfax8cT9PHoTxL74hNUrUhlU0WvFvuTUEQdjKQcZq3IBWo/XVuTPFskGFfUe4LoKUkh+69/UBj1QhcRe1Dm20JPMADsd1haSyGhaulqPSRkOVc4NENcU51/G5FYZGNogDYtFmgM5WH6MRodhjYQLCQdgT08yQi+l+WP2rYEO+JYQA2Mcwee+2c7vjJso88qdzzLJLbqoPgZzaZQn6iybQ/t6d2vqK4OMNiBvxlJKZfMCCLpc38913Ifoz0PaF4EAr9Ry8yct+viSGiBJbJj3bhmiGysFZQqZvOpdF11I/6bXzXKk8OiV7tglf0nAvB45zla3plsDVHVyh20yjrrQr7IovGDVobVRtO6QbquQ/lILDUoJU6J98q5RnH2aQNoWlMmKY9rrhNHEImCUWDUQDor8CeegX435Y8c36UWTGWFvkOY39EE++76B6NxEAWobeU4zzk6DnAzrOan8jfsUUSUfGn/NfeTluZZclaFyns4bmyuYqNPyyhBnTyacF3VSHYEQeYbqCTYkTyLcHnofh4l6T+cF+Or3k/jh1KrfYP2CPvVmkQTocOVz8gltXuTyWHxgjSIqw+jrbLgGYsHwBUEYHAa7x+huVW8g5balODCwietKZQTkFv9+ZMTf7Vge58mDujWjutfWTLltGOytsWm0suUwXRrvRaZrS1twbQJZxilgyBIfGd1B3683rpSBUV/opsubp7aAvNEG3AmCvRB41HYXUKX/2w5Baf9+knMziRn28kIUtprmCC/zXuI2I/yyhnhDjl3EK9UHjBB/rHIbj3iURoVhe8sSjLFIO7XS5D0SEo=",
+        moduleLoaders: [SDCBarcode.barcodeCaptureLoader()]
     });
 
+    console.log("Creating data capture context...");
+    const context = await SDCCore.DataCaptureContext.create();
+
+    console.log("Setting up data capture view...");
+    const view = await SDCCore.DataCaptureView.forContext(context);
+    view.connectToElement(cameraview);
+    view.showProgressBar();
+
+    console.log("Setting up camera...");
+    const camera = SDCCore.Camera.default;
+    const cameraSettings = SDCBarcode.BarcodeCapture.recommendedCameraSettings;
+    await camera.applySettings(cameraSettings);
+    await context.setFrameSource(camera);
+
+    console.log("Setting up barcode capture settings...");
+    const settings = new SDCBarcode.BarcodeCaptureSettings();
+    settings.enableSymbologies([
+        SDCBarcode.Symbology.Code128,
+        SDCBarcode.Symbology.Code39,
+        SDCBarcode.Symbology.QR,
+        SDCBarcode.Symbology.EAN8,
+        SDCBarcode.Symbology.UPCE,
+        SDCBarcode.Symbology.EAN13UPCA
+    ]);
+
+    settings.locationSelection = new SDCCore.RadiusLocationSelection(
+        new SDCCore.NumberWithUnit(5, SDCCore.MeasureUnit.Pixel)
+    );
+    settings.codeDuplicateFilter = 1000;
+
+    console.log("Creating barcode capture...");
+    //barcodeCapture = await SDCBarcode.BarcodeCapture.forContext(context, settings);
+
+    const barcodeCapture = await SDCBarcode.BarcodeCapture.forContext(context, settings);
+
+    // Asynchronous helper function
+    const handleScanResult = async (recognizedBarcodes) => {
+        console.log(recognizedBarcodes[0]._data);  // Do something with the barcodes
+        resulttext.value = "";
+        resulttext.value = recognizedBarcodes[0]._data;
+
+        //Pause camera
+        console.log("Pausing Camera.....");
+        await pauseScanner();
+
+        console.log("Starting Search...");
+        var correctlyAdded = scannedPartSearch();
+
+        if (correctlyAdded) {
+            scanmodalinst.close();
+        }
+        else {
+            resultcard.style.display = 'block';
+            resultstatus.textContent = "Failed To Find Part";
+            var partgoogle = document.getElementById('partGoogle');
+            var pnumber = resulttext.value;
+            partgoogle.innerHTML = "Google: " + pnumber;
+            var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
+            partgoogle.href = googleSearchURL;
+        }
+    };
+
+    // Listener to handle barcode scan results
+    const listener = {
+        didScan: (barcodeCapture, session) => {
+            const recognizedBarcodes = session.newlyRecognizedBarcodes;
+            handleScanResult(recognizedBarcodes);
+        }
+    };
+
+    console.log("Adding listener to brcode capture")
+    barcodeCapture.addListener(listener);
+
+
+
+
+
+    console.log("Adding camera switch control...");
+    view.addControl(new SDCCore.CameraSwitchControl());
+
+    console.log("Hiding progress bar...");
+    view.hideProgressBar();
+
+    console.log("Adding barcode capture overlay...");
+    const overlay = await SDCBarcode.BarcodeCaptureOverlay.withBarcodeCaptureForView(barcodeCapture, view);
+    overlay.setViewfinder(new SDCCore.AimerViewfinder());
+
+
+ 
+
+    console.log("Scanner ready")
+    await barcodeCapture.setEnabled(false);
+    canScan = true;
+    ScanReady();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Close Result Pop-up Div
     closeresults.addEventListener('click', function () {
         resultcard.style.display = 'none';
     });
@@ -103,60 +245,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         //Max time allowed between strokes
         var maxTime = 700;
 
-        //Start reader
-        //document.addEventListener('keydown', function (event) {
-        //    const currentTime = Date.now();
-        //    const timeDiff = currentTime - lastKeyTime;
-
-        //    //Time difference is too large to be from scanner
-        //    if (timeDiff > maxTime) {
-        //        //reset string
-        //        savedString = '';
-        //        console.log('Time to far apart of characters: ' + event.key + "Time Diff: " + timeDiff)
-        //    }
-        //    else {
-        //        //Add char to string
-        //        if (event.key.length === 1) {
-        //            savedString += event.key;
-        //            console.log('Wrting: ' + event.key)
-        //        }
-
-        //        // Do something with the input string if it meets criteria
-        //        if (savedString.length > 2) {
-        //            console.log('Current Input String:', savedString);
-        //            resulttext.value = savedString;
-
-
-
-
-        //            if (event.key === 'Enter') {
-        //            var correctlyAdded = scannedPartSearch();
-
-        //            if (correctlyAdded) {
-        //                //handle correct
-        //                responseText.textContent = 'Reader Correctly Found: ' + savedString;
-        //                console.log('Reader Correctly Found: ' + savedString);
-        //            }
-        //            else {
-        //                //handle error
-        //                responseText.textContent = 'Reader Failed To Find: ' + savedString;
-
-        //                resultcard.style.display = 'block';
-        //                resultstatus.textContent = "Failed To Find Part";
-        //                var partgoogle = document.getElementById('partGoogle');
-        //                var pnumber = resulttext.value;
-        //                partgoogle.innerHTML = pnumber;
-        //                var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
-        //                partgoogle.href = googleSearchURL;
-        //                console.log('Reader Failed To Find: ' + savedString);
-        //            }
-
-        //            }
-        //        }
-        //    }
-        //    lastKeyTime = currentTime; // Update the last keypress time
-
-        //});
 
         // Define the keydown event listener function
         keydownEventListener = function (event) {
@@ -233,7 +321,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     startscanningbn.addEventListener('click', async function () {
 
         if (!scanning) {
-            
 
             startScanner();
             startscanningbn.innerHTML = '...Scanning...';
@@ -248,34 +335,26 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
   
-
+    //Pause or Starts barcode scanning listener
     async function pauseScanner() {
         scanning = false;
         startscanningbn.innerHTML = 'Start Scanner';
 
         await barcodeCapture.setEnabled(false);
-
-        //pausedoverlay.style.display = 'block';
-       // workingoverlay.style.display = 'none';
-
-
     }
 
     async function startScanner() {
         scanning = true;
         startscanningbn.innerHTML = '...Scanning...';
+
         await barcodeCapture.setEnabled(true);
-
-       // pausedoverlay.style.display = 'none';
-        //workingoverlay.style.display = 'block';
-
 
     }
 
-
+    //When Camera button is clicked
     camerascan.addEventListener('click', async function () {
         try {
-            
+            //Start Camera scanning, load camera
             await StartCamera();
         } catch (error) {
             console.error("Error initializing scanner:", error);
@@ -283,6 +362,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
 
+    //When Dialogs are closed - Clear reset vals
     async function stopRec() {
         //Reset Values
 
@@ -300,153 +380,28 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         console.log('Scanner no longer reading.');
 
-        resultcard.style.display = 'none';
-
+       // resultcard.style.display = 'none';
 
         console.log("Turning off camera...");
         await camera.switchToDesiredState(SDCCore.FrameSourceState.Standby);
-        await barcodeCapture.setEnabled(false);
+        await pauseScanner();
     }
 
-
+    //Start Camera Start Up
     async function initializeScanner() {
 
-        console.log("Configuring Scandit SDK...");
-        await SDCCore.configure({
-            libraryLocation: new URL("/lib/engine/", document.baseURI).toString(),
-            licenseKey: "AuwUBWZPQ38aOwpSKznFhogWqDlQIdAV1g/WwP0F3cywBkLcAElvM1IdKQOMLYk5Enzh8xtJ+QslEQMl8m7CHJJ3tJdCMj+i8jVAVwASQmEFGIUo4xNzGyELEBGqdIh180WRwblCpRkWQa8SnkPJVXh62Bn0TQFDkFnvvEhb+obEDDIhnRkShiphiNlEbaYMr0zF70xMwQpAWuq14kWbliRu1erjF8CmHWfUrQdhhUgLeEGNYV4I++dkfaZNf5bi4nNAy6BwGImJExK9f2go4H4ggb4/atdSGnAQ2gpFNO7sS/9zCnhDygNEiNHdeSJvn0lOT7NA5U2uf09klk55H+t4qewhdcLqMlfIeV1qHsqGSnNo02Oi5vg7EZqRYeE2JAuyDVZ7VR2MevyOhSfax8cT9PHoTxL74hNUrUhlU0WvFvuTUEQdjKQcZq3IBWo/XVuTPFskGFfUe4LoKUkh+69/UBj1QhcRe1Dm20JPMADsd1haSyGhaulqPSRkOVc4NENcU51/G5FYZGNogDYtFmgM5WH6MRodhjYQLCQdgT08yQi+l+WP2rYEO+JYQA2Mcwee+2c7vjJso88qdzzLJLbqoPgZzaZQn6iybQ/t6d2vqK4OMNiBvxlJKZfMCCLpc38913Ifoz0PaF4EAr9Ry8yct+viSGiBJbJj3bhmiGysFZQqZvOpdF11I/6bXzXKk8OiV7tglf0nAvB45zla3plsDVHVyh20yjrrQr7IovGDVobVRtO6QbquQ/lILDUoJU6J98q5RnH2aQNoWlMmKY9rrhNHEImCUWDUQDor8CeegX435Y8c36UWTGWFvkOY39EE++76B6NxEAWobeU4zzk6DnAzrOan8jfsUUSUfGn/NfeTluZZclaFyns4bmyuYqNPyyhBnTyacF3VSHYEQeYbqCTYkTyLcHnofh4l6T+cF+Or3k/jh1KrfYP2CPvVmkQTocOVz8gltXuTyWHxgjSIqw+jrbLgGYsHwBUEYHAa7x+huVW8g5balODCwietKZQTkFv9+ZMTf7Vge58mDujWjutfWTLltGOytsWm0suUwXRrvRaZrS1twbQJZxilgyBIfGd1B3683rpSBUV/opsubp7aAvNEG3AmCvRB41HYXUKX/2w5Baf9+knMziRn28kIUtprmCC/zXuI2I/yyhnhDjl3EK9UHjBB/rHIbj3iURoVhe8sSjLFIO7XS5D0SEo=",
-            moduleLoaders: [SDCBarcode.barcodeCaptureLoader()]
-        });
-
-        console.log("Creating data capture context...");
-        context = await SDCCore.DataCaptureContext.create();
-
-        console.log("Setting up data capture view...");
-        view = await SDCCore.DataCaptureView.forContext(context);
-        view.connectToElement(cameraview);
-        view.showProgressBar();
-
-        console.log("Setting up camera...");
-        //const camera = SDCCore.Camera.default;
-        //const cameraSettings = SDCBarcode.BarcodeCapture.recommendedCameraSettings;
-        //await camera.applySettings(cameraSettings);
-        await context.setFrameSource(camera);
-
-        console.log("Setting up barcode capture settings...");
-        const settings = new SDCBarcode.BarcodeCaptureSettings();
-        settings.enableSymbologies([
-            SDCBarcode.Symbology.Code128,
-            SDCBarcode.Symbology.Code39,
-            SDCBarcode.Symbology.QR,
-            SDCBarcode.Symbology.EAN8,
-            SDCBarcode.Symbology.UPCE,
-            SDCBarcode.Symbology.EAN13UPCA
-        ]);
-
-        settings.locationSelection = new SDCCore.RadiusLocationSelection(
-            new SDCCore.NumberWithUnit(5, SDCCore.MeasureUnit.Pixel)
-        );
-        settings.codeDuplicateFilter = 1000;
-
-        console.log("Creating barcode capture...");
-        barcodeCapture = await SDCBarcode.BarcodeCapture.forContext(context, settings);
-
-        // Asynchronous helper function
-        const handleScanResult = async (recognizedBarcodes) => {
-            console.log(recognizedBarcodes[0]._data);  // Do something with the barcodes
-            resulttext.value = "";
-            resulttext.value = recognizedBarcodes[0]._data;
-
-            //Pause camera
-            console.log("Pausing Camera.....");
-            await pauseScanner();
-
-            console.log("Starting Search...");
-                var correctlyAdded = scannedPartSearch();
-
-                if (correctlyAdded) {
-                   // responsetextcamera.textContent = 'Camera Correctly Found Part';
-                    //pauseScanner();
-                    scanmodalinst.close();
-                }
-                else {
-                    resultcard.style.display = 'block';
-                    resultstatus.textContent = "Failed To Find Part";
-                    //responsetextcamera.textContent = 'Camera Did Not Find Part';
-                    var partgoogle = document.getElementById('partGoogle');
-                    var pnumber = resulttext.value;
-                    partgoogle.innerHTML = "Google: " +  pnumber;
-                    var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
-                    partgoogle.href = googleSearchURL;
-
-                   // pauseScanner();
-                }
-        };
-
-        // Listener to handle barcode scan results
-        const listener = {
-            didScan: (barcodeCapture, session) => {
-                const recognizedBarcodes = session.newlyRecognizedBarcodes;
-                handleScanResult(recognizedBarcodes);
-            }
-        };
-        barcodeCapture.addListener(listener);
-
-        console.log("Adding camera switch control...");
-        view.addControl(new SDCCore.CameraSwitchControl());
-
-        // console.log("Turning on the camera...");
-        // await camera.switchToDesiredState(SDCCore.FrameSourceState.On);
-        // await barcodeCapture.setEnabled(true);
-
-        console.log("Hiding progress bar...");
-        view.hideProgressBar();
-
-        console.log("Adding barcode capture overlay...");
-        const overlay = await SDCBarcode.BarcodeCaptureOverlay.withBarcodeCaptureForView(barcodeCapture, view);
-        overlay.setViewfinder(new SDCCore.AimerViewfinder());
-        await overlay.setShouldShowScanAreaGuides(true);
-
-        // Handle click events to move the viewfinder
-        cameraview.addEventListener('click', function (event) {
-            const rect = cameraview.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-
-            // Update the viewfinder's position
-            overlay.viewfinder.centerPoint = new SDCCore.PointWithUnit(
-                new SDCCore.NumberWithUnit(x, SDCCore.MeasureUnit.Pixel),
-                new SDCCore.NumberWithUnit(y, SDCCore.MeasureUnit.Pixel)
-            );
-        });
-
-        console.log("Scanner ready")
-        await barcodeCapture.setEnabled(false);
-        canScan = true;
-        ScanReady();
         return Promise.resolve();
     }
 
     async function StartCamera() {
         try {
-            //await initializeScanner();
-
             console.log("Turning on the camera...");
             if (context && camera && barcodeCapture) {
+
+                //Turns On Camera
                 await camera.switchToDesiredState(SDCCore.FrameSourceState.On);
-                //await barcodeCapture.setEnabled(false);
                 resultstatus.value = "";
                 scanmodalinst.open();
-
-                // Get the modal's position and dimensions
-                var modalRect = scanmodalinst.getBoundingClientRect();
-
-                // Position the popupYoContainer below the modal
-                resultcontainer.style.top = (modalRect.bottom + window.scrollY) + 'px';
-                resultcontainer.style.left = (modalRect.left + (modalRect.width / 2) - (resultcontainer.offsetWidth / 2)) + 'px';
-                resultcontainer.style.display = 'block';
-
-
             }
             
         } catch (error) {
@@ -454,7 +409,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-   
+   //Checks If scanner is ready to be used
     function ScanReady() {
        
         if (!canScan) {
@@ -465,7 +420,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log("Changing scan to yes");
             camerascan.disabled = false;
         }
-        
     }
 
 });
