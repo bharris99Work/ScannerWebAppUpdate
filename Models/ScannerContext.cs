@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.Eventing.Reader;
@@ -38,11 +40,155 @@ namespace ScannerWebAppUpdate.Models
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
 
-    
 
-        //Logic for adding parts
+        //Check in parts logic
         #region
-        public async Task<bool> AddPartAsync(Part part)
+
+        //Returns not checked in parts
+        public async Task<List<JobPartsViewModel>> GetNonCheckedInParts(int jobId)
+        {
+            try
+            {
+                var parts = await (from joparts in JobParts
+                                   join part in Parts on joparts.PartId equals part.PartId
+                                   join po in PurchaseOrders on joparts.PurchaseOrderId equals po.PurchaseOrderId
+                                   where joparts.JobId == jobId
+                                   select new JobPartsViewModel()
+                                   {
+                                       JobPartId = joparts.JobPartId,
+                                       JobId = jobId,
+                                       PartId = joparts.PartId,
+                                       PartName = part.PartNumber,
+                                       PartDescription = part.Description,
+                                       PurchaseOrderId = joparts.PurchaseOrderId,
+                                       POName = po.Name,
+                                       Status = joparts.Status,
+                                      // AssignedParts = joparts.AssignedQuantity,
+                                      // SignedOff = joparts.SignedOff,
+                                      // AvailableQuantity = joparts.AvailableQuantity
+                                      Ordered = joparts.Ordered,
+                                      CheckedIn = joparts.CheckedIn,
+                                      AllChecked = joparts.AllChecked,
+                                     
+                                   }).ToListAsync();
+
+                return parts;
+            }
+            catch (Exception ex)
+            {
+                return new List<JobPartsViewModel>();
+
+            }
+
+
+        }
+
+        //Returns checked in parts
+        public async Task<List<JobPartsViewModel>> GetCheckedInParts(int jobId)
+        {
+            try
+            {
+                var parts = await (from joparts in JobParts
+                                   join part in Parts on joparts.PartId equals part.PartId
+                                   join po in PurchaseOrders on joparts.PurchaseOrderId equals po.PurchaseOrderId
+                                   where joparts.JobId == jobId && joparts.CheckedIn != 0
+                                   select new JobPartsViewModel()
+                                   {
+                                       JobPartId = joparts.JobPartId,
+                                       JobId = jobId,
+                                       PartId = joparts.PartId,
+                                       PartName = part.PartNumber,
+                                       PartDescription = part.Description,
+                                       PurchaseOrderId = joparts.PurchaseOrderId,
+                                       POName = po.Name,
+                                       Status = joparts.Status,
+                                       AssignedParts = joparts.AssignedQuantity,
+                                       SignedOff = joparts.SignedOff,
+                                       AvailableQuantity = joparts.AvailableQuantity,
+                                       Ordered = joparts.Ordered,
+                                       CheckedIn = joparts.CheckedIn,
+                                       AllChecked = joparts.AllChecked
+                                       
+                                   }).ToListAsync();
+
+                return parts;
+            }
+            catch (Exception ex)
+            {
+                return new List<JobPartsViewModel>();
+
+            }
+        }
+
+        //Checkin Part
+        public async Task<bool> CheckInPart(int jobpartid, int toCheckIn)
+        {
+            try
+            {
+                //find jobpart
+                var jp = JobParts.FirstOrDefault(jobpart => jobpart.JobPartId == jobpartid);
+
+                //add to check in to checkedin
+                jp.CheckedIn += toCheckIn;
+                //Add to available parts to use
+                jp.AvailableQuantity += toCheckIn;
+
+                if (jp.CheckedIn == jp.Ordered) {
+                    jp.AllChecked = true;
+                }
+                else
+                {
+                    jp.AllChecked = false;
+                }
+
+
+               
+
+                //save changes
+                await SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        //Get Checkin view model
+        public async Task<CheckInPartsViewModel> GetCheckInVM(int jobId)
+        {
+            try
+            {
+                List<JobPartsViewModel> jpvm = await GetNonCheckedInParts(jobId);
+
+                int notCheckedParts = jpvm.Count(jp => jp.AllChecked == true);
+
+                int totalParts = jpvm.Count;
+
+                CheckInPartsViewModel checkVM = new CheckInPartsViewModel() {
+                 checkParts = jpvm,
+                 notChecked = notCheckedParts,
+                totalParts  = totalParts
+                };
+
+                return checkVM;
+            }
+            catch (Exception ex) {
+                return new CheckInPartsViewModel();
+            
+            }
+        }
+
+
+      
+
+            #endregion
+
+
+            //Logic for adding parts
+            #region
+            public async Task<bool> AddPartAsync(Part part)
         {
             try
             {
@@ -202,13 +348,11 @@ namespace ScannerWebAppUpdate.Models
                     jp.AvailableQuantity = jp.AvailableQuantity + CheckedIn;
 
                     rp.QuantityReturned = rp.QuantityReturned - CheckedIn;
-
                 }
                 else
                 {
                     return false;
                 }
-
 
                 await SaveChangesAsync();
 
@@ -355,6 +499,8 @@ namespace ScannerWebAppUpdate.Models
                     {
                         existingJobPart.AvailableQuantity += selectedPart.AssignedParts;
 
+
+
                         foundTruckPart.QuantityAvalible -= selectedPart.AssignedParts;
                         foundTruckPart.QuantityAllocated += selectedPart.AssignedParts;
 
@@ -483,19 +629,32 @@ namespace ScannerWebAppUpdate.Models
         {
             try
             {
-                List<JobPartsViewModel> jobParts = await JobPartsFind(jobId);
-                List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
+               // List<JobPartsViewModel> jobParts = await JobPartsFind(jobId);
+                //List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
 
 
-                //Get List of available truck parts
+                ////Get List of available truck parts
+                //JobPartsPartialViewModel jppv = new JobPartsPartialViewModel()
+                //{
+                //    jobId = jobId,
+                //    AssignedParts = assignedParts,
+                //    AvailableParts = jobParts,
+                //    AvailableTruckParts = await GetTechParts(1)
+                //};
+                //return jppv;
+
+                //List of checked in parts
+                List<JobPartsViewModel> checkedinParts = await GetCheckedInParts(jobId);
+
                 JobPartsPartialViewModel jppv = new JobPartsPartialViewModel()
                 {
                     jobId = jobId,
-                    AssignedParts = assignedParts,
-                    AvailableParts = jobParts,
+                    //AssignedParts = assignedParts,
+                    AvailableParts = checkedinParts,
                     AvailableTruckParts = await GetTechParts(1)
                 };
                 return jppv;
+
 
             }
             catch (Exception ex)
@@ -765,7 +924,7 @@ namespace ScannerWebAppUpdate.Models
                             PurchaseOrderId = PONumId,
                             Status = "Ordered",
                             ReturnStatus = "N/A",
-                            Quantity = rand.Next(1, 100),
+                            Quantity = rand.Next(1, 10),
                         };
 
                         POParts.Add(pOPart);
@@ -798,8 +957,9 @@ namespace ScannerWebAppUpdate.Models
                                 PartId = popart.PartId,
                                 JobId = jobid,
                                 PurchaseOrderId = popart.PurchaseOrderId,
-                                AvailableQuantity = popart.Quantity,
-                                Status = "Ordered"
+                                Ordered = popart.Quantity,
+                                Status = "Ordered",
+                                AllChecked = false
                                
                             }).ToListAsync();
                

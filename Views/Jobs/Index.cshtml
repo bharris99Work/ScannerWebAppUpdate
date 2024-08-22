@@ -42,41 +42,45 @@
         </div>
     </div>
     <div class="row">
-        <div class="table-container">
-            <table id="datatable" class="dataTable striped responsive">
-                <thead>
-                    <tr>
-                        <th>Job Number: </th>
-                        <th>Date Created: </th>
-                        <th>Location: </th>
-                        <th>Status: </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!--Fills each column with apropriate info from parts-->
-                    @foreach (var job in ViewBag.JobsList)
-                    {
+        <div class="col s12">
+            <div class="table-container">
+                <table id="datatable">
+                    <thead>
                         <tr>
-
-                            <td>@job.JobNumber</td>
-                            <td>@job.DateCreated</td>
-                            <td>@job.Location</td>
-                            <td>@job.Status</td>
-                            <td>
-                                <form asp-action="JobEditor" asp-controller="Jobs" method="post">
-                                    <input type="hidden" name="JobsId" value="@job.JobsId" />
-                                    <input type="hidden" name="JobNumber" value="@job.JobNumber" />
-                                     <input type="hidden" name="DateCreated" value="@job.DateCreated" /> 
-                                    <input type="hidden" name="Location" value="@job.Location" />
-                                    <input type="hidden" name="Status" value="@job.Status" />
-                                    <button class="waves-effect btn blue darken-2">View</button>
-                                </form>
-                            </td>
+                            <th>Job Number: </th>
+                            <th>Date Created: </th>
+                            <th>Location: </th>
+                            <th>Status: </th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <!--Fills each column with apropriate info from parts-->
+                        @foreach (var job in ViewBag.JobsList)
+                        {
+                            <tr>
+
+                                <td>@job.JobNumber</td>
+                                <td>@job.DateCreated</td>
+                                <td>@job.Location</td>
+                                <td>@job.Status</td>
+                                <td>
+                                    <form asp-action="JobEditor" asp-controller="Jobs" method="post">
+                                        <input type="hidden" name="JobsId" value="@job.JobsId" />
+                                        <input type="hidden" name="JobNumber" value="@job.JobNumber" />
+                                        <input type="hidden" name="DateCreated" value="@job.DateCreated" />
+                                        <input type="hidden" name="Location" value="@job.Location" />
+                                        <input type="hidden" name="Status" value="@job.Status" />
+                                        <button class="waves-effect btn blue darken-2">View</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
         </div>
     </div>
 </div>

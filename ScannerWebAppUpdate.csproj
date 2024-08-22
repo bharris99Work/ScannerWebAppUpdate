@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Jobs\CheckInParts.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\css\styles.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\codeCreatorSearch.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\JobParts.js" />
@@ -51,6 +52,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Jobs\CheckInParts.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -14,6 +14,7 @@
 <button id="openScanDialog" style="display:none;"></button>
 
 <div>
+
     <!--Dialog which shows the Search VIewComponent which features read and search-->
     <div id="SearchDialog" class="modal small-dialog">
         <div class="modal-container">
@@ -77,6 +78,7 @@
                 </div>
             </div>
     </div>
+
 
 
 
@@ -161,6 +163,8 @@
                         </div>
                     </div>
 
+
+
                     <!--Prints Labels-->
                     <div class="row">
 
@@ -179,6 +183,10 @@
                 <!--Triggers Submission-->
                 <div class="row">
                     <button class="waves-effect btn blue darken-2" id="updatePart">Update Part</button>
+                </div>
+
+                <div class="row center">
+                    <h5 class="red-text" id="errorResponse"></h5>
                 </div>
             </div>
 
@@ -221,6 +229,7 @@
         <div class="col s12">
             <h3>Job Manager:</h3>
 
+            <!--For mobile debugging. TODO: Remove on production-->
             <div class="row">
                 <div class="consolecontainer"></div>
             </div>
@@ -230,25 +239,44 @@
     </div>
 
     <!--Add Part btn-->
-    <div class="row">
+    <div class="row valign-wrapper">
         <div class="col s12">
             <a class="btn" style="display:none;" id="testBtn">Test</a>
-            <h4>@ViewBag.JobName</h3>
-            <a class="waves-effect btn modal-trigger right green accent-4 " href="#truckPartsModal"><i class="material-icons right indigo-text text-darken-4">add</i>Add Part</a>
+            <h4 class="left">@ViewBag.JobName</h4>
+            <a class="waves-effect btn modal-trigger right green accent-4 " href="#truckPartsModal"><i class="material-icons right indigo-text text-darken-4">add</i>Add Parts</a>
         </div>
     </div>
 
     
     <!--Scan and Sign Off btns-->
     <div class="row">
-        <div class="multi-btn-container">
+        <div class="col s12">
+
+            <form asp-action="CheckInParts" asp-controller="Jobs">
+                <input type="hidden" name="jobId" value="@ViewBag.JobId" />
+
+                <button class="waves-effect btn right blue darken-2"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Check-In Parts</button>
+            </form>
+
+
+            </div>
+        
+        <div style="display:none;" class="multi-btn-container">
             <!--Not used btn-->
             <div class="left-btn-container">
-                <button class="waves-effect btn modal-trigger red" href="#SearchDialog" id="notUsedPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Not Used (Scan)</button>
+                <button class="waves-effect btn modal-trigger red" href="#SearchDialog" style="display:none;" id="notUsedPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Not Used (Scan)</button>
             </div>
             <div class="right-btn-container">
-                    <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="signPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Sign Off (Scan)</button>
-                    <button class="waves-effect btn blue darken-2 modal-trigger" href="#SearchDialog" id="usedPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Use Part (Scan)</button>
+
+               @*  <form asp-action="CheckInParts" asp-controller="Jobs">
+                    <input type="hidden" name="jobId" value="@ViewBag.JobId" />
+
+                    <button class="waves-effect btn right blue darken-2"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Check-In Parts</button>
+                </form> *@
+
+                @* <a asp-action="testview" asp-controller="Jobs">test</a> *@
+                    <button class="waves-effect btn blue darken-2 modal-trigger" style="display:none;" href="#SearchDialog" id="signPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Sign Off (Scan)</button>
+                    <button class="waves-effect btn blue darken-2 modal-trigger" style="display:none;" href="#SearchDialog" id="usedPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Use Part (Scan)</button>
             </div>
         </div>
     </div>

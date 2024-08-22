@@ -35,18 +35,20 @@ namespace ScannerWebAppUpdate.Controllers
             return View();
         }
 
+      
+
    
         public async Task<IActionResult> JobEditor(Jobs selectedJob)
         {
      
-            List<JobPartsViewModel> jobParts = await _context.JobPartsFind(selectedJob.JobsId);
+           // List<JobPartsViewModel> jobParts = await _context.JobPartsFind(selectedJob.JobsId);
 
-            List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
+           // List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
 
 
           
-            ViewBag.JobParts = jobParts;
-            ViewBag.AssignedParts = assignedParts;
+           // ViewBag.JobParts = jobParts;
+           // ViewBag.AssignedParts = assignedParts;
             ViewBag.JobId = selectedJob.JobsId;
             ViewBag.JobName = selectedJob.JobNumber;
             ViewBag.ReturnOptions = ReturnOptionsList;
@@ -88,6 +90,71 @@ namespace ScannerWebAppUpdate.Controllers
             }
         }
 
+        //Check in parts for job
+        public async Task<IActionResult> CheckInParts(int jobId)
+        {
+            try
+            {
+
+                // List<JobPartsViewModel> nonCheckedInParts = await _context.GetNonCheckedInParts(jobId);
+                CheckInPartsViewModel checkinparts = await _context.GetCheckInVM(jobId);
+
+                ViewBag.JobId = jobId;
+
+
+
+                return View(checkinparts);
+            }
+
+            catch (Exception ex)
+            {
+
+                return View();
+            }
+        }
+
+
+        // Sends parts to database
+        public async Task<IActionResult> UploadChecked(JobPartsViewModel checkedpart, int toCheckIn)
+        {
+            //Add to checked in
+
+             bool success = await _context.CheckInPart(checkedpart.JobPartId, toCheckIn);
+
+            //Return Partial view
+            //List<JobPartsViewModel> jplist = await _context.GetNonCheckedInParts(checkedpart.JobId);
+            CheckInPartsViewModel checkinparts = await _context.GetCheckInVM(checkedpart.JobId);
+
+
+            return PartialView("_CheckInPartsList", checkinparts);
+
+        }
+
+
+
+
+
+        //Check in parts list
+        public async Task<IActionResult> CheckInPartsList(int jobId)
+        {
+            try
+            {
+                CheckInPartsViewModel checkinparts = await _context.GetCheckInVM(jobId);
+
+               // List<JobPartsViewModel> jplist = await _context.GetCheckedInParts(jobId);
+
+                return PartialView("_CheckInPartsList", checkinparts);
+            }
+
+            catch (Exception ex)
+            {
+                return View();
+            }
+
+        }
+
+
+        //Updates parts on job
         [HttpPost]
         public async Task<IActionResult> UpdatePart(JobPartsViewModel jobPart, string FunctionType, string ReturnReason, string ReturnNumber)
         {
@@ -121,21 +188,31 @@ namespace ScannerWebAppUpdate.Controllers
                 }
 
 
-
                 if (success)
                 {
                         JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
+                        jppv.uploadResult = "Successfully Updated Part";
                         return PartialView("_JobParts", jppv);
                  
                 }
-                return View();
+                else
+                {
+                    JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
+                    jppv.uploadResult = "Failed To Update Part";
+                    return PartialView("_JobParts", jppv);
+                }
+                //return View();
                 //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
 
 
             }
             catch (Exception ex)
             {
-                return View();
+
+                JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobPart.JobId);
+                jppv.uploadResult = "Failed To Update Part";
+                return PartialView("_JobParts", jppv);
+                //return View();
                 //return RedirectToAction("JobEditor", new { jobId = jobPart.JobId });
             }
         }

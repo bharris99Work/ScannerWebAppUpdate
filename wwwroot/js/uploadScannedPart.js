@@ -6,11 +6,15 @@ $(document).ready(function () {
     var qtydialogopt = { onCloseEnd: resetQuantityDialog };
     var qtydialoginit = M.Modal.init(quantitydialog, qtydialogopt);
 
+    
+
     $('select').formSelect();
 
     var partName
     var formData;
     var form;
+
+    var initialCount;
 
     var currentcount;
     var maxcount;
@@ -29,6 +33,7 @@ $(document).ready(function () {
 
     //returnselect.value = '0';
 
+ 
 
  
     //Function if scanned prt
@@ -126,104 +131,145 @@ $(document).ready(function () {
         ReturnSubmit();
     });
 
+    function UploadResult() {
+
+        var uploadResult = $('#UploadResult').val();
+        if (uploadResult === '') {
+
+            console.log("No Result currently.")
+
+        }
+        else {
+            console.log("Result found opening dialog.")
+            var uploadresultdialog = document.getElementById('UploadResultDialog');
+            var uploadresultdialoginit = M.Modal.init(uploadresultdialog);
+
+            var uploadresultdialoginst = M.Modal.getInstance(uploadresultdialog);
+
+            uploadresultdialoginst.open();
+            console.log("Dialog Opened");
+
+        }
+    }
+
+    
+
 
     //Function to send part to database
     $('#updatePart').click(function () {
-        if (formData) {
-            form.find('input[name="FunctionType"]').val(funcType);
-
-            switch (funcType) {
-                //Sign Part
-                case "1":
-                    form.find('input[name="SignedOff"]').val(currentcount);
-                    break;
-                //Add Part
-                case "2":
-                    form.find('input[name="AssignedParts"]').val(currentcount);
-                    break;
-                //Return Part Not Used
-                case "3":
-                    //currentcount = 0;
-                    form.find('input[name="AssignedParts"]').val(currentcount);
-                    break;
-                //Update Part
-                case "4":
-                    form.find('input[name="AssignedParts"]').val(currentcount);
-                    form.find('input[name="AvailableQuantity"]').val(maxcount);
-                    break;
-            }
 
 
-            //Hide Container
-            if (funcType.trim() == "3") {
-                var instance = M.FormSelect.getInstance(returnselect);
+        if (initialCount === currentcount) {
+            //Update Header
+            $('#errorResponse').text('No Changes Made');
+            //Break and cancel function
+            return;
+        }
+        else {
 
-                //Get and Set Return Reason
-                if (instance.selectedIndex == 0 || returnselect.selectedIndex == 0) {
-                    if (returnothertext.value == '' || returnothertext.value == null) {
-                        console.log("Must Have Return Reason");
+
+            if (formData) {
+                form.find('input[name="FunctionType"]').val(funcType);
+
+                switch (funcType) {
+                    //Sign Part
+                    case "1":
+                        form.find('input[name="SignedOff"]').val(currentcount);
+                        break;
+                    //Add Part
+                    case "2":
+                        form.find('input[name="AssignedParts"]').val(currentcount);
+                        break;
+                    //Return Part Not Used
+                    case "3":
+                        //currentcount = 0;
+                        form.find('input[name="AssignedParts"]').val(currentcount);
+                        break;
+                    //Update Part
+                    case "4":
+                        form.find('input[name="AssignedParts"]').val(currentcount);
+                        form.find('input[name="AvailableQuantity"]').val(maxcount);
+                        break;
+                }
+
+                
+                //Hide Container
+                if (funcType.trim() == "3") {
+                    var instance = M.FormSelect.getInstance(returnselect);
+                    //Break and cancel function if select does not exist
+                    //Get and Set Return Reason
+                    if (instance.selectedIndex == 0 || returnselect.selectedIndex == 0) {
+                        if (returnothertext.value == '' || returnothertext.value == null) {
+                            console.log("Must Have Return Reason");
+                            //Update Header
+                            $('#errorResponse').text('Must Have Return Reason');
+                            return;
+                        }
+                        else {
+                            //Other text found
+                            form.find('input[name="ReturnReason"]').val(returnothertext.value);
+                        }
                     }
                     else {
-                        //Other text found
-                        form.find('input[name="ReturnReason"]').val(returnothertext.value);
-                    }
-                }
-                else {
-                    //select option found
-                    form.find('input[name="ReturnReason"]').val(returnselect.options[returnselect.selectedIndex].text);
-
-                }
-
-            }
-            formData = form.serialize();
-
-
-         
-
-
-            $('#returnElements').css("display", "none");
-
-            // Get the instance of the quantity modal and open it
-            var QuantityModalInst = M.Modal.getInstance($("#quantityModal"));
-            var SearchDialogInst = M.Modal.getInstance($('#SearchDialog'));
-            var TruckPartsInst = M.Modal.getInstance($('#truckPartsModal'));
-            if (QuantityModalInst) {
-                QuantityModalInst.close();
-            } else {
-                console.error("Quantity modal instance is undefined.");
-            }
-            if (SearchDialogInst) {
-                SearchDialogInst.close();
-            }
-            if (TruckPartsInst) {
-                TruckPartsInst.close();
-            }
-
-            // Optionally send the form data via AJAX
-            $.ajax({
-                type: 'POST',
-                url: form.attr('action'),
-                data: formData,
-                success: function (response) {
-                    console.log('Form submitted successfully:', response);
-                    // Optionally update the partial view with the new data
-                    
-                    if (funcType.trim() == "3") {
-                        // Redirect to the Returns controller's Index action
-                        window.location.href = '/Returns/Index';
-                    }
-                    else {
-                        $('#divPartial').html(response);
+                        //select option found
+                        form.find('input[name="ReturnReason"]').val(returnselect.options[returnselect.selectedIndex].text);
 
                     }
-                    // Reinitialize modals after updating the partial view
-                    // Initialize all modal elements within the updated partial view
-                  
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error submitting form:', textStatus, errorThrown);
+
                 }
-            });
+                formData = form.serialize();
+
+
+
+
+
+                $('#returnElements').css("display", "none");
+
+                // Get the instance of the quantity modal and open it
+                var QuantityModalInst = M.Modal.getInstance($("#quantityModal"));
+                var SearchDialogInst = M.Modal.getInstance($('#SearchDialog'));
+                var TruckPartsInst = M.Modal.getInstance($('#truckPartsModal'));
+                if (QuantityModalInst) {
+                    QuantityModalInst.close();
+                } else {
+                    console.error("Quantity modal instance is undefined.");
+                }
+                if (SearchDialogInst) {
+                    SearchDialogInst.close();
+                }
+                if (TruckPartsInst) {
+                    TruckPartsInst.close();
+                }
+
+                // Optionally send the form data via AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: formData,
+                    success: function (response) {
+                        console.log('Form submitted successfully:', response);
+
+
+                        if (funcType.trim() == "3") {
+                            // Redirect to the Returns controller's Index action
+                            window.location.href = '/Returns/Index';
+                        }
+                        else {
+                            $('#divPartial').html(response);
+                            // Optionally update the partial view with the new data
+                            UploadResult();
+                        }
+                        // Reinitialize modals after updating the partial view
+                        // Initialize all modal elements within the updated partial view
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        UploadResult();
+
+                        console.error('Error submitting form:', textStatus, errorThrown);
+                    }
+                });
+            }
         }
     });
 
@@ -257,6 +303,7 @@ $(document).ready(function () {
             //Sign Part
             case "1":
                 currentcount = parseInt(form.find('input[name="SignedOff"]').val());
+                initialCount = currentcount;
                 maxcount = parseInt(form.find('input[name="AssignedParts"]').val());
                 //Hide Container
                 $('#returnElements').css("display", "none");
@@ -268,6 +315,9 @@ $(document).ready(function () {
                 currentcount = 0;
                 maxcount = parseInt(form.find('input[name="AvailableQuantity"]').val());
                 totalParts = maxcount;
+
+                initialCount = currentcount;
+
 
                 //Hide Container
                 $('#returnElements').css("display", "none");
@@ -353,6 +403,9 @@ $(document).ready(function () {
 
                 console.log(returnnumber); // Outputs: 08072024123045 (for example)
 
+                initialCount = currentcount;
+
+
                 form.find('input[name="ReturnNumber"]').val(returnnumber);
 
                 break;
@@ -362,6 +415,8 @@ $(document).ready(function () {
                 currentcount = parseInt(form.find('input[name="AssignedParts"]').val());
                 maxcount = parseInt(form.find('input[name="AvailableQuantity"]').val());
                 totalParts = currentcount + maxcount;
+
+                initialCount = currentcount;
 
                 //Hide Container
                 $('#returnElements').css("display", "none");
@@ -387,27 +442,6 @@ $(document).ready(function () {
                 currentcount += 1;
                 maxcount -= 1;
 
-                //switch (funcType) {
-                //    //Sign Part
-                //    case "1":
-                //        form.find('input[name="SignedOff"]').val(currentcount);
-                //        break;
-                //    //Add Part
-                //    case "2":
-                //        form.find('input[name="AssignedParts"]').val(currentcount);
-                //        break;
-                //    //Return Part Not Used
-                //    case "3":
-                //        //currentcount = 0;
-                //        form.find('input[name="AssignedParts"]').val(currentcount);
-                //        break;
-                //    //Update Part
-                //    case "4":
-                //        form.find('input[name="AssignedParts"]').val(currentcount);
-                //        form.find('input[name="AvailableQuantity"]').val(maxcount-=1);
-                //        break;
-                //}
-
                 $('#inputQty').val(currentcount);
                 //formData = form.serialize();
             }
@@ -418,27 +452,6 @@ $(document).ready(function () {
                 currentcount -= 1;
                 maxcount += 1;
 
-                //switch (funcType) {
-                //    //Sign Part
-                //    case "1":
-                //        form.find('input[name="SignedOff"]').val(currentcount);
-                //        break;
-                //    //Add Part
-                //    case "2":
-                //        form.find('input[name="AssignedParts"]').val(currentcount);
-                //        break;
-                //    //Return Part Not Used
-                //    case "3":
-                //        //currentcount = 0;
-                //        form.find('input[name="AssignedParts"]').val(currentcount);
-                //        break;
-                //    //Update Part
-                //    case "4":
-                //        form.find('input[name="AssignedParts"]').val(currentcount);
-                //        form.find('input[name="AvailableQuantity"]').val(maxcount+=1);
-
-                //        break;
-                //}
 
                 $('#inputQty').val(currentcount);
                 //formData = form.serialize();
@@ -563,6 +576,8 @@ $(document).ready(function () {
                 data: formData,
                 success: function (response) {
                     console.log('Form submitted successfully:', response);
+                   // UploadResult();
+
                     // Optionally update the partial view with the new data
                     //$('#divPartial').html(response);
                     // Reinitialize modals after updating the partial view
@@ -573,6 +588,8 @@ $(document).ready(function () {
 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                   // UploadResult();
+
                     console.error('Error submitting form:', textStatus, errorThrown);
                 }
             });
@@ -588,6 +605,8 @@ $(document).ready(function () {
     function resetQuantityDialog() {
         $('#assignPart').off('click.assign');
         $('#removePart').off('click.remove');
+        $('#errorResponse').text('');
+
     }
 
 });

@@ -1,0 +1,369 @@
+﻿@model CheckInPartsViewModel
+<head>
+<style>
+    /* Style the bottom menu */
+    .bottom-menu {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff; /* White background */
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3); /* Shadow for the top edge */
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 800; /* Ensures the menu is above other content */
+    }
+
+        .modal-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 15px !important;
+        }
+
+        #reader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            padding: 0 !important;
+            margin: 0 !important;
+            box-sizing: border-box;
+            border-radius: 15px !important;
+        }
+
+        .part-google {
+            display: flex;
+            align-items: center; /* Vertically center the items */
+            justify-content: center; /* Horizontally center the items */
+        }
+
+            .part-google a {
+                margin-right: 10px; /* Space between the link and image */
+                display: flex;
+                align-items: center;
+                font-size: 1rem; /* Adjust font size if needed */
+            }
+
+            .part-google img {
+                max-width: 50px; /* Adjust max width of the image */
+                height: auto;
+                display: block;
+                border: none;
+            }
+
+
+        .result-header-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(128, 128, 128, 0.75); /* Grey background with 75% opacity */
+            z-index: 2;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+            .result-header-container .row {
+                margin: 0;
+                padding: 5px;
+                color: white; /* Text color for visibility */
+            }
+
+        .scan-button-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .scan-button {
+            margin: 5px 5px 35px 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px !important; /* Rounded edges */
+        }
+
+    </style>
+
+
+    <!-- Include jQuery Library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+</head>
+
+
+<!--Asks user for number of items to check in-->
+<div id="CountDialog" class="modal small-dialog">
+    <!--Part Number Header-->
+    <div class="row">
+        <div class="col s12">
+            <h5 id="partNumberHeader"></h5>
+            <div class="divider"></div>
+        </div>
+    </div>
+
+    <!--Count-->
+    <div class="row">
+        <div class="col s12">
+            <label>Check-In:</label>
+            <input id="checkingin" type="text" />
+            <input id="availableqty" type="text" disabled />
+
+            <button class="waves-effect btn-small light-blue darken-4" id="addCheckIn"> 
+                <i class="material-icons indigo-text text-darken-4">add</i>
+                </button>
+            <button class="waves-effect btn-small light-blue darken-4" id="subCheckIn">
+                <i class="material-icons indigo-text text-darken-4">remove</i>
+                </button>
+        </div>
+    </div>
+
+    <!--Submit button-->
+    <div class="row">
+        <div class="col s12">
+            <button class="waves-effect btn-small light-blue darken-4" id="updateCount">Submit</button>
+        </div>
+    </div>
+</div>
+
+
+<!--Error Response Dialog-->
+<div id="responseDialog" class="modal small-dialog">
+
+    <div class="row">
+        <div class="col s12">
+            <h5 id="responseHeader">Response</h5>
+            <div class="divider"></div>
+            <h7 id="responsePartHeader">Part</h7>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <!-- Modal Trigger -->
+            <button data-target="responseDialog" class="btn modal-close">Close</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Scaan Modal: Features Camera View-->
+<div id="ScanDialog" class="modal">
+    <div class="modal-container">
+
+        <!--QR Code Reader-->
+        <div class="row">
+            <div id="reader"></div>
+        </div>
+
+        <!--StartScan and PauseScan buttons-->
+        <div class="scan-button-container">
+            <button class=" waves-effect scan-button btn-small light-blue darken-4" id="startScanning">Start Scanning</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div>
+    <!--Title Box-->
+    <div class="row">
+        <div class="col s12">
+            <form asp-action="JobEditor" asp-controller="Jobs">
+                <input name="JobsId" type="hidden" value="@ViewBag.JobId" />
+
+                <!--TODO: ALSO RETURN JOB NUMBER-->
+                <input type="hidden" name="JobName" />
+                
+                <button class=" waves-effect scan-button btn-small blue darken-2"><i class="material-icons indigo-text text-darken-4">arrow_back</i></button>
+            </form>
+        </div>
+    </div>
+
+    <!--Main Content-->
+    <div class="row">
+
+        <!--Table-->
+        <div id="table-view">
+            <!--Partial VIew of Job Parts Table-->
+            <div id="divPartial" class="col s12">
+                @await Html.PartialAsync("_CheckInPartsList", Model)
+            </div>
+        </div>
+
+        <!--Camera View-->
+        <div style="display: none;" id="camera-view">
+            <div id="cameraview"></div>
+
+            <!--StartScan and PauseScan buttons-->
+            <div class="scan-button-container">
+                <button class=" waves-effect scan-button btn-small light-blue darken-4" id="startScanning">Start Scanning</button>
+                <button id="exitCameraBN" class=" waves-effect scan-button btn-small red">Exit</button>
+            </div>
+        </div>
+
+        <!--Reader View-->
+        <div style="display: none;" id="reader-view">
+       
+        </div>
+
+
+
+        <div id="resultcontainer" style="display:none;" class="col s4 valign">
+            <label class="text-black text-darken-2" for="resultText">Part Number:</label>
+            <input placeholder="Scan or Enter Part Number" type="text" id="resultText" readonly name="scannedPart" value="">
+        </div>
+    </div>
+
+<!--Button Menu (Footer?)-->
+<div class="bottom-menu">
+    <div class="row">
+            <div class="col s4" style="display:none;">
+            <button id="openList"class="waves-effect btn-small blue darken-2">List</button>
+        </div>
+        <div class="col s4">
+                <button id="cameraScan" class="waves-effect btn-small blue darken-2"><i class="material-icons">photo_camera</i></button>
+        </div>
+        <div class="col s4">
+                <button id="readerScan" class="waves-effect btn-small blue darken-2"><i class="material-icons">barcode_reader</i></button>
+
+            <!--Options avalible if reader is selected-->
+            <div id="readerOptions" style="display: none;" class="center-align valign-wrapper">
+
+                <button class="btn waves-effect red accent-4 valign" id="cancelReader">Cancel</button>
+                <h7 class="valign">Waiting For Barcode Reader Input....</h7>
+                <div class="preloader-wrapper small active valign-wrapper">
+                    <div class="spinner-layer spinner-green-only valign">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    @*      <!--Scan Options-->
+    <div class="row">
+    <div class="col s12">
+    <div class="row">
+    <div class="col s12">
+    <!--Search Component-->
+    @await Component.InvokeAsync("Search")
+    </div>
+    </div>
+    </div>
+    </div> *@
+
+
+
+    @*    <!--QR Code Reader-->
+    <div  class="valign-wrapper">
+    <div class="row">
+    <div class="col S12">
+    <div class="card reader-card center" id="CameraScanDiv" style="display:none;">
+    <div class="card-content">
+
+
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+    </div> *@
+
+    @section Scripts {
+        <script>
+            function scannedPartSearch() {
+                var result = $('#resultText').val();
+                var found = false;
+
+
+                //Grab list of parts from jobParts
+                $('#checkinPartsTable tbody tr').each(function () {
+
+                    var partName = $(this).find('td').eq(0).text().toLowerCase();
+
+                    //Search list for specific part
+                    if (partName.trim() == result.toLocaleLowerCase().trim()) {
+                        console.log("Part Found" + partName.trim());
+
+                        //Get List of details about the part
+                        var jobPartId = $(this).find('input[name="JobPartId"]').val();
+                        var partId = $(this).find('input[name="PartId"]').val();
+                        var partName = $(this).find('input[name="PartName"]').val();
+                        var jobId = $(this).find('input[name="JobId"]').val();
+                        var purchaseOrderId = $(this).find('input[name="PurchaseOrderId"]').val();
+                        var poname = $(this).find('input[name="POName"]').val();
+                        var status = $(this).find('input[name="Status"]').val();
+                        var assignedParts = $(this).find('input[name="AssignedParts"]').val();
+                        var availableQuantity = $(this).find('input[name="AvailableQuantity"]').val();
+                        var signedOff = $(this).find('input[name="SignedOff"]').val();
+
+                        var ordered = $(this).find('input[name="Ordered"]').val();
+                        var checkedin = $(this).find('input[name="CheckedIn"]').val();
+
+
+                        $('#JobPartId').val(jobPartId);
+                        $('#PartId').val(partId);
+                        $('#PartName').val(partName);
+                        $('#JobId').val(jobId);
+                        $('#PurchaseOrderId').val(purchaseOrderId);
+                        $('#Status').val(status);
+                        $('#AssignedParts').val(assignedParts);
+                        $('#AvailableQuantity').val(availableQuantity);
+                        $('#SignedOff').val(signedOff);
+
+                        $('#CheckedIn').val(checkedin);
+                        $('#Ordered').val(ordered);
+
+                        $('#updateScanPart').click();
+
+                        found = true;
+                        console.log("Part has been found");
+                        return false;
+
+                    }
+
+                    console.log(partName);
+                });
+
+                return found;
+            }
+        </script>
+
+        <script src="~/js/CheckIn.js"></script>
+        <script src="~/dist/scanditscanningnodialog.bundle.js"></script>
+
+
+    }

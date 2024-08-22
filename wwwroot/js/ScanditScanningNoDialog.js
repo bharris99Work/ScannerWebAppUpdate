@@ -2,11 +2,12 @@
 import * as SDCBarcode from "scandit-web-datacapture-barcode";
 
 document.addEventListener('DOMContentLoaded', async function () {
-    let scanoptions = document.getElementById('scanOptions');
+    //let scanoptions = document.getElementById('scanOptions');
 
     //camera attributes
     var cameraview = document.getElementById("reader");
     var camerascan = document.getElementById('cameraScan');
+
    
 
     var startscanningbn = document.getElementById('startScanning');
@@ -20,53 +21,29 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     var resulttext = document.getElementById('resultText');
 
-    
-    //Modal init
-    var scanmodal = document.getElementById('ScanDialog');
 
-    var searchmodal = document.getElementById('SearchDialog');
-
-    var scansearchopt = { onCloseEnd: stopRec };
-
-    var scandialoginit = M.Modal.init(scanmodal, scansearchopt);
-    var searchdialoginit = M.Modal.init(searchmodal, scansearchopt);
-
-
-    //Grabs instance of scanner dialog
-    var scanmodalinst = M.Modal.getInstance(scanmodal);
-
-    //Grab instance of SearchDialog
-    var searchmodalinst = M.Modal.getInstance(searchmodal)
-
-
-    // Initialize the first modal with its own onCloseEnd callback
-    $('#ScanDialog').modal({
-        onCloseEnd: stopRec()
-    });
-
-    $('#SearchDialog').modal({
-        onCloseEnd: stopRec()
-    });
-
-    //Result helpers
-    var responseText = document.getElementById('resultStatus');
-    var resultcard = document.getElementById('resultContainer');
-    //var testbtn = document.getElementById('testBtn');
-
-    var closeresults = document.getElementById('closeResults');
-    var exitresults = document.getElementById('exitResults');
-
-    var resultstatus = document.getElementById('resultStatus');
+    var responseDialog = document.getElementById('responseDialog');
+    var responseDialogInit = M.Modal.init(responseDialog);
+    var responseDialogInst = M.Modal.getInstance(responseDialog);
 
 
     var canScan = false;
- 
 
     // Store reference to the keydown event listener
     let keydownEventListener;
 
 
+    ////For Now
+    //Modal init
+    var scanmodal = document.getElementById('ScanDialog');
+     var scansearchopt = { onCloseEnd: StopCamera };
+    var scandialoginit = M.Modal.init(scanmodal, scansearchopt);
+    //var scandialoginit = M.Modal.init(scanmodal);
+    //Grabs instance of scanner dialog
+    var scanmodalinst = M.Modal.getInstance(scanmodal);
 
+
+    //Initialize Scanner
 
     camerascan.disabled = true;
     console.log("Configuring Scandit SDK...");
@@ -107,8 +84,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     settings.codeDuplicateFilter = 1000;
 
     console.log("Creating barcode capture...");
-    //barcodeCapture = await SDCBarcode.BarcodeCapture.forContext(context, settings);
-
     const barcodeCapture = await SDCBarcode.BarcodeCapture.forContext(context, settings);
 
     // Asynchronous helper function
@@ -125,16 +100,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         var correctlyAdded = scannedPartSearch();
 
         if (correctlyAdded) {
-            scanmodalinst.close();
+            await StopCamera();
+
         }
         else {
-            resultcard.style.display = 'block';
-            resultstatus.textContent = "Failed To Find Part";
-            var partgoogle = document.getElementById('partGoogle');
-            var pnumber = resulttext.value;
-            partgoogle.innerHTML = "Google: " + pnumber;
-            var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
-            partgoogle.href = googleSearchURL;
+            $('#responseHeader').text('Part Not On Job');
+
+            $('#responsePartHeader').text(resulttext.value);
+            await StopCamera();
+
+            responseDialogInst.open();
+
+            //resultcard.style.display = 'block';
+           // resultstatus.textContent = "Failed To Find Part";
+            //var partgoogle = document.getElementById('partGoogle');
+            //var pnumber = resulttext.value;
+            //partgoogle.innerHTML = "Google: " + pnumber;
+            //var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
+            //partgoogle.href = googleSearchURL;
         }
     };
 
@@ -149,10 +132,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log("Adding listener to brcode capture")
     barcodeCapture.addListener(listener);
 
-
-
-
-
     console.log("Adding camera switch control...");
     view.addControl(new SDCCore.CameraSwitchControl());
 
@@ -162,9 +141,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log("Adding barcode capture overlay...");
     const overlay = await SDCBarcode.BarcodeCaptureOverlay.withBarcodeCaptureForView(barcodeCapture, view);
     overlay.setViewfinder(new SDCCore.AimerViewfinder());
-
-
- 
 
     console.log("Scanner ready")
     await barcodeCapture.setEnabled(false);
@@ -178,73 +154,27 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //Close Result Pop-up Div
-    closeresults.addEventListener('click', function () {
-        resultcard.style.display = 'none';
-    });
-
-    exitresults.addEventListener('click', function () {
-        resultcard.style.display = 'none';
-    });
-
     //Reader functions and logic
-    openreader.addEventListener('click', function () {
+    openreader.addEventListener('click', async function () {
         readeroptions.style.display = 'block';
-        scanoptions.style.display = 'none';
+
+        //Disable Camera
+        $('#cameraScan').prop('disabled', true);
+
+        //Hide reader button
+        $('#readerScan').css('display', 'none');
+
+
+        //Put Camera On Standby
+        await StopCamera();
+
+       // scanoptions.style.display = 'none';
         let lastKeyTime = Date.now(); // Initialize lastKeyTime
 
         var savedString = '';
 
         //Max time allowed between strokes
         var maxTime = 700;
-
 
         // Define the keydown event listener function
         keydownEventListener = function (event) {
@@ -273,19 +203,28 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                         if (correctlyAdded) {
                             // Handle correct
-                            responseText.textContent = 'Reader Correctly Found: ' + savedString;
+                            //responseText.textContent = 'Reader Correctly Found: ' + savedString;
                             console.log('Reader Correctly Found: ' + savedString);
                         } else {
                             // Handle error
-                            responseText.textContent = 'Reader Failed To Find: ' + savedString;
 
-                            resultcard.style.display = 'block';
-                            resultstatus.textContent = "Failed To Find Part";
-                            var partgoogle = document.getElementById('partGoogle');
-                            var pnumber = resulttext.value;
-                            partgoogle.innerHTML = pnumber;
-                            var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
-                            partgoogle.href = googleSearchURL;
+
+                            $('#responseHeader').text('Part Not On Job');
+
+                            $('#responsePartHeader').text(resulttext.value);
+
+                            responseDialogInst.open();
+
+
+                            //responseText.textContent = 'Reader Failed To Find: ' + savedString;
+
+                            //resultcard.style.display = 'block';
+                            //resultstatus.textContent = "Failed To Find Part";
+                            //var partgoogle = document.getElementById('partGoogle');
+                            //var pnumber = resulttext.value;
+                            //partgoogle.innerHTML = pnumber;
+                            //var googleSearchURL = 'https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(pnumber);
+                            //partgoogle.href = googleSearchURL;
                             console.log('Reader Failed To Find: ' + savedString);
                         }
                     }
@@ -296,7 +235,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Add the keydown event listener
         document.onkeydown = keydownEventListener;
-   
+
 
         //Close Keyboard
 
@@ -307,7 +246,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     cancelreader.addEventListener('click', function () {
         readeroptions.style.display = 'none';
-        scanoptions.style.display = 'block';
+        //scanoptions.style.display = 'block';
+        $('#readerScan').css('display', 'block');
+
+        //Disable Camera
+        $('#cameraScan').prop('disabled', false);
 
         //Open keyboard cancel reader
         console.log('Removing ability to of scanner');
@@ -315,24 +258,34 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.onkeydown = null;
         console.log('Scanner no longer reading.');
 
+
+        //Close Reader Click
+        //Hide Reader Options
+        //Stop listeners
+        //Enable camera
+        //Show reader button
+
     });
+
+
 
 
     startscanningbn.addEventListener('click', async function () {
 
         if (!scanning) {
+
             startScanner();
             startscanningbn.innerHTML = '...Scanning...';
         }
         else {
+
             pauseScanner();
-            startscanningbn.innerHTML ='Start Scanner';
+            startscanningbn.innerHTML = 'Start Scanner';
         }
 
     });
 
 
-  
     //Pause or Starts barcode scanning listener
     async function pauseScanner() {
         scanning = false;
@@ -341,12 +294,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         await barcodeCapture.setEnabled(false);
     }
 
-
     async function startScanner() {
         scanning = true;
         startscanningbn.innerHTML = '...Scanning...';
 
+
         await barcodeCapture.setEnabled(true);
+
     }
 
     //When Camera button is clicked
@@ -354,63 +308,66 @@ document.addEventListener('DOMContentLoaded', async function () {
         try {
             //Start Camera scanning, load camera
             await StartCamera();
+
+           // scanoptions.style.display = 'none';
         } catch (error) {
             console.error("Error initializing scanner:", error);
         }
     });
 
 
-
-    //When Dialogs are closed - Clear reset vals
-    async function stopRec() {
-        //Reset Values
-
-        resulttext.value = '';
-
-        readeroptions.style.display = 'none';
-
-        scanoptions.style.display = 'block';
-
-        //Open keyboard cancel reader
-        console.log('Removing ability to of scanner');
-
-        // $(document).off('keydown');
-        document.onkeydown = null;
-
-        console.log('Scanner no longer reading.');
-
-       // resultcard.style.display = 'none';
-
-        console.log("Turning off camera...");
-        await camera.switchToDesiredState(SDCCore.FrameSourceState.Standby);
-        await pauseScanner();
-    }
-
-    //Start Camera Start Up
-    async function initializeScanner() {
-
-        return Promise.resolve();
-    }
-
     async function StartCamera() {
         try {
             console.log("Turning on the camera...");
             if (context && camera && barcodeCapture) {
-
                 //Turns On Camera
                 await camera.switchToDesiredState(SDCCore.FrameSourceState.On);
-                resultstatus.value = "";
+                //resultstatus.value = "";
                 scanmodalinst.open();
+                //cameraview.style.display = 'block';
+
+               // $('#camera-view').css('display', 'block');
+                //$('#table-view').css('display', 'none');
+               // $('#reader-view').css('display', 'none');
+
+                //$('#tableDiv').css('display', 'none');
+                //$('#reader-view').css('display', 'none');
+
             }
-            
+
         } catch (error) {
             console.error("Error initializing scanner:", error);
         }
     }
 
-   //Checks If scanner is ready to be used
+    async function StopCamera() {
+        try {
+            console.log("Turning off the camera...");
+            if (context && camera && barcodeCapture) {
+                pauseScanner();
+
+                //Turns On Camera
+                await camera.switchToDesiredState(SDCCore.FrameSourceState.Standby);
+                //resultstatus.value = "";
+                scanmodalinst.close();
+                //cameraview.style.display = 'block';
+
+                //$('#camera-view').css('display', 'none');
+               // $('#tableDiv').css('display', 'block');
+                //$('#reader-view').css('display', 'none');
+
+            }
+
+        } catch (error) {
+            console.error("Error initializing scanner:", error);
+        }
+    }
+
+
+
+    //Checks If scanner is ready to be used
     function ScanReady() {
-       
+
         if (!canScan) {
             console.log("Changing scan to no");
             camerascan.disabled = true;
@@ -420,5 +377,52 @@ document.addEventListener('DOMContentLoaded', async function () {
             camerascan.disabled = false;
         }
     }
+
+    $('#exitCameraBN').on('click', function () {
+        $('#CameraScanDiv').css('display', 'none');
+
+       // $('#resultcontainer').css('display', 'block');
+
+
+        //scanoptions.style.display = 'block';
+
+    });
+
+    $('#openList').on('click', async function () {
+
+        console.log('Showing List');
+
+        await StopCamera();
+
+        $('#camera-view').css('display', 'none');
+        //$('#table-view').css('display', 'block');
+        $('#reader-view').css('display', 'none');
+
+        $('#tableDiv').css('display', 'block');
+
+
+    });
+
+    $('#readerScan').on('click', function () {
+
+        console.log('Showing Reader');
+
+        $('#camera-view').css('display', 'none');
+        $('#table-view').css('display', 'block');
+
+        //Hide reader button
+        $('#readerScan').css('display', 'none');
+
+
+        //Show Reader Options
+        readeroptions.style.display = 'block';
+
+        
+
+
+        //Start Listeners?
+
+    });
+
 
 });

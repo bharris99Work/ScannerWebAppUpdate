@@ -41,13 +41,20 @@
 
 .admin-Dialog {
     width: 80vw;
-    height: 50vh;
+    height: auto;
     border-radius: 15px; /* Adjust the value as needed */
 }
 
 .small-dialog {
     width: 80vw;
-    height: 30vh;
+    height: auto;
+    border-radius: 15px; /* Adjust the value as needed */
+}
+
+.reader-card {
+    /*width: 80vw;*/
+    justify-content: center;
+    align-items: center;
     border-radius: 15px; /* Adjust the value as needed */
 }
 
@@ -209,6 +216,14 @@ main {
 
     @media only screen and (min-width: 993px) {
 
+        .reader-card {
+            width: 50vw;
+
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+
         .result-container {
             top: 82%;
             bottom: 1%;
@@ -217,7 +232,7 @@ main {
 
         .small-dialog {
             width: 45vw;
-            height: 25vh;
+            height: auto;
             border-radius: 15px; /* Adjust the value as needed */
         }
 

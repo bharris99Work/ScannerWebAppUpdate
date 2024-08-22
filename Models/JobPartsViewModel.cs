@@ -15,5 +15,11 @@
         public int AssignedParts {  get; set; }
         public int AvailableQuantity { get; set; }
         public int SignedOff { get; set; }
+
+        public int Ordered {  get; set; }
+
+        public int CheckedIn { get; set; }
+
+        public bool AllChecked { get; set; }
     }
 }

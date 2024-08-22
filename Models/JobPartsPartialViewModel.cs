@@ -6,6 +6,7 @@
         public List<JobPartsViewModel> AssignedParts = new List<JobPartsViewModel>();
         public List<JobPartsViewModel> AvailableParts = new List<JobPartsViewModel>();
         public List<JobPartsViewModel> AvailableTruckParts = new List<JobPartsViewModel>();
+        public string uploadResult = string.Empty;
 
     }
 }
