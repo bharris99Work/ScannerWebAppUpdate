@@ -97,7 +97,17 @@ namespace ScannerWebAppUpdate.Controllers
         {
             try
             {
+                //Add Tech
+                Tech newTech = new Tech()
+                {
+                    TechId = 1,
+                    TechName = "Demo Tech"
+                };
 
+                await _context.AddTech(newTech);
+
+                //Add Tech Truck
+                await _context.AddTechTruck(1, 1);
 
                 bool success = false;
                 //Create List Of Parts

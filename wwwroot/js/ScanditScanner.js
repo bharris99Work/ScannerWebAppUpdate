@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         await camera.applySettings(cameraSettings);
         await context.setFrameSource(camera);
 
+
         console.log("Setting up barcode capture settings...");
         const settings = new SDCBarcode.BarcodeCaptureSettings();
         settings.enableSymbologies([
@@ -37,14 +38,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             SDCBarcode.Symbology.UPCE,
             SDCBarcode.Symbology.EAN13UPCA
         ]);
-
         settings.locationSelection = new SDCCore.RadiusLocationSelection(
             new SDCCore.NumberWithUnit(5, SDCCore.MeasureUnit.Pixel)
         );
         settings.codeDuplicateFilter = 500;
 
+
         console.log("Creating barcode capture...");
         const barcodeCapture = await SDCBarcode.BarcodeCapture.forContext(context, settings);
+
 
         // Listener to handle barcode scan results
         const listener = {
@@ -85,6 +87,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             );
         });
     }
+
 
     try {
         await initializeScanner();

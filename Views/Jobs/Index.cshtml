@@ -1,86 +1,94 @@
-﻿<div>
-    <div class="row">
-        <div class="col s12">
-            <h3>Job Lookup: </h3>
+﻿
+<body>
+    <div>
+        <div id="sparkScanViewElement"></div>
 
-        </div>
-    </div>
-    <div class="row">
         <div class="row">
-            <div class="col s12 l6">
-                <!--Searches for part by job number-->
-                <label class="text-black text-darken-2" for="jobNumSearch">Job Number: </label>
-                <input placeholder="Enter Job Number" id="jobNumSearch" type="text" name="jobNumber">
+            <div class="col s12">
+                <h3>Job Lookup: </h3>
+
+            </div>
+        </div>
+        <div class="row" style="display:none;">
+            <div class="row">
+                <div class="col s12 l6">
+                    <!--Searches for part by job number-->
+                    <label class="text-black text-darken-2" for="jobNumSearch">Job Number: </label>
+                    <input placeholder="Enter Job Number" id="jobNumSearch" type="text" name="jobNumber">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 l6">
+                    <!--Searches for part by description-->
+                    <label class="text-black text-darken-2" for="startDatePicker">Start Date: </label>
+                    <input placeholder="10/10/10" id="startDatePicker" type="date" name="startDate">
+
+                    <!--Searches for part by description-->
+                    <label class="text-black text-darken-2" for="endDatePicker">End Date: </label>
+                    <input placeholder="10/10/10" id="endDatePicker" type="date" name="endDate">
+                </div>
+            </div>
+            <div class="row valign-wrapper center">
+                <div class="col s12 l6">
+                    <div class="">
+                        <!--Searches for part in DB-->
+                        <button id="submitbn" class="btn blue darken-2" type="submit" name="action">
+                            Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                        <!--Resets form back to original state-->
+                        <a class="btn red darken-2" id="resetForm">
+                            Reset
+                            <i class="material-icons right">restart_alt</i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col s12 l6">
-                <!--Searches for part by description-->
-                <label class="text-black text-darken-2" for="startDatePicker">Start Date: </label>
-                <input placeholder="10/10/10" id="startDatePicker" type="date" name="startDate">
+            <div class="col s12">
+                <div class="table-container">
+                    <table id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Job Number: </th>
+                                <th>Date Created: </th>
+                                <th>Location: </th>
+                                <th>Status: </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--Fills each column with apropriate info from parts-->
+                            @foreach (var job in ViewBag.JobsList)
+                            {
+                                <tr>
 
-                <!--Searches for part by description-->
-                <label class="text-black text-darken-2" for="endDatePicker">End Date: </label>
-                <input placeholder="10/10/10" id="endDatePicker" type="date" name="endDate">
-            </div>
-        </div>
-        <div class="row valign-wrapper center">
-            <div class="col s12 l6">
-                <div class="">
-                    <!--Searches for part in DB-->
-                    <button id="submitbn" class="btn blue darken-2" type="submit" name="action">
-                        Submit
-                        <i class="material-icons right">send</i>
-                    </button>
-                    <!--Resets form back to original state-->
-                    <a class="btn red darken-2" id="resetForm">
-                        Reset
-                        <i class="material-icons right">restart_alt</i>
-                    </a>
+                                    <td>@job.JobNumber</td>
+                                    <td>@job.DateCreated</td>
+                                    <td>@job.Location</td>
+                                    <td>@job.Status</td>
+                                    <td>
+                                        <form asp-action="JobEditor" asp-controller="Jobs" method="post">
+                                            <input type="hidden" name="JobsId" value="@job.JobsId" />
+                                            <input type="hidden" name="JobNumber" value="@job.JobNumber" />
+                                            <input type="hidden" name="DateCreated" value="@job.DateCreated" />
+                                            <input type="hidden" name="Location" value="@job.Location" />
+                                            <input type="hidden" name="Status" value="@job.Status" />
+                                            <button class="waves-effect btn blue darken-2">View</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col s12">
-            <div class="table-container">
-                <table id="datatable">
-                    <thead>
-                        <tr>
-                            <th>Job Number: </th>
-                            <th>Date Created: </th>
-                            <th>Location: </th>
-                            <th>Status: </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!--Fills each column with apropriate info from parts-->
-                        @foreach (var job in ViewBag.JobsList)
-                        {
-                            <tr>
-
-                                <td>@job.JobNumber</td>
-                                <td>@job.DateCreated</td>
-                                <td>@job.Location</td>
-                                <td>@job.Status</td>
-                                <td>
-                                    <form asp-action="JobEditor" asp-controller="Jobs" method="post">
-                                        <input type="hidden" name="JobsId" value="@job.JobsId" />
-                                        <input type="hidden" name="JobNumber" value="@job.JobNumber" />
-                                        <input type="hidden" name="DateCreated" value="@job.DateCreated" />
-                                        <input type="hidden" name="Location" value="@job.Location" />
-                                        <input type="hidden" name="Status" value="@job.Status" />
-                                        <button class="waves-effect btn blue darken-2">View</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
 
 
-        </div>
-    </div>
-</div>
+
+</body>
+
+@* <script src="~/dist/sparkscanning.bundle.js"></script> *@

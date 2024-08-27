@@ -59,7 +59,7 @@
         </div>
 
         <!--TruckParts Dialog-->
-        <div id="truckPartsModal" class="modal  bottom-sheet">
+        <div id="truckPartsModal" class="modal bottom-table-dialog center bottom-sheet">
             <div class="modal-content">
                 <div class="row">
                     <h4>Assigned Tech Parts: </h4>
@@ -79,162 +79,170 @@
                 </div>
 
                 <div class="row">
-                
-                    <!--Table of Truck Parts-->
-                        <table id="truckPartsTable" class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>Part Number: </th>
-                                    <th>Description: </th>
-                                    <th>Purchase Order:</th>
-                                    @* <th>Quantity Used: </th> *@
-                                    <th>Quantity Availible: </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (JobPartsViewModel part in Model.AvailableTruckParts)
-                                {
+                    <div class="col s12">
+                        <div class="table-container">
+                            <!--Table of Truck Parts-->
+                            <table id="truckPartsTable">
+                                <thead>
                                     <tr>
-                                        <td>@part.PartName</td>
-                                        <td>@part.PartDescription</td>
-                                        <td>@part.POName</td>
-                                        @* <td>@part.AssignedParts</td> *@
-                                        <td>@part.AvailableQuantity</td>
-                                        <td>
-                                            <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="add-part-form">
-                                                <input type="hidden" name="JobPartId" value="@part.JobPartId" />
-                                                <input type="hidden" name="PartId" value="@part.PartId" />
-                                                <input type="hidden" name="PartName" value="@part.PartName" />
-                                                <input type="hidden" name="JobId" value="@part.JobId" />
-                                                <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
-                                                <input type="hidden" name="TruckId" value="@part.TruckId" />
-
-                                                <input type="hidden" name="Status" value="@part.Status" />
-                                                <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
-                                                <input type="hidden" name="SignedOff" value="@part.SignedOff" />
-                                                <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
-                                                <input type="hidden" name="FunctionType" value="" />
-
-                                                <button class="waves-effect btn blue darken-2" type="submit">Add</button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
-                                                <input type="hidden" name="PartId" value="@part.PartId" />
-                                                <input type="hidden" name="PartNumber" value="@part.PartName" />
-                                                <button class="waves-effect btn blue darken-2" type="submit">QR Code</button>
-                                            </form>
-                                        </td>
+                                        <th>Part Number: </th>
+                                        <th>Description: </th>
+                                        <th>Purchase Order:</th>
+                                        @* <th>Quantity Used: </th> *@
+                                        <th>Quantity Availible: </th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (JobPartsViewModel part in Model.AvailableTruckParts)
+                                    {
+                                        <tr>
+                                            <td>@part.PartName</td>
+                                            <td>@part.PartDescription</td>
+                                            <td>@part.POName</td>
+                                            @* <td>@part.AssignedParts</td> *@
+                                            <td>@part.AvailableQuantity</td>
+                                            <td>
+                                                <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="add-part-form">
+                                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                                    <input type="hidden" name="PartName" value="@part.PartName" />
+                                                    <input type="hidden" name="JobId" value="@part.JobId" />
+                                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                                    <input type="hidden" name="TruckId" value="@part.TruckId" />
+
+                                                    <input type="hidden" name="Status" value="@part.Status" />
+                                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                                    <input type="hidden" name="SignedOff" value="@part.SignedOff" />
+                                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+                                                    <input type="hidden" name="FunctionType" value="" />
+
+                                                    <button class="waves-effect btn blue darken-2" type="submit">Add</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
+                                                    <input type="hidden" name="PartId" value="@part.PartId" />
+                                                    <input type="hidden" name="PartNumber" value="@part.PartName" />
+                                                    <button class="waves-effect btn blue darken-2" type="submit">QR Code</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
                 </div>
-                </div>
-          
-              </div>
+            </div>
 
-
-
-        <!--Table of Job Parts-->
-        <div class="table-container">
-            <table id="partsTable" class="responsive-table">
-                <thead>
-                    <tr>
-                        <th>Part Number: </th>
-                        <th>Description: </th>
-                        <th>Purchase Order:</th>
-                        @* <th>Signed Off:</th> *@
-                        <th>Quantity Used: </th>
-                        <th>Quantity Availible: </th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (JobPartsViewModel part in Model.AvailableParts)
-                    {
-                        <tr>
-                            <td>@part.PartName</td>
-                            <td>@part.PartDescription</td>
-                            <td>@part.POName</td>
-                            @* <td>@part.SignedOff</td> *@
-                            <td>@part.AssignedParts</td>
-                            <td>@part.AvailableQuantity</td>
-                            <td>
-                                <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="use-part-form">
-                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
-                                    <input type="hidden" name="PartId" value="@part.PartId" />
-                                    <input type="hidden" name="PartName" value="@part.PartName" />
-                                    <input type="hidden" id="POName" name="POName" value="@part.POName" />
-                                    <input type="hidden" name="JobId" value="@part.JobId" />
-                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
-                                    <input type="hidden" name="TruckId" />
-
-                                    <input type="hidden" name="Status" value="@part.Status" />
-                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
-                                    <input type="hidden" name="SignedOff" value="@part.SignedOff" />
-                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
-                                    <input type="hidden" name="FunctionType" value="" />
-
-                                    <button class="waves-effect btn-small blue darken-2" type="submit">Use</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="signoff-part-form">
-                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
-                                    <input type="hidden" name="PartId" value="@part.PartId" />
-                                    <input type="hidden" name="PartName" value="@part.PartName" />
-                                    <input type="hidden" id="POName" name="POName" value="@part.POName" />
-
-                                    <input type="hidden" name="JobId" value="@part.JobId" />
-                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
-                                    <input type="hidden" name="TruckId" />
-
-                                    <input type="hidden" name="Status" value="@part.Status" />
-                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
-                                    <input type="hidden" name="SignedOff" value="@part.SignedOff" />
-                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
-                                    <input type="hidden" name="FunctionType" value="" />
-                                    <button class="waves-effect btn-small blue darken-2" style="display:none;" type="submit">Sign Off</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="notused-part-form">
-                                    <input type="hidden" name="JobPartId" value="@part.JobPartId" />
-                                    <input type="hidden" name="PartId" value="@part.PartId" />
-                                    <input type="hidden" name="PartName" value="@part.PartName" />
-                                    <input type="hidden" id="POName" name="POName" value="@part.POName" />
-
-                                    <input type="hidden" name="JobId" value="@part.JobId" />
-                                    <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
-                                    <input type="hidden" name="TruckId" />
-
-                                    <input type="hidden" name="Status" value="@part.Status" />
-                                    <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
-                                    <input type="hidden" name="SignedOff" value="@part.SignedOff" />
-                                    <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
-                                    <input type="hidden" name="FunctionType" value="" />
-
-                                    <input type="hidden" name="ReturnNumber" value="" />
-                                    <input type="hidden" name="ReturnReason" value="" />
-
-
-                                    <button class="waves-effect btn-small blue darken-2" type="submit">Return</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
-                                    <input type="hidden" name="PartId" value="@part.PartId" />
-                                    <input type="hidden" name="PartNumber" value="@part.PartName" />
-                                    <button class="waves-effect btn-small blue darken-2" type="submit">QR Code</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
         </div>
+
+
+        <div class="row">
+            <div class="col s12">
+                <!--Table of Job Parts-->
+                <div class="table-container">
+                    <table id="partsTable">
+                        <thead>
+                            <tr>
+                                <th>Part Number: </th>
+                                <th>Description: </th>
+                                <th>Purchase Order:</th>
+                                @* <th>Signed Off:</th> *@
+                                <th>Quantity Used: </th>
+                                <th>Quantity Availible: </th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (JobPartsViewModel part in Model.AvailableParts)
+                            {
+                                <tr>
+                                    <td>@part.PartName</td>
+                                    <td>@part.PartDescription</td>
+                                    <td>@part.POName</td>
+                                    @* <td>@part.SignedOff</td> *@
+                                    <td>@part.AssignedParts</td>
+                                    <td>@part.AvailableQuantity</td>
+                                    <td>
+                                        <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="use-part-form">
+                                            <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                            <input type="hidden" name="PartId" value="@part.PartId" />
+                                            <input type="hidden" name="PartName" value="@part.PartName" />
+                                            <input type="hidden" id="POName" name="POName" value="@part.POName" />
+                                            <input type="hidden" name="JobId" value="@part.JobId" />
+                                            <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                            <input type="hidden" name="TruckId" />
+
+                                            <input type="hidden" name="Status" value="@part.Status" />
+                                            <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                            <input type="hidden" name="SignedOff" value="@part.SignedOff" />
+                                            <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+                                            <input type="hidden" name="FunctionType" value="" />
+
+                                            <button class="waves-effect btn-small blue darken-2" type="submit">Use</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="signoff-part-form">
+                                            <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                            <input type="hidden" name="PartId" value="@part.PartId" />
+                                            <input type="hidden" name="PartName" value="@part.PartName" />
+                                            <input type="hidden" id="POName" name="POName" value="@part.POName" />
+
+                                            <input type="hidden" name="JobId" value="@part.JobId" />
+                                            <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                            <input type="hidden" name="TruckId" />
+
+                                            <input type="hidden" name="Status" value="@part.Status" />
+                                            <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                            <input type="hidden" name="SignedOff" value="@part.SignedOff" />
+                                            <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+                                            <input type="hidden" name="FunctionType" value="" />
+                                            <button class="waves-effect btn-small blue darken-2" style="display:none;" type="submit">Sign Off</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="notused-part-form">
+                                            <input type="hidden" name="JobPartId" value="@part.JobPartId" />
+                                            <input type="hidden" name="PartId" value="@part.PartId" />
+                                            <input type="hidden" name="PartName" value="@part.PartName" />
+                                            <input type="hidden" id="POName" name="POName" value="@part.POName" />
+
+                                            <input type="hidden" name="JobId" value="@part.JobId" />
+                                            <input type="hidden" name="PurchaseOrderId" value="@part.PurchaseOrderId" />
+                                            <input type="hidden" name="TruckId" />
+
+                                            <input type="hidden" name="Status" value="@part.Status" />
+                                            <input type="hidden" name="AssignedParts" value="@part.AssignedParts" />
+                                            <input type="hidden" name="SignedOff" value="@part.SignedOff" />
+                                            <input type="hidden" name="AvailableQuantity" value="@part.AvailableQuantity" />
+                                            <input type="hidden" name="FunctionType" value="" />
+
+                                            <input type="hidden" name="ReturnNumber" value="" />
+                                            <input type="hidden" name="ReturnReason" value="" />
+
+
+                                            <button class="waves-effect btn-small blue darken-2" type="submit">Return</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form asp-action="Create" asp-controller="CodeCreator" method="post" target="_blank">
+                                            <input type="hidden" name="PartId" value="@part.PartId" />
+                                            <input type="hidden" name="PartNumber" value="@part.PartName" />
+                                            <button class="waves-effect btn-small blue darken-2" type="submit">QR Code</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
 
   
 

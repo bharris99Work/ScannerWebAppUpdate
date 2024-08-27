@@ -52,7 +52,7 @@ namespace ScannerWebAppUpdate.Models
                 var parts = await (from joparts in JobParts
                                    join part in Parts on joparts.PartId equals part.PartId
                                    join po in PurchaseOrders on joparts.PurchaseOrderId equals po.PurchaseOrderId
-                                   where joparts.JobId == jobId
+                                   where joparts.JobId == jobId && joparts.Ordered != 0
                                    select new JobPartsViewModel()
                                    {
                                        JobPartId = joparts.JobPartId,
@@ -91,7 +91,7 @@ namespace ScannerWebAppUpdate.Models
                 var parts = await (from joparts in JobParts
                                    join part in Parts on joparts.PartId equals part.PartId
                                    join po in PurchaseOrders on joparts.PurchaseOrderId equals po.PurchaseOrderId
-                                   where joparts.JobId == jobId && joparts.CheckedIn != 0
+                                   where joparts.JobId == jobId && joparts.AllChecked == true
                                    select new JobPartsViewModel()
                                    {
                                        JobPartId = joparts.JobPartId,
@@ -499,7 +499,7 @@ namespace ScannerWebAppUpdate.Models
                     {
                         existingJobPart.AvailableQuantity += selectedPart.AssignedParts;
 
-
+                        existingJobPart.AllChecked = true;
 
                         foundTruckPart.QuantityAvalible -= selectedPart.AssignedParts;
                         foundTruckPart.QuantityAllocated += selectedPart.AssignedParts;
@@ -518,7 +518,8 @@ namespace ScannerWebAppUpdate.Models
                             AssignedQuantity = 0,
                             AvailableQuantity = selectedPart.AssignedParts,
                             Status = "Added From Truck",
-                            JobId = selectedPart.JobId
+                            JobId = selectedPart.JobId,
+                            AllChecked = true
                         };
 
                         foundTruckPart.QuantityAvalible -= selectedPart.AssignedParts;
@@ -591,7 +592,6 @@ namespace ScannerWebAppUpdate.Models
             {
                 return false;
             }
-
         }
 
 
@@ -824,6 +824,34 @@ namespace ScannerWebAppUpdate.Models
                                    AvailableQuantity = truckpart.QuantityAvalible
                                }).ToListAsync();
             return parts;
+        }
+
+        public async Task<bool> AddTechTruck(int TechId, int TruckId)
+        {
+            try
+            {
+                TechTruck techTruck = new TechTruck()
+                {
+                    TechId = TechId,
+                    TruckId = TruckId
+                };
+
+                TechTrucks.Add(techTruck);
+
+
+                await SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+
+            }
+
+
+
         }
 
 

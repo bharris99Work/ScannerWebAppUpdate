@@ -19,11 +19,7 @@ namespace ScannerWebAppUpdate.Controllers
             _context.Database.EnsureCreated();
             _context.ReturnOptions.Load();
 
-
             _context.Jobs.Load();
-            //_context.Parts.Load();
-            //_context.AssignedParts.Load();
-
 
             ReturnOptionsList = _context.ReturnOptions.Local.ToObservableCollection();
             JobsList = _context.Jobs.Local.ToObservableCollection();
@@ -41,14 +37,6 @@ namespace ScannerWebAppUpdate.Controllers
         public async Task<IActionResult> JobEditor(Jobs selectedJob)
         {
      
-           // List<JobPartsViewModel> jobParts = await _context.JobPartsFind(selectedJob.JobsId);
-
-           // List<JobPartsViewModel> assignedParts = jobParts.FindAll(jp => jp.AssignedParts > 0);
-
-
-          
-           // ViewBag.JobParts = jobParts;
-           // ViewBag.AssignedParts = assignedParts;
             ViewBag.JobId = selectedJob.JobsId;
             ViewBag.JobName = selectedJob.JobNumber;
             ViewBag.ReturnOptions = ReturnOptionsList;
@@ -60,11 +48,10 @@ namespace ScannerWebAppUpdate.Controllers
 
         public async Task<IActionResult> JobParts(int jobId)
         {
-        
-
             JobPartsPartialViewModel jppv = await _context.GetJobPartPartialVM(jobId);
             return PartialView("_JobParts", jppv);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> AddPart(JobPartsViewModel jobPart)
@@ -96,7 +83,6 @@ namespace ScannerWebAppUpdate.Controllers
             try
             {
 
-                // List<JobPartsViewModel> nonCheckedInParts = await _context.GetNonCheckedInParts(jobId);
                 CheckInPartsViewModel checkinparts = await _context.GetCheckInVM(jobId);
 
                 ViewBag.JobId = jobId;
@@ -122,7 +108,6 @@ namespace ScannerWebAppUpdate.Controllers
              bool success = await _context.CheckInPart(checkedpart.JobPartId, toCheckIn);
 
             //Return Partial view
-            //List<JobPartsViewModel> jplist = await _context.GetNonCheckedInParts(checkedpart.JobId);
             CheckInPartsViewModel checkinparts = await _context.GetCheckInVM(checkedpart.JobId);
 
 
@@ -140,8 +125,6 @@ namespace ScannerWebAppUpdate.Controllers
             try
             {
                 CheckInPartsViewModel checkinparts = await _context.GetCheckInVM(jobId);
-
-               // List<JobPartsViewModel> jplist = await _context.GetCheckedInParts(jobId);
 
                 return PartialView("_CheckInPartsList", checkinparts);
             }

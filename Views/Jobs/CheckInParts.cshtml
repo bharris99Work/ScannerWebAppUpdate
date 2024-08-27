@@ -1,19 +1,19 @@
 ﻿@model CheckInPartsViewModel
 <head>
-<style>
-    /* Style the bottom menu */
-    .bottom-menu {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #ffffff; /* White background */
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3); /* Shadow for the top edge */
-        display: flex;
-        justify-content: space-around;
-        padding: 10px 0;
-        z-index: 800; /* Ensures the menu is above other content */
-    }
+    <style>
+        /* Style the bottom menu */
+        .bottom-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff; /* White background */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3); /* Shadow for the top edge */
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 800; /* Ensures the menu is above other content */
+        }
 
         .modal-container {
             position: relative;
@@ -106,7 +106,10 @@
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 </head>
 
+<body id="checkinBody">
+    <div>
 
+ 
 <!--Asks user for number of items to check in-->
 <div id="CountDialog" class="modal small-dialog">
     <!--Part Number Header-->
@@ -124,12 +127,12 @@
             <input id="checkingin" type="text" />
             <input id="availableqty" type="text" disabled />
 
-            <button class="waves-effect btn-small light-blue darken-4" id="addCheckIn"> 
+            <button class="waves-effect btn-small light-blue darken-4" id="addCheckIn">
                 <i class="material-icons indigo-text text-darken-4">add</i>
-                </button>
+            </button>
             <button class="waves-effect btn-small light-blue darken-4" id="subCheckIn">
                 <i class="material-icons indigo-text text-darken-4">remove</i>
-                </button>
+            </button>
         </div>
     </div>
 
@@ -163,7 +166,7 @@
 
 
 <!-- Scaan Modal: Features Camera View-->
-<div id="ScanDialog" class="modal">
+@* <div id="ScanDialog" class="modal">
     <div class="modal-container">
 
         <!--QR Code Reader-->
@@ -176,13 +179,13 @@
             <button class=" waves-effect scan-button btn-small light-blue darken-4" id="startScanning">Start Scanning</button>
         </div>
     </div>
-</div>
+</div> *@
 
 
 
 
 
-<div>
+<div class="page-container">
     <!--Title Box-->
     <div class="row">
         <div class="col s12">
@@ -191,11 +194,12 @@
 
                 <!--TODO: ALSO RETURN JOB NUMBER-->
                 <input type="hidden" name="JobName" />
-                
+
                 <button class=" waves-effect scan-button btn-small blue darken-2"><i class="material-icons indigo-text text-darken-4">arrow_back</i></button>
             </form>
         </div>
     </div>
+
 
     <!--Main Content-->
     <div class="row">
@@ -207,6 +211,7 @@
                 @await Html.PartialAsync("_CheckInPartsList", Model)
             </div>
         </div>
+
 
         <!--Camera View-->
         <div style="display: none;" id="camera-view">
@@ -221,7 +226,6 @@
 
         <!--Reader View-->
         <div style="display: none;" id="reader-view">
-       
         </div>
 
 
@@ -232,41 +236,38 @@
         </div>
     </div>
 
-<!--Button Menu (Footer?)-->
-<div class="bottom-menu">
-    <div class="row">
-            <div class="col s4" style="display:none;">
-            <button id="openList"class="waves-effect btn-small blue darken-2">List</button>
-        </div>
-        <div class="col s4">
-                <button id="cameraScan" class="waves-effect btn-small blue darken-2"><i class="material-icons">photo_camera</i></button>
-        </div>
-        <div class="col s4">
+    <!--Button Menu (Footer?)-->
+    <div class="bottom-menu">
+        <div class="row">
+            <div class="col s12">
                 <button id="readerScan" class="waves-effect btn-small blue darken-2"><i class="material-icons">barcode_reader</i></button>
+                        
+                <button style="display:none;" id="cameraScan" class="waves-effect btn-small blue darken-2"><i class="material-icons">photo_camera</i></button>
 
-            <!--Options avalible if reader is selected-->
-            <div id="readerOptions" style="display: none;" class="center-align valign-wrapper">
+                <!--Options avalible if reader is selected-->
+                <div id="readerOptions" style="display: none;" class="center-align valign-wrapper">
 
-                <button class="btn waves-effect red accent-4 valign" id="cancelReader">Cancel</button>
-                <h7 class="valign">Waiting For Barcode Reader Input....</h7>
-                <div class="preloader-wrapper small active valign-wrapper">
-                    <div class="spinner-layer spinner-green-only valign">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div><div class="gap-patch">
-                            <div class="circle"></div>
-                        </div><div class="circle-clipper right">
-                            <div class="circle"></div>
+                    <button class="btn waves-effect red accent-4 valign" id="cancelReader">Cancel</button>
+                    <h7 class="valign">Waiting For Barcode Reader Input....</h7>
+                    <div class="preloader-wrapper small active valign-wrapper">
+                        <div class="spinner-layer spinner-green-only valign">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
-
-
         </div>
     </div>
-</div>
-
+        </div>
+</body>
 
 
 
@@ -363,7 +364,8 @@
         </script>
 
         <script src="~/js/CheckIn.js"></script>
-        <script src="~/dist/scanditscanningnodialog.bundle.js"></script>
+        <script src="~/dist/sparkscanning.bundle.js"></script>
+        @* <script src="~/dist/scanditscanningnodialog.bundle.js"></script> *@
 
 
     }

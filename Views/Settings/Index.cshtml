@@ -6,77 +6,78 @@
     </div>
 
     <!--Add return options-->
-        <button data-target="AddReturn" class="btn modal-trigger waves-effect blue darken-2">Add Return Option: </button>
-        <div id="AddReturn" class="modal">
-            <div>
-                <form asp-action="UploadReturn" asp-controller="Settings" method="post">
-                    <div class="row">
-                        <label>Enter Return Option: </label>
-                        <textarea name="returnDescription"></textarea>
-                    </div>
-                    <div class="row">
-                        <!--Submits changes to database-->
-                        <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
-                </form>
-                <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+    <button data-target="AddReturn" class="btn modal-trigger waves-effect blue darken-2">Add Return Option: </button>
+    <div id="AddReturn" class="modal">
+        <div>
+            <form asp-action="UploadReturn" asp-controller="Settings" method="post">
+                <div class="row">
+                    <label>Enter Return Option: </label>
+                    <textarea name="returnDescription"></textarea>
+                </div>
+                <div class="row">
+                    <!--Submits changes to database-->
+                    <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+                </div>
+            </form>
+            <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
 
+        </div>
+    </div>
+</div>
+
+
+<!--Add Test Part: REMOVE DURING PRODUCTION-->
+<button data-target="AddPart" class="btn modal-trigger waves-effect blue darken-2">Add Test Part: </button>
+<div id="AddPart" class="modal">
+    <div>
+        <form asp-action="uploadPart" asp-controller="Settings" method="post">
+            <!--Part number-->
+            <div class="row">
+                <label for="itemnumber">Part Number: </label>
+                <input id="itemnumber" type="text" name="ItemNumber">
             </div>
-        </div>
+            <!--Job Number-->
+            <div class="row">
+                <label for="description">Description: </label>
+                <input id="description" type="text" name="Description">
+            </div>
+            <!--Quantity-->
+            <div class="row">
+                <label for="quantity">Quantity: </label>
+                <input id="quantity" type="number" name="Quantity">
+            </div>
+
+
+            <!--Submits changes to database-->
+            <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+        </form>
+        <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
+
     </div>
+</div>
 
+<!--Add Test Job: REMOVE DURING PRODUCTION-->
+<button data-target="AddJob" class="btn modal-trigger waves-effect blue darken-2">Add Test Job: </button>
+<div id="AddJob" class="modal">
+    <div>
+        <form asp-action="UploadJob" asp-controller="Settings" method="post">
+            <!--Job Number-->
+            <div class="row">
+                <label for="jobnumber">Job Number: </label>
+                <input id="jobnumber" type="text" name="jobNumber">
+            </div>
+            <!--Job Number-->
+            <div class="row">
+                <label for="location">Location: </label>
+                <input id="location" type="text" name="location">
+            </div>
+            <!--Submits changes to database-->
+            <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
+        </form>
+        <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
 
-    <!--Add Test Part: REMOVE DURING PRODUCTION-->
-    <button data-target="AddPart" class="btn modal-trigger waves-effect blue darken-2">Add Test Part: </button>
-    <div id="AddPart" class="modal">
-        <div>
-            <form asp-action="uploadPart" asp-controller="Settings" method="post">
-                <!--Part number-->
-                <div class="row">
-                    <label for="itemnumber">Part Number: </label>
-                    <input id="itemnumber" type="text" name="ItemNumber">
-                </div>
-                <!--Job Number-->
-                <div class="row">
-                    <label for="description">Description: </label>
-                    <input id="description" type="text" name="Description">
-                </div>
-                <!--Quantity-->
-                <div class="row">
-                    <label for="quantity">Quantity: </label>
-                    <input id="quantity" type="number" name="Quantity">
-                </div>
-
-
-                <!--Submits changes to database-->
-                <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
-            </form>
-            <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-
-        </div>
     </div>
-
-    <!--Add Test Job: REMOVE DURING PRODUCTION-->
-    <button data-target="AddJob" class="btn modal-trigger waves-effect blue darken-2">Add Test Job: </button>
-    <div id="AddJob" class="modal">
-        <div>
-            <form asp-action="UploadJob" asp-controller="Settings" method="post">
-                <!--Job Number-->
-                <div class="row">
-                    <label for="jobnumber">Job Number: </label>
-                    <input id="jobnumber" type="text" name="jobNumber">
-                </div>
-                <!--Job Number-->
-                <div class="row">
-                    <label for="location">Location: </label>
-                    <input id="location" type="text" name="location">
-                </div>
-                <!--Submits changes to database-->
-                <button class="waves-effect btn blue darken-2" type="submit" id="submit">Submit</button>
-            </form>
-            <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-
-        </div>
-    </div>
+</div>
 
 <a class="btn" asp-action="SeedTestData" asp-controller="Settings">Seed Test Data</a>
 </div>
@@ -118,8 +119,6 @@
 
 
         <a class="btn waves-effect blue darken-2" asp-action="UploadDemo" asp-controller="Settings"> Upload Demo Items</a>
-
-
     </div>
 </div>
 <div class="row">

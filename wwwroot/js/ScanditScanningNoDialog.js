@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     var resulttext = document.getElementById('resultText');
 
-
+    //Error Response Dialog
     var responseDialog = document.getElementById('responseDialog');
     var responseDialogInit = M.Modal.init(responseDialog);
     var responseDialogInst = M.Modal.getInstance(responseDialog);
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
     //Initialize Scanner
-
     camerascan.disabled = true;
     console.log("Configuring Scandit SDK...");
     await SDCCore.configure({

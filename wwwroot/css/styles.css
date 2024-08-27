@@ -26,6 +26,21 @@
     height: 100%;
 }
 
+.bottom-table-dialog {
+    border-top-right-radius: 30px !important; /* Adjust the value as needed */
+    border-top-left-radius: 30px !important; /* Adjust the value as needed */
+
+    width: 95vw !important;
+    position: fixed;
+    left: 50%; /* Center horizontally */
+    bottom: 0; /* Align to the bottom */
+    transform: translateX(-50%); /* Offset by half the width to fully center it */
+    max-width: 95%; /* Ensure it doesn’t stretch too wide */
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
 
 .result-Dialog {
     width: 90vw;
@@ -183,7 +198,6 @@ main {
     }
 
 
-
 .result-container {
     display: none;  /*Hide initially */
     position: fixed;
@@ -214,21 +228,42 @@ main {
 
 
 
-    @media only screen and (min-width: 993px) {
+@media only screen and (min-width: 993px) {
 
-        .reader-card {
-            width: 50vw;
+    .reader-card {
+        width: 50vw;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px; /* Adjust the value as needed */
+    }
 
-            justify-content: center;
-            align-items: center;
-            border-radius: 15px; /* Adjust the value as needed */
-        }
+    .bottom-table-dialog {
+        border-top-right-radius: 30px !important; /* Adjust the value as needed */
+        border-top-left-radius: 30px !important; /* Adjust the value as needed */
+        width: 80vw !important;
+        position: fixed;
+        left: 50%; /* Center horizontally */
+        bottom: 0; /* Align to the bottom */
+        transform: translateX(-50%); /* Offset by half the width to fully center it */
+        max-width: 90%; /* Ensure it doesn’t stretch too wide */
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
 
-        .result-container {
-            top: 82%;
-            bottom: 1%;
-            width: 35%;
-        }
+
+    spark-scan-view-mini-preview[visible] {
+        display: block;
+        z-index: 20 !important;
+        margin-left: 300px !important;
+        
+    }
+
+    .result-container {
+        top: 82%;
+        bottom: 1%;
+        width: 35%;
+    }
 
         .small-dialog {
             width: 45vw;

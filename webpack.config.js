@@ -10,7 +10,8 @@ module.exports = {
         scanditscanning: './wwwroot/js/ScanditScanning.js',
         scanditscanner: './wwwroot/js/ScanditScanner.js',
         uploadScanPart: '/wwwroot/js/uploadScannedPart.js',
-        scanditscanningnodialog: './wwwroot/js/ScanditScanningNoDialog.js'
+        scanditscanningnodialog: './wwwroot/js/ScanditScanningNoDialog.js',
+        sparkscanning: './wwwroot/js/SparkScanning.js'
     },
     output: {
         filename: '[name].bundle.js',
