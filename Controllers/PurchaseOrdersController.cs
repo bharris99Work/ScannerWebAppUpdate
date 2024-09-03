@@ -7,19 +7,25 @@ namespace ScannerWebAppUpdate.Controllers
 {
     public class PurchaseOrdersController : Controller
     {
+
         private readonly ScannerContext _context = new ScannerContext();
         private ObservableCollection<Jobs> JobsList;
         private ObservableCollection<Truck> TrucksList;
+        private ObservableCollection<Part> PartsList;
+
 
         public PurchaseOrdersController()
         {
             _context.Database.EnsureCreated();
             _context.Jobs.Load();
             _context.Trucks.Load();
+            _context.Parts.Load();
 
             JobsList = _context.Jobs.Local.ToObservableCollection();
             TrucksList = _context.Trucks.Local.ToObservableCollection();
+            PartsList = _context.Parts.Local.ToObservableCollection();
         }
+
 
         public async Task<IActionResult> Index()
         {
@@ -28,8 +34,10 @@ namespace ScannerWebAppUpdate.Controllers
             return View();
         }
 
+  
         public IActionResult CreatePO()
         {
+            
             List<string> poOptions = new List<string>()
             {
                 "JobOrder",
@@ -37,11 +45,15 @@ namespace ScannerWebAppUpdate.Controllers
                 "PickList"
             };
 
+
             ViewBag.jobs = JobsList;
             ViewBag.trucks = TrucksList;
             ViewBag.potypes = poOptions;
+            ViewBag.allparts = PartsList;
             return View();
         }
+
+
 
         public async Task<IActionResult> EditPO(PurchaseOrderViewModel poVM)
         {
@@ -57,91 +69,45 @@ namespace ScannerWebAppUpdate.Controllers
             ViewBag.POParts = await _context.GetPoParts(poVM.PurchaseOrderID);
 
             return View();
-
-
         }
 
-      
 
-        public async Task<IActionResult> UploadPo(string poNumber, int partsSelected, string selectedJob, string selectedTruck) 
+
+
+        public async Task<IActionResult> UploadPurchaseOrder([FromBody] PurchaseOrderUpload purchaseOrderViewModel)
         {
             bool success = false;
-            int POId = 0;
 
             //Stock Order
-            if (selectedJob == null && selectedTruck != string.Empty) {
+            if (purchaseOrderViewModel.SelectedJob == "None" && purchaseOrderViewModel.SelectedTruck != "None")
+            {
+                success = await _context.UploadStockOrder(purchaseOrderViewModel.parts, purchaseOrderViewModel.POName, purchaseOrderViewModel.SelectedTruck);
 
-                //Create Stock Order:
-
-                //Save PO
-                PurchaseOrder newPo = new PurchaseOrder()
-                {
-                    Name = poNumber,
-                    TruckId = int.Parse(selectedTruck.Trim()),
-                    Type = "Stock Order"
-                };
-
-                success = await _context.AddPurchaseOrder(newPo);
-
-                if (success) {
-
-                   POId = await _context.CreatePOParts(partsSelected, poNumber);
-                }
-                if (success) {
-
-                    success = await _context.AddTruckParts(POId, int.Parse(selectedTruck.Trim()));
-                
-                }
-
-
-                //Add List of parts to truckparts
-            
             }
-
             //Job Order
-           else if (selectedJob != string.Empty && selectedTruck == null)
+            else if (purchaseOrderViewModel.SelectedJob != "None" && purchaseOrderViewModel.SelectedTruck == "None")
             {
-                //Save PO
-                PurchaseOrder newPo = new PurchaseOrder()
-                {
-                    Name = poNumber,
-                    JobId = int.Parse(selectedJob.Trim()),
-                    Type = "Job Order"
-                };
-
-                success = await _context.AddPurchaseOrder(newPo);
-
-                //CreatePOParts
-                //Return PO Id
-                if (success)
-                {
-                    POId = await _context.CreatePOParts(partsSelected, poNumber);
-                }
-
-                //CreateJobOrder
-                if (POId != 0)
-                {
-                    success = await _context.CreateJobOrder(int.Parse(selectedJob.Trim()), POId);
-                }
-
-                //success = context.createjobparts(id, jobid)
-
+                success = await _context.UploadJobOrder(purchaseOrderViewModel.parts, purchaseOrderViewModel.POName, purchaseOrderViewModel.SelectedJob);
 
             }
-
             //Pick List
-            else if (selectedJob != string.Empty && selectedTruck != string.Empty)
+            else if (purchaseOrderViewModel.SelectedJob != "None" && purchaseOrderViewModel.SelectedTruck != "None")
             {
-
+                success = await _context.UploadPickList(purchaseOrderViewModel.parts, purchaseOrderViewModel.POName, purchaseOrderViewModel.SelectedTruck);
 
             }
 
-            PurchaseOrder newPO = new PurchaseOrder()
-            {
-                Name = poNumber,
-            };
+            if (success) {
+                return RedirectToAction("Index");
+
+            }
+
 
             return RedirectToAction("Index");
         }
+
+
+
+      
     }
 }

@@ -166,6 +166,8 @@
                                     @* <td>@part.SignedOff</td> *@
                                     <td>@part.AssignedParts</td>
                                     <td>@part.AvailableQuantity</td>
+
+
                                     <td>
                                         <form asp-action="UpdatePart" asp-controller="Jobs" method="post" class="use-part-form">
                                             <input type="hidden" name="JobPartId" value="@part.JobPartId" />
@@ -235,16 +237,14 @@
                                             <button class="waves-effect btn-small blue darken-2" type="submit">QR Code</button>
                                         </form>
                                     </td>
-                                </tr>
+                    
+                    </tr>
                             }
-                        </tbody>
-                    </table>
-                </div>
+                </tbody>
+                </table>
             </div>
         </div>
-        
-
-  
+    </div>
 
 
 
@@ -253,7 +253,10 @@
 
 
 
-        <!--Table of Assigned Parts-->
+
+
+
+    <!--Table of Assigned Parts-->
         <div class="table-container">
             <table style="display:none;">
                 <thead>

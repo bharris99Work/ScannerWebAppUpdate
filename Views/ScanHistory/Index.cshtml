@@ -1,124 +1,48 @@
-﻿<head>
-    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.24/dataRender/ellipsis.js"></script>
-
-    <style>
-        .table-container {
-            display: block;
-            overflow-x: auto;
-            width: 100%;
-        }
-
-        .dataTable {
-            width: 100%;
-        }
-
-    </style>
-</head>
-
-<div>
-    <h3 class="title-header">Scan History: </h3>
-
-    <form>
-        <div class="row">
-
-            <div class="row">
-                <div class="col s6">
-                    <!--Searches for part by item number-->
-                    <label class="text-black text-darken-2" for="itemNumSearch">Item Number: </label>
-                    <input placeholder="Enter Item Number" id="itemNumSearch" type="text" name="itemNumber">
-                </div>
-                <div class="col s6">
-                    <!--Searches for part by job number-->
-                    <label class="text-black text-darken-2" for="jobNumSearch">Job Number: </label>
-                    <input placeholder="Enter Job Number" id="jobNumSearch" type="text" name="jobNumber">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                    <!--Searches for part by description-->
-                    <label class="text-black text-darken-2" for="startDatePicker">Start Date: </label>
-                    <input placeholder="10/10/10" id="startDatePicker" type="date" name="startDate">
-
-                    <!--Searches for part by description-->
-                    <label class="text-black text-darken-2" for="endDatePicker">End Date: </label>
-                    <input placeholder="10/10/10" id="endDatePicker" type="date" name="endDate">
-                </div>
-            </div>
-            <div class="row valign-wrapper center">
-                <div class="col s12">
-                    <div class="btn-container">
-                        <!--Searches for part in DB-->
-                        <button id="submitbn" class="btn blue darken-2" type="submit" name="action">
-                            Submit
-                            <i class="material-icons right">send</i>
-                        </button>
-                        <!--Resets form back to original state-->
-                        <a class="btn red darken-2" id="resetForm">
-                            Reset
-                            <i class="material-icons right">restart_alt</i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-       
-    </form>
-
+﻿<div>
+    
+    <!--Header-->
     <div class="row">
         <div class="col s12">
-            <button id="printButton"  class="btn blue darken-2"><i class="material-icons">print</i></button>
-            <button  class="btn blue darken-2"><i class="material-icons">download</i></button>
+            <h4>Job History:</h4>
         </div>
     </div>
 
+    <div class="divider"></div>
+    <div class="section"></div>
+
+    <!--Table-->
     <div class="row">
         <div class="col s12">
-
             <div class="table-container">
-                <table id="datatable" class="dataTable striped responsive">
+
+                <table id="jobHistoryTable">
                     <thead>
                         <tr>
-                            <th>Item Number: </th>
-                            <th>Job Number: </th>
-                            <th>Changed Information: </th>
-                            <th>Date Modified: </th>
+                            <th>Part Number: </th>
+                            <th>Tech: </th>
+                            <th>Job Number:</th>
+                            <th>Action: </th>
+                            <th>Quantity: </th>
+                            <th>Timestamp</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!--Fills each column with apropriate info from parts-->
-                        @foreach (var phvm in ViewBag.PartHistoryList)
+                        @foreach (JobHistoryViewModel part in ViewBag.PartHistoryList)
                         {
                             <tr>
-                                <td>@phvm.Part.ItemNumber</td>
-                                <td>@phvm.Part.JobNumber</td>
-                                <td>@phvm.PartHistory.ChangedValues</td>
-                                <td>@phvm.PartHistory.DateChanged</td>
+                                <td>@part.PartNumber</td>
+                                <td>@part.TechName</td>
+                                <td>@part.JobNumber</td>
+                                <td>@part.Action</td>
+                                <td>@part.Quantity</td>
+                                <td>@part.Timestamp</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-
         </div>
-
     </div>
-
-
+   
 
 </div>
-
-<script>
-
-    function toggleExpand(element) {
-        if (element.classList.contains('truncate')) {
-            element.classList.remove('truncate');
-            element.classList.add('expanded');
-        } else {
-            element.classList.remove('expanded');
-            element.classList.add('truncate');
-        }
-    }
-</script>
-
-<script src="~/dist/scanHistoryTable.bundle.js"></script>

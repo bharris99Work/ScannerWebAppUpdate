@@ -20,7 +20,6 @@
                 </div>
             </form>
             <button class="waves-effect btn blue darken-2 modal-close">Cancel</button>
-
         </div>
     </div>
 </div>
@@ -79,28 +78,13 @@
     </div>
 </div>
 
-<a class="btn" asp-action="SeedTestData" asp-controller="Settings">Seed Test Data</a>
+@* <a class="btn" asp-action="SeedTestData" asp-controller="Settings" >Seed Test Data</a> *@
 </div>
 </div>
 
 
-<!--Select DB (Test, Live)-->
-<div class="row">
-    <div class="s12">
-        <label>Server Used: </label>
-        <select>
-            <option>Test Site</option>
-            <option>Live Site</option>
-        </select>
-    </div>
-</div>
 
 
-
-<!--Save location of Excel sheet used for saving part history-->
-<div class="row">
-    <label>Save excel sheet location:</label>
-</div>
 
 <!--Test Buttons for initial seeding of Database. (REMOVE DURING PRODUCTION)-->
 <div class="row">
@@ -110,18 +94,18 @@
 </div>
 <div class="row">
     <div class="col s12">
-        <a class="btn waves-effect blue darken-2" asp-action="uploadTestTechs" asp-controller="Settings">Upload Test Techs</a>
+        @* <a class="btn waves-effect blue darken-2" asp-action="uploadTestTechs" asp-controller="Settings">Upload Test Techs</a> *@
         <a class="btn waves-effect blue darken-2" asp-action="uploadTestReturns" asp-controller="Settings">Upload Test Returns</a>
-        <a class="btn waves-effect blue darken-2" asp-action="uploadTestParts" asp-controller="Settings"> Upload Test Parts</a>
+        @* <a class="btn waves-effect blue darken-2" asp-action="uploadTestParts" asp-controller="Settings"> Upload Test Parts</a> *@
 
-        <a class="btn waves-effect blue darken-2" asp-action="UploadTestTruck" asp-controller="Settings"> Upload Test Truck:</a>
-        <a class="btn waves-effect blue darken-2" asp-action="uploadTestTruckParts" asp-controller="Settings"> Upload Test TruckParts</a>
+        @* <a class="btn waves-effect blue darken-2" asp-action="UploadTestTruck" asp-controller="Settings"> Upload Test Truck:</a> *@
+        @* <a class="btn waves-effect blue darken-2" asp-action="uploadTestTruckParts" asp-controller="Settings"> Upload Test TruckParts</a> *@
 
 
         <a class="btn waves-effect blue darken-2" asp-action="UploadDemo" asp-controller="Settings"> Upload Demo Items</a>
     </div>
 </div>
-<div class="row">
+<div class="row" >
     <label>Add Test Parts from Excel: </label>
     <form asp-action="UploadPartsFromExcel" asp-controller="Settings" method="post" enctype="multipart/form-data">
         <div class="file-field input-field">

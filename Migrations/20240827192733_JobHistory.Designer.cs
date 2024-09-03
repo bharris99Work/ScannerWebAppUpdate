@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScannerWebAppUpdate.Models;
 
@@ -10,9 +11,11 @@ using ScannerWebAppUpdate.Models;
 namespace ScannerWebAppUpdate.Migrations
 {
     [DbContext(typeof(ScannerContext))]
-    partial class ScannerContextModelSnapshot : ModelSnapshot
+    [Migration("20240827192733_JobHistory")]
+    partial class JobHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
@@ -41,7 +44,7 @@ namespace ScannerWebAppUpdate.Migrations
 
                     b.HasKey("JobHistoryId");
 
-                    b.ToTable("JobHistory");
+                    b.ToTable("jobHistories");
                 });
 
             modelBuilder.Entity("ScannerWebAppUpdate.Models.JobPart", b =>

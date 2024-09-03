@@ -23,28 +23,32 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="~/js/materialize.min.js"></script>
     <style>
-        .navbar-fixed .nav-wrapper{
-            height: 65px;
-           
+        /* Ensure the .brand-logo has no padding or margin */
+        .brand-logo {
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important; /* Use flexbox for vertical centering */
+            align-items: center !important;
+            height: 100% !important; /* Ensure it takes up the full height of the navbar */
         }
 
-        .brand-logo img{
-            height:58px;
-            width: auto;
-        }
-
-       
+            /* Ensure the image inside .brand-logo is centered and constrained */
+            .brand-logo img {
+                max-height: 100% !important; /* Constrain the logo's height to fit inside the navbar */
+                margin: 0 !important;
+                padding: 0 !important;
+                vertical-align: middle !important; /* Vertically align the image */
+            }
     </style>
 
 </head>
 <body class="has-fixed-sidenav">
     <header>
 
-
         <div class="navbar-fixed z-depth-1">
             <nav>
                 <div class="nav-wrapper z-depth-1 white">
-                    <a class="brand-logo responsive-img" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/Resize APS.png"></a>
+                    <a class="brand-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/Resize APS.png"></a>
                     <a href="!#" data-target="mobile-demo" class="sidenav-trigger hide-on-large-only text-blue"><i class="material-icons">menu</i></a>
                 </div>
             </nav>
@@ -53,16 +57,16 @@
     </header>
 
 
+
+
+
     <!-- Mobile Sidenav -->
     <ul class="sidenav blue darken-3 white-text" id="mobile-demo">
         <li><a class="white-text" asp-area="" asp-controller="Home" asp-action="Index"><i class="material-icons left indigo-text text-darken-4">dashboard</i>Dashboard</a></li>
         <li><a class="white-text" asp-area="" asp-controller="PurchaseOrders" asp-action=""><i class="material-icons left  indigo-text text-darken-4">receipt</i>Purchase Orders</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Jobs" asp-action=""><i class="material-icons left  indigo-text text-darken-4">work</i>Jobs</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Returns" asp-action=""><i class="material-icons left  indigo-text text-darken-4">swap_horiz</i>Returns</a></li>
-        @* <li><a class="white-text" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Scanner</a></li> *@
-        @* <li><a class="white-text" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left  indigo-text text-darken-4">print</i>Print Barcode</a></li> *@
-        @* <li><a class="white-text" asp-area="" asp-controller="ScanHistory" asp-action=""><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li> *@
-        @* <li><a class="white-text" asp-area="" asp-controller="PartDeliveries" asp-action=""><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li> *@
+        <li><a class="white-text" asp-area="" asp-controller="ScanHistory" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Job History</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Settings" asp-action=""><i class="material-icons left  indigo-text text-darken-4">settings</i>Settings</a></li>
         <li><a class="white-text" asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
     </ul>
@@ -73,10 +77,7 @@
         <li><a class="white-text" asp-area="" asp-controller="PurchaseOrders" asp-action=""><i class="material-icons left  indigo-text text-darken-4">receipt</i>Purchase Orders</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Jobs" asp-action=""><i class="material-icons left  indigo-text text-darken-4">work</i>Jobs</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Returns" asp-action=""><i class="material-icons left  indigo-text text-darken-4">swap_horiz</i>Returns</a></li>
-        @* <li><a class="white-text" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Scanner</a></li> *@
-        @* <li><a class="white-text" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left indigo-text text-darken-4">print</i>Print Barcode</a></li> *@
-        @* <li><a class="white-text" asp-area="" asp-controller="ScanHistory" asp-action=""><i class="material-icons left  indigo-text text-darken-4">history</i>Scan History</a></li> *@
-        @* <li><a class="white-text" asp-area="" asp-controller="PartDeliveries" asp-action=""><i class="material-icons left  indigo-text text-darken-4">schedule</i>Scheduled Deliveries</a></li> *@
+        <li><a class="white-text" asp-area="" asp-controller="ScanHistory" asp-action=""><i class="material-icons left  indigo-text text-darken-4">qr_code_scanner</i>Job History</a></li>
         <li><a class="white-text" asp-area="" asp-controller="Settings" asp-action=""><i class="material-icons left  indigo-text text-darken-4">settings</i>Settings</a></li>
         <li><a class="white-text" asp-area="" asp-controller="TestPages" asp-action="">Test Page</a></li>
     </ul>
@@ -88,15 +89,7 @@
         </main>
     </div>
 
- @*    <div class="fixed-action-btn">
-        <a class="btn-floating btn blue darken-2">
-            <i class="material-icons top">qr_code_scanner</i>Scan
-        </a>
-        <ul>
-            <li><a class="btn-floating blue darken-2" asp-area="" asp-controller="Scanner" asp-action=""><i class="material-icons left">qr_code_scanner</i>Scan</a></li>
-            <li><a class="btn-floating blue darken-2" asp-area="" asp-controller="CodeCreator" asp-action=""><i class="material-icons left">create</i>Create</a></li>
-        </ul>
-    </div> *@
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -104,18 +97,7 @@
             var instances = M.Sidenav.init(elems, { draggable: true });
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.fixed-action-btn');
-            var instances = M.FloatingActionButton.init(elems, {
-                direction: 'left',
-                hoverEnabled: false
-            });
-        });
-    </script>
-
- 
-
+   
  
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

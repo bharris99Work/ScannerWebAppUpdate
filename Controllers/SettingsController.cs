@@ -129,6 +129,7 @@ namespace ScannerWebAppUpdate.Controllers
                 success = await _context.AddPartsList(jobPartList);
                 success = await _context.AddPartsList(truckPartList);
 
+                //Get Parts as Ordered Parts
 
 
                 //Create Job
@@ -149,14 +150,15 @@ namespace ScannerWebAppUpdate.Controllers
                     Name = "PO-0002",
                     Type = "Truck Order"
                 };
-                success = await _context.AddPurchaseOrder(pojob);
-                success = await _context.AddPurchaseOrder(potruck);
+
+                int poJobId = await _context.AddPurchaseOrder(pojob);
+                int poTruckId = await _context.AddPurchaseOrder(potruck);
 
                 //Create POParts (Parts List, PO Name)
                 //Send Parts list
                 //Find the ID for each one
-                int jobPOId = await _context.CreatePOParts(jobPartList, pojob.Name);
-                int truckPOId = await _context.CreatePOParts(truckPartList, potruck.Name);
+                int jobPOId = await _context.CreateTestPOParts(jobPartList, poJobId);
+                int truckPOId = await _context.CreateTestPOParts(truckPartList, poTruckId);
 
 
                 //Grab JobId

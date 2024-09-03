@@ -1,72 +1,140 @@
-﻿<div>
-    <form asp-action="UploadPo" asp-controller="PurchaseOrders">
+﻿@model Part
+
+<div id="partSelector" class="modal">
+    <!--Header-->
+    <div class="row">
+        <div class="col s12">
+
+        </div>
+    </div>
+
+    <!--Table-->
+    <div class="row">
+        <div class="col s12">
+            <div class="table-container">
+                <table id="allPartsTable">
+                    <thead>
+                        <tr>
+                            <th>Part Number: </th>
+                            <th>Description:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Part part in ViewBag.allparts)
+                        {
+                            <tr>
+                                <td>@part.PartNumber</td>
+                                <td>@part.Description</td>
+
+
+                                <!--Update table-->
+                                <td>
+                                    <form id="addpartForm" class="addpart-po-form">
+                                        <input type="hidden" name="PartId" value="@part.PartId" />
+                                        <input type="hidden" name="PartNumber" value="@part.PartNumber" />
+                                        <button id="addPartBN" type="submit">Add</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div>
         <!--PO Name-->
         <label for="poNumber">PO Number: </label>
         <input id="poNumber" type="text" placeholder="PO Number" name="poNumber" />
 
         <!--Parts selected-->
-        <label for="partsSelected">Parts To Select: </label>
-        <input id="partsSelected" type="number" placeholder="Parts To Select" name="partsSelected" />
+        @* <label for="partsSelected">Parts To Select: </label>
+        <input id="partsSelected" type="number" placeholder="Parts To Select" name="partsSelected" /> *@
 
-       @*  <!--Type Of PO-->
-        <select id="poTypeSelect">
-            @{
-                foreach (var potypes in ViewBag.potypes)
-                {
-                    <option value="@potypes">@potypes</option>
 
-                }
-            }
-        </select> *@
+        <!--Header-->
+        <div class="row">
+            <div class="col s12">
+                <h4></h4>
+            </div>
+        </div>
 
+
+        <!--Function Type Drop Downs-->
         <!--JobNumber-->
+    <label for="jobNumbersSelect">Select Job:</label>
         <select id="jobNumbersSelect" name="selectedJob">
-            <option value="" >No Job</option>
+            <option value="">None</option>
 
             @{
                 int jobscounter = 1;
                 foreach (var job in ViewBag.jobs)
                 {
-                        <option value="@job.JobsId">@job.JobNumber</option>
+                    <option value="@job.JobsId">@job.JobNumber</option>
                     jobscounter++;
 
                 }
             }
         </select>
-        <input id="hiddenJobSelect" type="hidden" name="JobOption"/>
+        <input id="hiddenJobSelect" type="hidden" name="JobOption" />
 
         <!--TruckName-->
+    <label for="truckNameSelect">Select Truck:</label>
+
         <select id="truckNameSelect" name="selectedTruck">
-            <option value="">No Job</option>
+            <option value="">None</option>
             @{
                 int truckcounter = 1;
                 foreach (var truck in ViewBag.trucks)
                 {
-                        <option value="@truck.TruckId">@truck.TruckName</option>
+                    <option value="@truck.TruckId">@truck.TruckName</option>
                     truckcounter++;
                 }
             }
         </select>
         <input id="hiddenTruckSelect" type="hidden" name="TruckOption" />
+        <!---->
+        <!--Add Parts Button-->
+        <div class="row">
+            <div class="col s12">
+                <button class="waves-effect btn blue darken-2 modal-trigger" href="#partSelector">Add part</button>
+            </div>
+        </div>
 
+
+        <!--Added Parts Table-->
+        <div class="row">
+            <div class="col s12">
+                <div class="table-container">
+                    <table id="addedPartsTable">
+                        <thead>
+                            <tr>
+                                <th>Part Number: </th>
+                                <th>Ordered:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                            <!--Update table-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <button id="submitbn" type="submit">Submit</button>
-    </form>
 </div>
-@section scripts{
+
+
+@section scripts {
     <script>
-        // var submit = document.getElementById('submitbn');
-
-        // submit.addEventListener('click', function (event) {
-        //     //event.preventDefault();
-
-
-
-        // });
 
 
     </script>
-
 }
 
-
+<script src="~/js/poCreation.js"></script>
 <script src="~/js/partForm.js"></script>

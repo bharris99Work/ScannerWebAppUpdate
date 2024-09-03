@@ -13,10 +13,10 @@ namespace ScannerWebAppUpdate.Models
 {
     public class ScannerContext : DbContext
     {
+
         public DbSet<Part> Parts { get; set; }
         public DbSet<ReturnOption> ReturnOptions { get; set; }
         public DbSet<Jobs> Jobs { get; set; }
-
         public DbSet<JobPart> JobParts { get; set; }
         public DbSet<Truck> Trucks { get; set; }
         public DbSet<Tech> Techs { get; set; }
@@ -24,11 +24,10 @@ namespace ScannerWebAppUpdate.Models
         public DbSet<POPart> POParts { get; set; }
         public DbSet<TruckPart> TruckParts { get; set; }
         public DbSet<TechTruck> TechTrucks { get; set; }
-
         public DbSet<ReturnPart> ReturnParts { get; set; }
-
-
+        public DbSet<JobHistory> JobHistory { get; set; }
         public string DbPath { get; }
+
 
         public ScannerContext()
         {
@@ -37,9 +36,42 @@ namespace ScannerWebAppUpdate.Models
             DbPath = System.IO.Path.Join(path, "ScannerDatabase.db");
         }
 
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
 
+
+        //JobHistory Logic
+        public async Task<List<JobHistoryViewModel>> GetJobHistory()
+        {
+            try
+            {
+                var jobHistories = await (from jobhist in JobHistory
+                                          join jobpart in JobParts on jobhist.JobPartId equals jobpart.JobPartId
+                                          join part in Parts on jobpart.PartId equals part.PartId
+                                          join job in Jobs on jobpart.JobId equals job.JobsId
+                                         
+                                          select new JobHistoryViewModel()
+                                          {
+                                              JobNumber = job.JobNumber,
+                                              PartNumber = part.PartNumber,
+                                              TechName = "Demo Tech",
+                                              Action = jobhist.Action,
+                                              Quantity = jobhist.Quantity,
+                                              Timestamp = jobhist.Timestamp
+                                          }).ToListAsync();
+
+
+               jobHistories = jobHistories.OrderByDescending(jp => jp.Timestamp).ToList();
+
+               return jobHistories;
+            }
+            catch (Exception ex)
+            {
+                return new List<JobHistoryViewModel>() { };
+            }
+        }
+ 
 
         //Check in parts logic
         #region
@@ -91,7 +123,7 @@ namespace ScannerWebAppUpdate.Models
                 var parts = await (from joparts in JobParts
                                    join part in Parts on joparts.PartId equals part.PartId
                                    join po in PurchaseOrders on joparts.PurchaseOrderId equals po.PurchaseOrderId
-                                   where joparts.JobId == jobId && joparts.AllChecked == true
+                                   where joparts.JobId == jobId && joparts.CheckedIn >0 || joparts.AllChecked == true
                                    select new JobPartsViewModel()
                                    {
                                        JobPartId = joparts.JobPartId,
@@ -147,6 +179,19 @@ namespace ScannerWebAppUpdate.Models
                 //save changes
                 await SaveChangesAsync();
 
+                JobHistory newEntry = new JobHistory() {
+                TechId = jobpartid,
+                JobPartId = jp.JobPartId,
+                Action = "Checked-In",
+                Quantity = toCheckIn,
+                Timestamp = DateTime.Now,
+                
+                };
+
+                JobHistory.Add(newEntry);
+
+                await SaveChangesAsync();
+
                 return true;
             }
             catch (Exception ex)
@@ -186,8 +231,8 @@ namespace ScannerWebAppUpdate.Models
             #endregion
 
 
-            //Logic for adding parts
-            #region
+        //Logic for adding parts
+        #region
             public async Task<bool> AddPartAsync(Part part)
         {
             try
@@ -243,7 +288,6 @@ namespace ScannerWebAppUpdate.Models
                     return true;
                 }
                 return false;
-
             }
             catch (Exception ex)
             {
@@ -263,15 +307,17 @@ namespace ScannerWebAppUpdate.Models
                         return false;
                     }
                 }
+
                 return true;
+            
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 return false;
             }
-
         }
+
 
 
         public async Task<bool> AddReturn(ReturnOption returnOption)
@@ -286,13 +332,11 @@ namespace ScannerWebAppUpdate.Models
                     return true;
                 }
                 return false;
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 return false;
-
             }
         }
 
@@ -304,26 +348,33 @@ namespace ScannerWebAppUpdate.Models
                 //Check if it exists
                 if(!ReturnParts.Any(rp => rp.ReturnPartNumber == newReturnPart.ReturnPartNumber))
                 {
-
                     var jp = JobParts.FirstOrDefault(jobpart => jobpart.JobPartId == newReturnPart.JobPartId);
 
                     //Find Job Part with jobpartid
                    // JobPart jp = await JobParts.FirstOrDefaultAsync(jp => jp.JobPartId == newReturnPart.JobPartId);
-                   
+
                     //Remove available parts = to Quantity Returned
                     if (jp != null) {
                         jp.AvailableQuantity = jp.AvailableQuantity - newReturnPart.QuantityReturned;
                     };
-
+                    
                     ReturnParts.Add(newReturnPart);
+
+                    JobHistory newEntry = new JobHistory() {
+                    TechId = 1,
+                    JobPartId = newReturnPart.JobPartId,
+                    Action = "Returned Part",
+                    Quantity = newReturnPart.QuantityReturned,
+                    Timestamp = DateTime.Now
+                    };
+
+                    JobHistory.Add(newEntry);
 
                     await SaveChangesAsync();
 
                     return true;
                 }
                 //Save changes
-
-
                 return false;
             }
             catch(Exception ex)
@@ -340,7 +391,6 @@ namespace ScannerWebAppUpdate.Models
                 //Find Job Part with jobpartid
                 var jp = await JobParts.FirstOrDefaultAsync(jobpart => jobpart.JobPartId == newReturnPart.JobPartId);
                 var rp = await ReturnParts.FirstOrDefaultAsync(returnpart => returnpart.ReturnPartId == newReturnPart.ReturnPartId);
-
 
                 //Remove available parts = to Quantity Returned
                 if (jp != null && rp != null)
@@ -484,6 +534,8 @@ namespace ScannerWebAppUpdate.Models
         {
             try
             {
+                bool success = false;
+
                 var foundTruckPart = TruckParts.FirstOrDefault(truckpart => selectedPart.TruckId == truckpart.TruckId
                 && truckpart.PartId == selectedPart.PartId && truckpart.PurchaseOrderId == selectedPart.PurchaseOrderId);
 
@@ -501,11 +553,13 @@ namespace ScannerWebAppUpdate.Models
 
                         existingJobPart.AllChecked = true;
 
+                        
+
                         foundTruckPart.QuantityAvalible -= selectedPart.AssignedParts;
                         foundTruckPart.QuantityAllocated += selectedPart.AssignedParts;
 
                         await SaveChangesAsync();
-                        return true;
+                        success = true;
                     }
 
                     else
@@ -527,7 +581,27 @@ namespace ScannerWebAppUpdate.Models
 
                         JobParts.Add(newPart);
                         await SaveChangesAsync();
-                        return true;
+                        success = true;
+                    }
+
+
+                    if (success)
+                    {
+                        var newJobPart = JobParts.FirstOrDefault(jobpart => selectedPart.PartId
+               == jobpart.PartId && selectedPart.PurchaseOrderId == jobpart.PurchaseOrderId && selectedPart.JobId == jobpart.JobId);
+
+                        JobHistory newEntry = new JobHistory()
+                        {
+                            TechId = 1,
+                            JobPartId = newJobPart.PartId,
+                            Action = "Added Part From Truck",
+                            Quantity = selectedPart.AssignedParts,
+                            Timestamp = DateTime.Now
+
+                        };
+                        JobHistory.Add(newEntry);
+
+                        await SaveChangesAsync();
                     }
 
                 }
@@ -540,6 +614,7 @@ namespace ScannerWebAppUpdate.Models
             }
         }
 
+        //Mark Part As Used
         public async Task<bool> UpdateJobPart(JobPartsViewModel selectedjobPart)
         {
             try
@@ -554,6 +629,17 @@ namespace ScannerWebAppUpdate.Models
                     {
                         foundpart.Status = "Parts Used";
                     }
+
+                    JobHistory newEntry = new JobHistory()
+                    {
+                        TechId = 1,
+                        JobPartId = selectedjobPart.JobPartId,
+                        Action = "Update Used Quantity",
+                        Quantity = selectedjobPart.AssignedParts,
+                        Timestamp = DateTime.Now
+
+                    };
+                    JobHistory.Add(newEntry);
 
                     await SaveChangesAsync();
                     return true;
@@ -859,7 +945,7 @@ namespace ScannerWebAppUpdate.Models
 
         //Purchase Order Functions
         #region
-        public async Task<bool> AddPurchaseOrder(PurchaseOrder po)
+        public async Task<int> AddPurchaseOrder(PurchaseOrder po)
         {
             try
             {
@@ -867,84 +953,84 @@ namespace ScannerWebAppUpdate.Models
                 {
                     PurchaseOrders.Add(po);
                     await SaveChangesAsync();
-                    return true;
 
+                    int poId = PurchaseOrders.FirstOrDefault(newpo => po.Name == newpo.Name).PurchaseOrderId;
+                    return poId;
                 }
-                return false;
+                return 0;
             }
             catch (Exception ex)
             {
-                return false;
-
-            }
-        }
-
-        public async Task<int> CreatePOParts(int numberOfParts, string POName)
-        {
-            try
-            {
-                List<POPart> tempPoPartList = new List<POPart>();
-
-                int PONumId = PurchaseOrders.FirstOrDefault(po => po.Name == POName).PurchaseOrderId;
-                if (PONumId != 0) {
-
-                    Random rand = new Random();
-                    for (int i = 0; i < numberOfParts; i++)
-                    {
-                        int index = rand.Next(1, Parts.ToList().Count);
-                        //Random number within length of parts
-                        POPart part = new POPart()
-                        {
-                            PurchaseOrderId = PONumId,
-
-                            PartId = Parts.ElementAt(index).PartId,
-
-                            Quantity = index +2,
-                            Status = "Ordered",
-                            ReturnStatus = ""
-                        };
-                        //Check if part exist in popart with poid and part id
-                        if (!tempPoPartList.Any(popart => popart.PartId == part.PartId))
-                        {
-                            POParts.Add(part);
-                            tempPoPartList.Add(part);
-                        };
-
-                        if(tempPoPartList.Count < numberOfParts)
-                        {
-                            i -= 1;
-                        }
-                    }
-                }
-                else
-                {
-                    return 0;
-                }
-                await SaveChangesAsync ();
-                return PONumId;
-            }
-            catch (Exception ex) 
-            {
-            
                 return 0;
             }
-
         }
 
+        //public async Task<int> CreatePOParts(int numberOfParts, string POName)
+        //{
+        //    try
+        //    {
+        //        List<POPart> tempPoPartList = new List<POPart>();
+
+        //        int PONumId = PurchaseOrders.FirstOrDefault(po => po.Name == POName).PurchaseOrderId;
+        //        if (PONumId != 0)
+        //        {
+
+        //            Random rand = new Random();
+        //            for (int i = 0; i < numberOfParts; i++)
+        //            {
+        //                int index = rand.Next(1, Parts.ToList().Count);
+        //                //Random number within length of parts
+        //                POPart part = new POPart()
+        //                {
+        //                    PurchaseOrderId = PONumId,
+
+        //                    PartId = Parts.ElementAt(index).PartId,
+
+        //                    Quantity = index + 2,
+        //                    Status = "Ordered",
+        //                    ReturnStatus = ""
+        //                };
+        //                //Check if part exist in popart with poid and part id
+        //                if (!tempPoPartList.Any(popart => popart.PartId == part.PartId))
+        //                {
+        //                    POParts.Add(part);
+        //                    tempPoPartList.Add(part);
+        //                };
+
+        //                if (tempPoPartList.Count < numberOfParts)
+        //                {
+        //                    i -= 1;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return 0;
+        //        }
+        //        await SaveChangesAsync();
+        //        return PONumId;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return 0;
+        //    }
+        //}
+
+
         //TEST DEMO
-        public async Task<int> CreatePOParts(List<Part> parts, string POName)
+        public async Task<int> CreateTestPOParts(List<Part> parts, int POId)
         {
             try
             {
-                int PONumId = PurchaseOrders.FirstOrDefault(po => po.Name == POName).PurchaseOrderId;
+                int PONumId = POId;
                 if (PONumId != 0)
                 {
                     Random rand = new Random();
                     //Create POPart
                     //Part ID and Quantity
-                    foreach (var part in parts) {
+                    foreach (var part in parts)
+                    {
                         int partid = Parts.FirstOrDefault(dbpart => dbpart.PartNumber == part.PartNumber).PartId;
-
 
                         POPart pOPart = new POPart()
                         {
@@ -954,7 +1040,6 @@ namespace ScannerWebAppUpdate.Models
                             ReturnStatus = "N/A",
                             Quantity = rand.Next(1, 10),
                         };
-
                         POParts.Add(pOPart);
                     };
                 }
@@ -964,12 +1049,90 @@ namespace ScannerWebAppUpdate.Models
                 }
                 await SaveChangesAsync();
                 return PONumId;
+
             }
             catch (Exception ex)
             {
                 return 0;
             }
+        }
 
+
+        public async Task<int> CreatePOParts(List<OrderedParts> parts, int POId)
+        {
+            try
+            {
+                int PONumId = POId;
+                if (PONumId != 0)
+                {
+                    //Random rand = new Random();
+                    //Create POPart
+                    //Part ID and Quantity
+                    foreach (var part in parts) {
+                        int partid = Parts.FirstOrDefault(dbpart => dbpart.PartNumber == part.PartNumber).PartId;
+
+                        POPart pOPart = new POPart()
+                        {
+                            PartId = partid,
+                            PurchaseOrderId = PONumId,
+                            Status = "Ordered",
+                            ReturnStatus = "N/A",
+                            Quantity = part.Ordered
+                           // Quantity = rand.Next(1, 10),
+                        };
+                        POParts.Add(pOPart);
+                    };
+                }
+                else
+                {
+                    return 0;
+                }
+                await SaveChangesAsync();
+                return PONumId;
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        public async Task<int> CreatePOParts(List<Part> parts, int POId)
+        {
+            try
+            {
+                int PONumId = POId;
+                if (PONumId != 0)
+                {
+                    Random rand = new Random();
+                    //Create POPart
+                    //Part ID and Quantity
+                    foreach (var part in parts)
+                    {
+
+                        POPart pOPart = new POPart()
+                        {
+                            PartId = part.PartId,
+                            PurchaseOrderId = PONumId,
+                            Status = "Ordered",
+                            ReturnStatus = "N/A",
+                            Quantity = rand.Next(1, 10),
+                        };
+                        POParts.Add(pOPart);
+                    };
+                }
+                else
+                {
+                    return 0;
+                }
+                await SaveChangesAsync();
+                return PONumId;
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
         }
 
         public async Task<bool> CreateJobOrder(int jobid, int POId)
@@ -988,13 +1151,9 @@ namespace ScannerWebAppUpdate.Models
                                 Ordered = popart.Quantity,
                                 Status = "Ordered",
                                 AllChecked = false
-                               
                             }).ToListAsync();
                
                 JobParts.AddRange(parts);
-
-
-
 
                 await SaveChangesAsync();
                 return true;
@@ -1042,14 +1201,11 @@ namespace ScannerWebAppUpdate.Models
                             
 
                 return await parts.ToListAsync();
-                                   
 
             }
             catch (Exception ex) {
                 return null;
-            
             }
-
         }
 
         public async Task<List<PurchaseOrderViewModel>> GetPOViewModels()
@@ -1073,16 +1229,140 @@ namespace ScannerWebAppUpdate.Models
                             };
 
                 return await query.ToListAsync();
-
             }
             catch (Exception ex) {
-            
                 return null ;
-            
             }
-         
 
         }
+
+
+        public async Task<bool> UploadJobOrder(List<OrderedParts> parts, string pOName, string jobName)
+        {
+
+            int jobId = Jobs.FirstOrDefault(job => job.JobNumber == jobName).JobsId;
+
+            //Create PO with PO name
+           int poId = await CreatePOForUpload(pOName, "Job Order" );
+
+            //Create POParts with PoId and parts list
+            int success = await CreatePOParts(parts, poId);
+
+            //Create JobParts using parts list, PoId, JobNumber
+            //Need to get jobid
+            await CreateJobOrder(jobId, poId);
+            
+
+            return false;
+        }
+
+        public async Task<bool> UploadStockOrder(List<OrderedParts> parts, string pOName, string truckName)
+        {
+            int truckId = Trucks.FirstOrDefault(truck => truck.TruckName == truckName).TruckId;
+
+            //Create PO with PO name
+            int poId = await CreatePOForUpload(pOName, "Stock Order");
+
+            //Create POParts with PoId and parts list  
+            int success = await CreatePOParts(parts, poId);
+
+            //Create TruckParts using parts list, PoId, TruckNumber
+            await AddTruckParts(poId, truckId);
+
+            return false;
+        }
+        public async Task<bool> UploadPickList(List<OrderedParts> parts, string pOName, string truckName)
+        {
+            //Create PO with PO name
+            int poId = await CreatePOForUpload(pOName, "Pick List");
+
+            //Create POParts with PoId and parts list  
+            int success = await CreatePOParts(parts, poId);
+
+            //Create parts list, PoId, TruckNumber
+
+            //save
+
+            return false;
+        }
+
+
+
+
+
+        //CreatePO
+        public async Task<int> CreatePOForUpload(string poName, string type)
+        {
+            try
+            {
+                if (PurchaseOrders.Any(po => po.Name == poName))
+                {
+                    return 0;
+                }
+                else
+                {
+                    PurchaseOrder po = new PurchaseOrder()
+                    {
+                        Name = poName,
+                        Type = type
+                    };
+
+                    PurchaseOrders.Add(po);
+
+                    await SaveChangesAsync();
+
+                    int poId = PurchaseOrders.FirstOrDefault(po => po.Name == poName).PurchaseOrderId;
+
+                    return poId;
+                    
+                }
+            }
+            catch(Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        //CreatePOParts
+        //public async Task<bool> CreatePOParts(List<Part> parts, int poId)
+        //{
+        //    try
+        //    {
+        //        List<POPart> poparts = new List<POPart>();
+
+        //        foreach (Part part in parts) {
+        //            POPart newPoPart = new POPart()
+        //            {
+                        
+        //                PartId = part.PartId,
+        //                PurchaseOrderId = poId,
+        //                Status = "Ordered",
+        //                ReturnStatus = "",
+        //                //Quantity = part.Quantity
+
+        //            };
+
+                    
+
+        //            poparts.Add(newPoPart);
+        //        }
+
+        //        return true;
+        //    }
+
+        //    catch (Exception ex) {
+                
+                
+        //        return false;
+        //    }
+        //}
+
+
+
+
+
+
+
 
 
         #endregion

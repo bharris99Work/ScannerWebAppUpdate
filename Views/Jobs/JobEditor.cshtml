@@ -1,20 +1,36 @@
 ﻿@model JobPartsPartialViewModel
 
 <head>
+    <style>
+        /* Style the bottom menu */
+        .bottom-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff; /* White background */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3); /* Shadow for the top edge */
+            display: flex;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 10px 0;
+            z-index: 800; /* Ensures the menu is above other content */
+        }
+    </style>
     <!-- Include jQuery Library -->
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 </head>
+
 
 <input id="jobId" type="hidden" value="@ViewBag.JobId" />
 <input id="functionType" type="hidden" />
 
+
 <button id="openScanDialog" style="display:none;"></button>
 
-<div>
 
+<div>
     <!--Dialog which shows the Search VIewComponent which features read and search-->
     <div id="SearchDialog" class="modal small-dialog">
         <div class="modal-container">
@@ -30,7 +46,6 @@
             </div>
         </div>
     </div>
-
 
 
     <!-- Scan Modal: Features Camera View-->
@@ -50,7 +65,6 @@
     </div>
 
 
-
     <!--Displays at bottom of Scan/Read and presents result-->
     <div id="resultContainer" class="result-container">
             <!-- Header - Exit Button right aligned-->
@@ -68,7 +82,6 @@
             <div class="row">
                 <div class="part-google">
                     <a  id="partGoogle" target="_blank">This is Test Text</a>
-                    @* <a class="img-container"><img src="~/img/shopping.png" class="responsive-img" /></a> *@
                 </div>
             </div>
          <!-- OK (Exit Button)-->
@@ -78,8 +91,6 @@
                 </div>
             </div>
     </div>
-
-
 
 
     <!-- Quantity Modal -->
@@ -190,9 +201,6 @@
                 </div>
             </div>
 
-
-
-
         </div>
         
     </div>
@@ -243,20 +251,22 @@
         <div class="col s12">
             <a class="btn" style="display:none;" id="testBtn">Test</a>
             <h4 class="left">@ViewBag.JobName</h4>
-            <a class="waves-effect btn modal-trigger right green accent-4 " href="#truckPartsModal"><i class="material-icons right indigo-text text-darken-4">add</i>Add Parts</a>
         </div>
     </div>
 
     
     <!--Scan and Sign Off btns-->
-    <div class="row">
+    <div class="row hide-on-small-and-down">
         <div class="col s12">
+
 
             <form asp-action="CheckInParts" asp-controller="Jobs">
                 <input type="hidden" name="jobId" value="@ViewBag.JobId" />
-
                 <button class="waves-effect btn right blue darken-2"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Check-In Parts</button>
             </form>
+
+
+            <a class="waves-effect btn modal-trigger right green accent-4 " href="#truckPartsModal"><i class="material-icons left indigo-text text-darken-4">add</i>Add Parts</a>
 
 
             </div>
@@ -268,13 +278,6 @@
             </div>
             <div class="right-btn-container">
 
-               @*  <form asp-action="CheckInParts" asp-controller="Jobs">
-                    <input type="hidden" name="jobId" value="@ViewBag.JobId" />
-
-                    <button class="waves-effect btn right blue darken-2"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Check-In Parts</button>
-                </form> *@
-
-                @* <a asp-action="testview" asp-controller="Jobs">test</a> *@
                     <button class="waves-effect btn blue darken-2 modal-trigger" style="display:none;" href="#SearchDialog" id="signPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Sign Off (Scan)</button>
                     <button class="waves-effect btn blue darken-2 modal-trigger" style="display:none;" href="#SearchDialog" id="usedPart"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Use Part (Scan)</button>
             </div>
@@ -298,6 +301,24 @@
     <div class="row">
         <div id="divPartial" class="col s12">
             @await Html.PartialAsync("_JobParts", Model)
+        </div>
+    </div>
+
+
+
+    <!--Button Menu (Footer?)-->
+    <div class="bottom-menu hide-on-med-and-up">
+        <div class="row">
+            <div class="col s12">
+                <div class="multi-btn-container">
+                
+                <form asp-action="CheckInParts" asp-controller="Jobs">
+                    <input type="hidden" name="jobId" value="@ViewBag.JobId" />
+                    <button class="waves-effect btn right blue darken-2"><i class="material-icons left indigo-text text-darken-4">qr_code_scanner</i>Check-In Parts</button>
+                </form>
+                <a class="waves-effect btn modal-trigger right green accent-4 " href="#truckPartsModal"><i class="material-icons left indigo-text text-darken-4">add</i>Add Parts</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -401,20 +422,6 @@
                         // Add the part details to the matchingParts array
                         matchingParts.push(partDetails);
 
-
-
-                        // $('#JobPartId').val(jobPartId);
-                        // $('#PartId').val(partId);
-                        // $('#PartName').val(partName);
-                        // $('#JobId').val(jobId);
-                        // $('#PurchaseOrderId').val(purchaseOrderId);
-                        // $('#Status').val(status);
-                        // $('#AssignedParts').val(assignedParts);
-                        // $('#AvailableQuantity').val(availableQuantity);
-                        // $('#SignedOff').val(signedOff);
-
-                        // $('#updateScanPart').click();
-
                         found = true;
                         console.log("Part has been found");
                         //return false;
@@ -489,11 +496,6 @@
 
             return found;
 
-            //false
-            //Click Search button
-            //Show Search results for item
-            //TODO: ADD SEARCH FUNCITON
-            //console.log("This scan was succesful: " + result);
 
         }
 
@@ -516,8 +518,6 @@
 
             // Initialize the select input with Materialize
             M.FormSelect.init(poselect);
-
-        
 
 
             // Open the modal

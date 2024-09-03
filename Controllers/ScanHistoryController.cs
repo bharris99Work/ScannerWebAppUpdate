@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using ScannerWebAppUpdate.Models;
 
 namespace ScannerWebAppUpdate.Controllers
@@ -7,30 +8,18 @@ namespace ScannerWebAppUpdate.Controllers
     public class ScanHistoryController : Controller
     {
         private ScannerContext _context = new ScannerContext();
-
+        private List<JobHistory> jobHistories = new List<JobHistory>();
         public ScanHistoryController()
         {
             _context.Database.EnsureCreated();
-            _context.Parts.Load();
-           // _context.PartHistory.Load();
-            //PartsList = _context.Parts.Local.ToObservableCollection();
         }
-        public IActionResult Index()
-        {/*
-            var partHistoryViemModels = _context.PartHistory
-                .Join(_context.Parts,
-                partHistory => partHistory.PartId,
-                part => part.PartId,
-                (partHistory, part) => new PartHistoryPartViewModel
-                {
-                    Part = part,
-                    PartHistory = partHistory
-                }).ToList();*/
+        public async Task<IActionResult> Index()
+        {
 
-            ViewBag.PartHistoryList = null;
+            
+
+            ViewBag.PartHistoryList = await _context.GetJobHistory();
                 
-                //partHistoryViemModels;
-
             return View();
         }
 
